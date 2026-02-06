@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "c-users-lshio-desktop-astro",
+	"name": "my-portfolio",
   "compatibility_date": "2026-02-06",
   "compatibility_flags": [
     "nodejs_compat",
