@@ -1,9 +1,26 @@
 ---
+import Projects from '../components/Projects.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Greeting from '../components/Greeting';
-const pageTitle = "Home Page";
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
-<BaseLayout pageTitle={pageTitle}>
-  <h2>My awesome blog subtitle</h2>
-  <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
-</BaseLayout>
+<!doctype html>
+<BaseLayout  
+	title={SITE_TITLE}
+  description={SITE_DESCRIPTION}>
+		<main>
+			<div class="left">
+				<Projects />
+			</div>
+			<div class="right">
+				<h1 class="hero-text">🧑‍🚀 Hello, Astronaut!</h1>
+				<script>
+					import { gsap } from "gsap";
+					import { SplitText } from "gsap/SplitText";
+					gsap.registerPlugin(SplitText);
+					let split = SplitText.create(".hero-text", {type:"words,chars"});
+					var tl = gsap.timeline();
+					tl.from(split.chars, {duration: .5, opacity: 0, stagger: .125,  ease: 'power1. In'})
+				</script>
+			</div>
+		</main>
+	</BaseLayout>

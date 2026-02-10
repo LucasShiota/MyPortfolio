@@ -1,21 +1,77 @@
 ---
-import Menu from './Menu.astro';
-import Navigation from './Navigation.astro';
-import ThemeIcon from './ThemeIcon.astro';
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
 ---
-<header>
-  <nav >
-    <div>
-      <ThemeIcon />
-      <Menu />
-    </div>
-    <Navigation />
-  </nav>
-</header>
 
+<header>
+	<nav>
+		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<div class="internal-links">
+			<HeaderLink href="/">Home</HeaderLink>
+			<HeaderLink href="/blog">Blog</HeaderLink>
+			<HeaderLink href="/about">About</HeaderLink>
+		</div>
+		<div class="social-links">
+			<a href="https://m.webtoo.ls/@astro" target="_blank" aria-label="My GitHub!">
+				<span class="sr-only">Follow Astro on Mastodon</span>
+				<i class="fab fa-mastodon fa-2x"></i>
+			</a>
+			<a href="https://twitter.com/astrodotbuild" target="_blank" aria-label="My LinkedIn!">
+				<span class="sr-only">Follow Astro on Twitter</span>
+				<i class="fa-brands fa-linkedin fa-2xl"></i>
+			</a>
+			<a href="https://github.com/withastro/astro" target="_blank" aria-label="My GitHub!">
+				<span class="sr-only">Check out my GitHub Page</span>
+				<i class="fa-brands fa-github fa-2xl"></i>
+			</a>
+		</div>
+	</nav>
+</header>
+<script>/* 
+<i class="fa-brands fa-discord fa-2xl"></i> 
+<i class="fa-brands fa-steam fa-2xl"></i>
+<i class="fa-solid fa-moon fa-2xl"></i>
+<i class="fa-brands fa-spotify fa-2xl"></i>
+
+*/</script>
 <style>
-  div {
-    display: flex;
-    justify-content: space-between;
-  }
+	header {
+		margin: 0;
+		padding: 0 1em;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+	}
+	h2 {
+		margin: 0;
+		font-size: 1em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	nav a {
+		padding: 1em 0.5em;
+		color: var(--black);
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+	}
+	nav a.active {
+		text-decoration: none;
+		border-bottom-color: var(--accent);
+	}
+	.social-links,
+	.social-links a {
+		display: flex;
+	}
+	@media (max-width: 720px) {
+		.social-links {
+			display: none;
+		}
+	}
 </style>
