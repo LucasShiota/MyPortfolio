@@ -1,0 +1,152 @@
+<button id="theme-toggle">
+  <i class="fa-solid fa-moon"></i>
+</button>
+
+<style>
+/* -------- BUTTON STYLES -------- */
+#theme-toggle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, border 0.3s;
+}
+
+/* optional hover effect */
+#theme-toggle:hover {
+  background: rgba(var(--gray), 0.1);
+}
+
+/* -------- ICON STYLES -------- */
+#theme-toggle i {
+  color: var(--black);
+  font-size: 1.5rem;
+  transition: color 0.3s, transform 0.3s;
+}
+
+#theme-toggle:hover i {
+  color: var(--accent);
+  transform: rotate(15deg);
+}
+</style>
+
+<script is:inline>
+const toggleBtn = document.getElementById('theme-toggle');
+const icon = toggleBtn.querySelector('i'); // make sure we target the icon inside button
+let isDarkIcon = false;
+
+toggleBtn.addEventListener('click', () => {
+  // toggle data-theme
+  if (!isDarkIcon) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun'); // reliably change icon
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    icon.classList.remove('fa-sun');
+    icon.classList.add('fa-moon');
+  }
+  isDarkIcon = !isDarkIcon;
+});
+</script>
+
+<script is:inline>
+const root = document.documentElement;
+
+// Variables to animate
+const themeVars = [
+  '--accent', '--accent-dark', '--accent-monochrome',
+  '--black', '--gray', '--gray-light', '--gray-dark', '--gray-gradient',
+  '--box-shadow',
+  '--bg-color', '--text-color', '--link-color'
+];
+
+// Light theme
+const lightColors = {
+  '--accent': '#2337ff',
+  '--accent-dark': '#000d8a',
+  '--accent-monochrome' : '#000000',
+  '--black': '15, 18, 25',
+  '--gray': '96, 115, 159',
+  '--gray-light': '229, 233, 240',
+  '--gray-dark': '34, 41, 57',
+  '--gray-gradient': 'rgba(229, 233, 240, 0.5), #fff',
+  '--box-shadow': '0 2px 6 rgba(96, 115, 159, 0.25), 0 8px 24 rgba(96, 115, 159, 0.33), 0 16px 32 rgba(96, 115, 159, 0.33)',
+  '--bg-color': '#fff',
+  '--text-color': 'rgb(15, 18, 25)',
+  '--link-color': '#2337ff'
+};
+
+// Dark theme
+const darkColors = {
+  '--accent': '#5c7cff',
+  '--accent-dark': '#2337ff',
+  '--accent-monochrome' : '#ffffff',
+  '--black': '240, 240, 245',
+  '--gray': '70, 80, 100',
+  '--gray-light': '50, 50, 60',
+  '--gray-dark': '20, 25, 35',
+  '--gray-gradient': 'rgba(20, 25, 35, 0.5), #111',
+  '--box-shadow': '0 2px 6 rgba(70, 80, 100, 0.15), 0 8px 24 rgba(70, 80, 100, 0.20), 0 16px 32 rgba(70, 80, 100, 0.20)',
+  '--bg-color': '#111111',
+  '--text-color': 'rgb(240, 240, 245)',
+  '--link-color': '#4dabf7'
+};
+
+let isDark = false;
+
+// Helper: parse numeric lists
+function parseNumbers(value) {
+  return value.match(/[\d.]+/g)?.map(Number) || null;
+}
+
+// Lerp helper
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// Animate function
+function animateTheme(duration = 800) {
+  const start = performance.now();
+  const from = isDark ? darkColors : lightColors;
+  const to = isDark ? lightColors : darkColors;
+  
+  function step(time) {
+    const t = Math.min((time - start)/duration, 1);
+
+    themeVars.forEach(v => {
+      const fromVal = parseNumbers(from[v]);
+      const toVal = parseNumbers(to[v]);
+
+      if (fromVal && toVal && fromVal.length === toVal.length) {
+        // interpolate numbers
+        const newVal = fromVal.map((f,i) => lerp(f,toVal[i],t));
+        // special handling: if rgb variable
+        if (from[v].includes('rgb')) {
+          root.style.setProperty(v, `rgb(${newVal[0]}, ${newVal[1]}, ${newVal[2]})`);
+        } else if (from[v].includes('rgba')) {
+          // keep alpha the same
+          const alpha = from[v].match(/rgba\([\d\s.,]+, ([\d.]+)\)/)?.[1] || 1;
+          root.style.setProperty(v, `rgba(${newVal.join(', ')}, ${alpha})`);
+        } else {
+          // just join numbers with commas
+          root.style.setProperty(v, newVal.join(', '));
+        }
+      } else {
+        // fallback string (non-numeric)
+        if (t === 1) root.style.setProperty(v, to[v]);
+      }
+    });
+
+    if (t < 1) requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+  isDark = !isDark;
+}
+
+document.getElementById('theme-toggle').addEventListener('click', () => animateTheme(1000));
+</script>

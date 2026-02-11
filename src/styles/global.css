@@ -5,23 +5,61 @@
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px
-		rgba(var(--gray), 33%);
+	color-scheme: light;
+  /* Light mode */
+  --accent: #2337ff;
+  --accent-dark: #000d8a;
+	--accent-monochrome: #000000;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+  --gray-dark: 34, 41, 57;
+  --gray-gradient: rgba(var(--gray-light), 0.5), #fff;
+  --box-shadow: 
+    0 2px 6px rgba(var(--gray), 0.25), 
+    0 8px 24px rgba(var(--gray), 0.33), 
+    0 16px 32px rgba(var(--gray), 0.33);
 
-	/* VANTA */
-	--vanta-highlight: #ffd787;
+  /* VANTA (light) */
+  --vanta-highlight: #ffd787;
   --vanta-midtone: #ff9ee2;
   --vanta-lowlight: #eebcff;
   --vanta-base: #ffebcd;
+
+  /* Global colors */
+  --bg-color: #fff;
+  --text-color: rgb(var(--black));
+  --link-color: var(--accent);
 }
+
+[data-theme="dark"] {
+	color-scheme: dark;
+  /* Dark mode */
+  --accent: #5c7cff;
+  --accent-dark: #2337ff;
+	--accent-monochrome: #ffffff;
+  --black: 240, 240, 245; /* for text on dark bg */
+  --gray: 70, 80, 100;
+  --gray-light: 50, 50, 60;
+  --gray-dark: 20, 25, 35;
+  --gray-gradient: rgba(var(--gray-dark), 0.5), #111;
+  --box-shadow: 
+    0 2px 6 rgba(var(--gray), 0.15), 
+    0 8px 24px rgba(var(--gray), 0.20), 
+    0 16px 32px rgba(var(--gray), 0.20%);
+
+  /* VANTA (dark) */
+  --vanta-highlight: #963900;
+  --vanta-midtone: #670000;
+  --vanta-lowlight: #5b0043;
+  --vanta-base: #08002f;
+
+  /* Global colors */
+  --bg-color: #111111;
+  --text-color: rgb(var(--black));
+  --link-color: #4dabf7;
+}
+
 /* --------------- FONTS --------------- */
 /* #region Fonts */
   @font-face {
@@ -96,8 +134,8 @@ h5 {font-size: 1.25em;}
 strong,b {font-weight: 700;} /* bold, strong */
 
 /* links */
-a {color: var(--accent);} 
-a:hover {color: var(--accent);}
+a { color: var(--link-color); }
+a:hover { color: var(--link-color); }
 
 /* paragrah */
 p { margin-bottom: 1em; } 
@@ -154,16 +192,15 @@ body {
 	text-align: left;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
+	--text-color: rgb(var(--black));
 
 	margin: 0;
 	padding: 0;
 	
-	background-color: transparent; 
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
+	background-color: transparent; /* to show Vanta BG */
 	background-size: 100% 600px;
 
-	
-	color: rgb(var(--gray-dark));
+	color: var(--text-color);
 	font-size: 20px;
 	line-height: 1.7;
 }

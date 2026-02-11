@@ -1,26 +1,111 @@
 <div id="vanta-bg"></div>
-		<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-		<script is:inline src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-    <script>
-			
-			declare const VANTA: any;
-			const css = getComputedStyle(document.documentElement);
-			const hexToNumber = (hex: string) =>
-				Number(hex.replace('#', '0x'));
 
-    	VANTA.FOG({
-        el: '#vanta-bg',
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-				highlightColor: hexToNumber(css.getPropertyValue('--vanta-highlight').trim()),
-				midtoneColor: hexToNumber(css.getPropertyValue('--vanta-midtone').trim()),
-				lowlightColor: hexToNumber(css.getPropertyValue('--vanta-lowlight').trim()),
-				baseColor: hexToNumber(css.getPropertyValue('--vanta-base').trim()),
-        blurFactor: 0.90,
-				speed: 1.2,
-  			zoom: 0.8
-    	})
-    </script>
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+
+<script>
+  declare const VANTA: any;
+
+  const css = getComputedStyle(document.documentElement);
+  const hexToNumber = (hex: string) => Number(hex.replace('#', '0x'));
+
+  // Initialize Vanta Fog
+  const vantaEffect = VANTA.FOG({
+    el: '#vanta-bg',
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    highlightColor: hexToNumber(css.getPropertyValue('--vanta-highlight').trim()),
+    midtoneColor: hexToNumber(css.getPropertyValue('--vanta-midtone').trim()),
+    lowlightColor: hexToNumber(css.getPropertyValue('--vanta-lowlight').trim()),
+    baseColor: hexToNumber(css.getPropertyValue('--vanta-base').trim()),
+    blurFactor: 0.90,
+    speed: 1.2,  // ← fog movement speed (independent)
+    zoom: 0.8
+  });
+
+  // Save original colors for reverting
+  const originalColors = {
+    highlightColor: vantaEffect.options.highlightColor,
+    midtoneColor: vantaEffect.options.midtoneColor,
+    lowlightColor: vantaEffect.options.lowlightColor,
+    baseColor: vantaEffect.options.baseColor
+  };
+
+  // Grab the computed style of a temporary dark-theme element
+function getDarkThemeVantaColors() {
+  // Create a hidden div with data-theme="dark"
+  const temp = document.createElement('div');
+  temp.setAttribute('data-theme', 'dark');
+  temp.style.display = 'none';
+  document.body.appendChild(temp);
+
+  const css = getComputedStyle(temp);
+
+  const hexToNumber = (hex: string) => Number(hex.replace('#', '0x'));
+
+  const colors = {
+    highlightColor: hexToNumber(css.getPropertyValue('--vanta-highlight').trim()),
+    midtoneColor: hexToNumber(css.getPropertyValue('--vanta-midtone').trim()),
+    lowlightColor: hexToNumber(css.getPropertyValue('--vanta-lowlight').trim()),
+    baseColor: hexToNumber(css.getPropertyValue('--vanta-base').trim())
+  };
+
+  document.body.removeChild(temp);
+  return colors;
+}
+
+// Usage:
+const newColors = getDarkThemeVantaColors();
+  let toggled = false; // Track toggle state
+
+  // --- Color interpolation helpers ---
+  function hexLerp(start: number, end: number, t: number) {
+    const r = Math.round(((start >> 16) & 0xff) + t * (((end >> 16) & 0xff) - ((start >> 16) & 0xff)));
+    const g = Math.round(((start >> 8) & 0xff) + t * (((end >> 8) & 0xff) - ((start >> 8) & 0xff)));
+    const b = Math.round((start & 0xff) + t * ((end & 0xff) - (start & 0xff)));
+    return (r << 16) + (g << 8) + b;
+  }
+
+  // Smooth transition using timed steps
+  function transitionColors(targetColors: Record<string, number>, duration = 2000, steps = 60) {
+    const startColors = {
+      highlightColor: vantaEffect.options.highlightColor,
+      midtoneColor: vantaEffect.options.midtoneColor,
+      lowlightColor: vantaEffect.options.lowlightColor,
+      baseColor: vantaEffect.options.baseColor
+    };
+
+    let step = 0;
+
+    function nextStep() {
+      step++;
+      const t = step / steps;
+
+      vantaEffect.setOptions({
+        highlightColor: hexLerp(startColors.highlightColor, targetColors.highlightColor, t),
+        midtoneColor: hexLerp(startColors.midtoneColor, targetColors.midtoneColor, t),
+        lowlightColor: hexLerp(startColors.lowlightColor, targetColors.lowlightColor, t),
+        baseColor: hexLerp(startColors.baseColor, targetColors.baseColor, t)
+      });
+
+      if (step < steps) {
+        setTimeout(nextStep, duration / steps);
+      }
+    }
+
+    nextStep();
+  }
+
+  // --- Toggle button ---
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    if (!toggled) {
+      transitionColors(newColors, 1000); // 3 seconds fade
+    } else {
+      transitionColors(originalColors, 1000); // revert over 3 seconds
+    }
+    toggled = !toggled;
+  });
+</script>
