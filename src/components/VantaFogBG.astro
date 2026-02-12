@@ -1,4 +1,11 @@
 <div id="vanta-bg"></div>
+<style>
+  #vanta-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+  }
+</style>
 
 <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script is:inline src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
@@ -102,9 +109,9 @@ const newColors = getDarkThemeVantaColors();
   // --- Toggle button ---
   document.getElementById('theme-toggle')?.addEventListener('click', () => {
     if (!toggled) {
-      transitionColors(newColors, 1000); // 3 seconds fade
+      transitionColors(newColors, 500); // 3 seconds fade
     } else {
-      transitionColors(originalColors, 1000); // revert over 3 seconds
+      transitionColors(originalColors, 500); // revert over 3 seconds
     }
     toggled = !toggled;
   });

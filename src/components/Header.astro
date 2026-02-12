@@ -1,7 +1,6 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
-import Darkmode from './darkmode.astro';
 import VantaFogBG from './VantaFogBG.astro';
 ---
 
@@ -27,22 +26,29 @@ import VantaFogBG from './VantaFogBG.astro';
 				<i class="fa-brands fa-github fa-2xl"></i>
 			</a>
 		</div>
+
+		
+
+			<script is:inline>
+			
+		</script>
 		<VantaFogBG />
-		<Darkmode />
+		
 	</nav>
 </header>
+
 <script>/* 
 <i class="fa-brands fa-discord fa-2xl"></i> 
 <i class="fa-brands fa-steam fa-2xl"></i>
 <i class="fa-solid fa-moon fa-2xl"></i>
 <i class="fa-brands fa-spotify fa-2xl"></i>
-
 */</script>
+
 <style>
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: bg-color;
+		background: rgba(var(--black), 0.05);
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
 	}
 	h2 {

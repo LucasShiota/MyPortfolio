@@ -1,0 +1,83 @@
+---
+---
+<script >
+	import { gsap } from "gsap";
+	import { ScrollTrigger } from "gsap/ScrollTrigger";
+	import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+	gsap.registerPlugin(ScrollTrigger,ScrollToPlugin);
+	
+	let sections = gsap.utils.toArray(".panel");
+	ScrollTrigger.create({
+		id: "mainpage",
+		markers: false,
+		trigger: document.body,
+		start: "top top",	end: "bottom bottom",
+		scrub: 1,
+		snap: {
+			directional: false, 
+			snapTo: (progress) => {
+				const totalSteps = sections.length - 1;const step = 1 / totalSteps;
+				
+				const closestIndex = Math.round(progress / step); // 1. Find the NEAREST panel index (0, 1, 2, etc.)
+				const distanceToClosest = (progress - (closestIndex * step)) / step; 
+
+				const threshold = 0.2;//Threshold
+				if (Math.abs(distanceToClosest) > threshold) {
+					const direction = distanceToClosest > 0 ? 1 : -1;
+					return Math.max(0, Math.min(1, (closestIndex + direction) * step));// Delta > threshold = snap to the NEXT panel in that direction
+				} else {
+					return Math.max(0, Math.min(1, closestIndex * step));// Delta < threshold = snap back
+				}
+			},
+			duration: { min: 0.4, max: 0.6 },
+			delay: 0.1,
+			ease: "power1.inOut"
+		}
+	});
+	/* ------- NAV ANIMATION --------- */
+	const sidebarElements = Array.from(document.querySelectorAll<HTMLElement>(".nav-section, .nav-circle"));
+
+	if (sidebarElements.length > 0) {
+		const totalItems = sidebarElements.length;
+		const elementPercentages = sidebarElements.map((el, i) => (i / (totalItems - 1)) * 100);
+
+		function updateSidebarScale() {
+			const scrollPercent =
+				(window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+
+			sidebarElements.forEach((el, i) => {
+				const delta = Math.abs(scrollPercent - elementPercentages[i]);
+				const scale = 1.5 - Math.min(delta / 30, 1) * 0.5;
+				el.style.transform = `scale(${scale})`;
+			});
+		}
+
+		// Run once immediately
+		updateSidebarScale();
+
+		// Then run on scroll
+		window.addEventListener("scroll", updateSidebarScale);
+	}
+
+	const panels = gsap.utils.toArray<HTMLElement>(".panel");
+	const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
+
+	navSections.forEach((section) => {
+		section.style.cursor = "pointer";
+
+		section.addEventListener("click", () => {
+			const index = Number(section.dataset.index) / 2; 
+			// because panels are 0,2,4,6 in your nav structure
+
+			const targetPanel = panels[index];
+
+			if (targetPanel) {
+				gsap.to(window, {
+					duration: 1,
+					scrollTo: targetPanel,
+					ease: "power2.inOut"
+				});
+			}
+		});
+	});
+</script>

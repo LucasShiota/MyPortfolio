@@ -3,7 +3,8 @@
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
-
+/* --------------- THEMES --------------- */
+/* #region Themes */
 :root {
 	color-scheme: light;
   /* Light mode */
@@ -49,19 +50,28 @@
     0 16px 32px rgba(var(--gray), 0.20%);
 
   /* VANTA (dark) */
-  --vanta-highlight: #963900;
-  --vanta-midtone: #670000;
-  --vanta-lowlight: #5b0043;
-  --vanta-base: #08002f;
+  --vanta-highlight: #002e31;
+  --vanta-midtone: #35007b;
+  --vanta-lowlight: #730054;
+  --vanta-base: #080031;
 
   /* Global colors */
   --bg-color: #111111;
   --text-color: rgb(var(--black));
   --link-color: #4dabf7;
 }
+/* #endregion */
+
 
 /* --------------- FONTS --------------- */
 /* #region Fonts */
+  @font-face {
+    font-family: 'AbrilFatface';
+    src: url('/fonts/AbrilFatface-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
   @font-face {
     font-family: 'AtkinsonNext';
     src: url('/fonts/AtkinsonHyperlegibleNext-VariableFont_wght.woff2') format('woff2');
@@ -106,22 +116,8 @@
     font-style: normal;
     font-display: swap;
   }
-
-	@font-face {
-		font-family: "Atkinson";
-		src: url("/fonts/atkinson-regular.woff") format("woff");
-		font-weight: 400;
-		font-style: normal;
-		font-display: swap;
-	}
-	@font-face {
-		font-family: "Atkinson";
-		src: url("/fonts/atkinson-bold.woff") format("woff");
-		font-weight: 700;
-		font-style: normal;
-		font-display: swap;
-	}
 /* #endregion */
+
 
 /* --------------- CORE MISC --------------- */
 /* #region Misc */
@@ -206,30 +202,30 @@ body {
 }
 .hero-text {font-size: 1em;}
 
-#vanta-bg {position: fixed;inset: 0;z-index: -1;}
-
 main {
-	width: 80%;
-	min-height: 500px;
+	width: 90%;
   margin: 0 auto;
-  padding: 3em 1em;
+  padding: 2em;
   display: flex;
+  flex-direction: row; /* stack top + content vertically */
   gap: 2rem;
 	align-items: flex-start; /* important so children align at top */
-	flex: 1; /* take remaining space */
 }
 
-.left {
-  flex: 2; /* wider column */
+.top {
+  height: 50vh;         /* 20% of main's height */
+  padding: 2em;
   display: flex;
-  flex-direction: column;
-  height: 112vh;              /* constrain height so scroll works */
-  overflow-y: hidden;          /* scrollable if content exceeds height */
+  width: 80%;
+  align-self: center; /* vertically center children */
+  justify-content: center; /* horizontally center children */
 }
-.right {
-  flex: 1;                  /* narrower column */
+
+/* Bottom content: left + right columns */
+.bottom {
   display: flex;
-  flex-direction: column;
-  height: 112vh;             /* match left column */
-  overflow-y: hidden;         /* optional: scroll if content is tall */
+  flex: 1;               /* take remaining space */
+  width: 100%;
+  gap: 2rem;             /* optional spacing between columns */
 }
+

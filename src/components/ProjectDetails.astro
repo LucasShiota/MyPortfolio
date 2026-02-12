@@ -1,0 +1,71 @@
+---
+---
+
+<div class="project-preview">
+  <div class="preview-entry active" id="1">
+    <p>Preview 1</p>
+  </div>
+  <div class="preview-entry" id="2">
+    <p>Preview 1</p>
+  </div>
+  <div class="preview-entry" id="3">
+    <p>Preview 1</p>
+  </div>
+  <div class="preview-entry" id="4">
+  <p>Preview 1</p>
+    <div class="image-layer" style=" width: 100%; height: 100%;">
+      <img src="/images/TL_Inkpaint172.webp" alt="Inkpaint" 
+        style="
+          position: absolute; top: 50%; left: 50%;
+          transform: translate(-150%, -150%);
+          width: 50%; height: auto; z-index: 10;
+        ">
+    </div>
+  </div>
+  <div class="preview-entry" id="5">
+    <p>Preview 1</p>
+  </div>
+</div>
+
+<style>
+  .project-preview {
+    /* transform */
+    width: 80%;
+    height: 50%;
+    /* alignment to parent*/
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: visible;
+    /* alignment for children*/
+    justify-content: center;
+    align-items: center;
+    /* aesthetic */
+    background: rgba(var(--black), 0.05);
+		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    border-radius: 50px;
+  }
+  .preview-entry {
+    /* alignment */
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    /* alignment for children*/
+    justify-content: flex-start;
+    align-items: center;
+    /* transform */
+    top: 2;
+    left: 2;
+    width: 90%;
+    height: 90%; 
+    /* aesthetic */
+    
+    /* transition */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .preview-entry.active {
+    opacity: 1;
+    z-index: 10;  
+  }
+</style>
