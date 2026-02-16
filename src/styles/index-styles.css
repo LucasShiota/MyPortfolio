@@ -1,0 +1,153 @@
+/*--------------------*/
+/*------ MARQUEE ------*/
+/*--------------------*/
+/* #region Marquee */
+.marquee {
+  width: 100vw;
+  height: 23.25vw;
+  overflow: hidden;
+  position: relative;
+  display: flex;           /* 👈 ensures proper vertical sizing */
+  align-items: center;
+
+  /* Edge fade */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+}
+
+.marquee-track {
+  height: 100%;
+  display: inline-flex;
+  white-space: nowrap;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  filter: blur(0.2px);
+  justify-content: center; align-items: center;
+}
+
+:root { --font-size: 25vh; } /* hero BG text clamp sync value*/
+.marquee-content {
+  height: 100%;
+
+  font-size: var(--font-size); font-family: "Notable";
+  line-height: 0.65; 
+  letter-spacing: calc(0.1 * var(--font-size));
+  word-spacing: calc(0.01 * var(--font-size));
+  -webkit-text-stroke: calc(0.12 * var(--font-size)) currentColor; 
+  opacity: 5%;
+  display: inline-block;
+  user-select: none;
+}
+.hero-bgtext{
+  height: 100%;
+  display: flex; flex-direction: column;
+  justify-content:space-around;
+}
+/* #endregion */
+
+/*--------------------*/
+/*------ PANELS ------*/
+/*--------------------*/
+
+/* #region Panels */
+.panel-parent {width: 80%;}
+
+.panel {height: 93vh; width: 100%;margin-top: 7vh;}
+
+/*.hero-panel{ backdrop-filter: hue-rotate(0deg); }*/
+.projects-panel {
+  flex-direction: row; display: flex;
+  align-items: center; justify-content: center;
+  /*backdrop-filter: hue-rotate(90deg);*/
+}
+/*.about-panel{ backdrop-filter: hue-rotate(180deg); }*/
+.contacts-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-text {font-size: 1em;}
+
+.hero-link{font-size: 100% ;font-weight: normal;}
+
+/* #endregion */
+
+
+
+/*---------------------*/
+/*------ NAV BAR ------*/
+/*---------------------*/
+
+/* #region Nav */
+
+.sidebar {
+  height: 93vh; width: 20%; /* size */
+  margin-top: 7vh;
+  position:fixed; /* position */
+  right:0; top:0; z-index: 10;
+  display: flex; /* child alignment */
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  user-select: none;
+}
+.nav {
+  height: 100%; /* size */
+  padding: 2rem; /* child alignment */
+  gap: 1rem; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+}
+.nav-section {
+  gap: 1rem; display: flex; flex-direction: column;
+  cursor: pointer; /* no I-beam, retain pointer */
+}
+.nav-circle {
+  width: 10px; height: 10px;
+  background: var(--text-color);
+  border-radius: 50%;
+}
+
+/* #endregion */
+
+
+
+.fa-angle-up{ bottom:87%;} .fa-angle-down{bottom:2%;}
+.panel-arrow{ position: fixed; right:50%; }
+
+header {
+  position: fixed; z-index: 20;
+  height:7vh; width: 100%;
+  margin: 0; padding: 0 1em;
+  background: var(--bg-color);
+  box-shadow: var(--box-shadow);
+  display: flex; flex-direction: row;
+  align-items: center;
+  gap: 2em;
+  font-weight: bold;
+}
+
+/*---------------------*/
+/*------ MATTER JS ------*/
+/*---------------------*/
+#matter-container {
+  position: absolute;
+  inset: 0;           /* fills entire panel */
+  width: 100%;
+  height: 100%;
+  touch-action: auto;
+}

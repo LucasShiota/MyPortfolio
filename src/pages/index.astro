@@ -3,68 +3,100 @@ import ProjectShowcase from '../components/ProjectShowcase.astro';
 import ProjectDetails from '../components/ProjectDetails.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PanelScroll from '../components/PanelScroll.astro';
-import DarkMode from '../components/DarkMode.astro';
+import '../styles/index-styles.css';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
 <!doctype html>
 <BaseLayout  title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<div class="home">
-		<div class="sidebar">
-			<DarkMode />
-			<div class="nav">
-				<div class="nav-section hero-link" data-index="0">I'm Lucas</div>
-				<div class="nav-circle" data-index="1"></div>
-				<div class="nav-section projects-link" data-index="2">Projects</div>
-				<div class="nav-circle" data-index="3"></div>
-				<div class="nav-section about-link" data-index="4">About</div>
-				<div class="nav-circle" data-index="5"></div>
-				<div class="nav-section contacts-link" data-index="6">Contacts</div>
-			</div>
-		</div>
-		<div class="panel-parent">
-			<div class="panel hero-panel"></div>
-			<div class="panel projects-panel">
-				<main>
-					<div class="left"><ProjectShowcase/></div>
-					<div class="right"><ProjectDetails/></div>
-				</main>
-			</div>
-			<div class="panel about-panel"></div>
-			<div class="panel contacts-panel"></div>
+<i class="panel-arrow nav-arrow-button fa-solid fa-angle-up"></i>
+<i class="panel-arrow nav-arrow-button fa-solid fa-angle-down"></i>
+<div class="sidebar">
+	<div class="nav">
+		<div class="nav-section hero-link" data-index="0">Hey</div>
+		<div class="nav-circle" data-index="1"></div>
+		<div class="nav-section projects-link" data-index="2">Projects</div>
+		<div class="nav-circle" data-index="3"></div>
+		<div class="nav-section about-link" data-index="4">A Bit About Me</div>
+		<div class="nav-circle" data-index="5"></div>
+		<div class="nav-section contacts-link" data-index="6">Contacts</div>
+	</div>
+</div>
+<div class="panel-parent">
+	<div class="panel hero-panel">
+		<div class="hero-bgtext">
+			<div class="marquee" data-direction="left" data-speed="0.7"> <div class="marquee-track"> <span class="marquee-content">
+				A jack of all trades-&#8201;
+			</span> </div> </div>
+			<div class="marquee" data-direction="right" data-speed="0.5"> <div class="marquee-track"> <span class="marquee-content">
+				is a master of none.&#8201;
+			</span> </div> </div>
+			<div class="marquee" data-direction="left" data-speed="0.8"> <div class="marquee-track"> <span class="marquee-content">
+				But it sure sounds more fun-&#8201;
+			</span> </div> </div>
+			<div class="marquee" data-direction="right" data-speed="0.6"> <div class="marquee-track"> <span class="marquee-content">
+				than a master of one.&#8201;
+			</span> </div> </div>
 		</div>
 	</div>
-	<PanelScroll/>
+	<div class="panel projects-panel">
+			<div class="left"><ProjectShowcase/></div>
+			<div class="right"><ProjectDetails/></div>
+	</div>
+	<div class="panel about-panel"></div>
+	<div class="panel contacts-panel">
+		<div id="matter-container"></div>
+	</div>
+</div>
+<PanelScroll/>
+<script>
+  import { initMatter } from '../scripts/physics.js';
+  import { gsap } from "gsap";
+
+  initMatter();
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    const marquees = document.querySelectorAll('.marquee');
+
+    marquees.forEach((marquee) => {
+      const track = marquee.querySelector<HTMLElement>(".marquee-track");
+      const content = marquee.querySelector<HTMLElement>(".marquee-content");
+      
+      if (!track || !content) return;
+
+      // Read custom attributes
+      const direction = marquee.getAttribute('data-direction') || 'left';
+      const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
+
+      while (track.scrollWidth < window.innerWidth * 3) {
+        const clone = content.cloneNode(true) as HTMLElement;
+        track.appendChild(clone);
+      }
+
+      let position = 0;
+      let width = content.offsetWidth;
+
+      const resizeObserver = new ResizeObserver(() => {
+        width = content.offsetWidth;
+      });
+      resizeObserver.observe(content);
+
+      gsap.ticker.add(() => {
+        // Use the customSpeed variable here
+        const delta = customSpeed * gsap.ticker.deltaRatio();
+        
+        if (direction === 'left') {
+          position -= delta;
+          if (Math.abs(position) >= width) position = 0;
+        } else {
+          position += delta;
+          if (position >= 0) position = -width;
+        }
+
+        gsap.set(track, { x: position });
+      });
+    });
+  });
+</script>
+
+
 </BaseLayout>
-<style>
-	.panel-parent {width: 80%;}
-	.panel {height: 100vh;width: 100%;}
-	.home {width: 100%;position: relative;}
-	.hero-link{font-size: 120% ;font-weight: bold;}
-	.sidebar {
-		height: 100vh; width: 20%; /* size */
-		position:fixed; /* position */
-		right:0; top:0;
-		display: flex; /* child alignment */
-  	flex-direction: column;
-		align-items: center; justify-content: center;
-	}
-	.nav {
-		height: 100vh; /* size */
-		padding: 2rem; /* child alignment */
-		gap: 1rem;
-		align-items: center; justify-content: center;
-		display: flex; flex-direction: column;
-		
-	}
-	.nav-section {
-		display: flex; flex-direction: column;
-		gap: 1rem; /* space between items */
-		user-select: none; cursor: pointer; /* no I-beam, retain pointer */
-	}
-	.nav-circle {
-		width: 10px; height: 10px;
-		background: rgb(var(--black));
-		border-radius: 50%;
-		user-select: none; /* no I-beam */
-	}
-</style>

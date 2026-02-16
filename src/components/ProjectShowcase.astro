@@ -2,29 +2,37 @@
 import "../styles/project-styles.css"; 
 ---
 <div class="projects-wrapper">
+  <div class="project-list-nav">
+    <i class="nav-arrow-button fa-solid fa-angle-up"></i>
+    <i class="nav-arrow-button fa-solid fa-angle-down"></i>
+  </div>
   <section class="project-list">
+    <article class="project-entry" id="0">
+      <h3 class="project-title intro">My Projects:</h3>
+      <p class="project-desc"></p>
+    </article>
     <article class="project-entry" id="1">
-      <h3 class="project-title drg-mod"> Destructively<br>Expressive Icons </h3>
+      <h3 class="project-title drg-mod-title"> Destructively<br>Expressive Icons </h3>
       <p class="project-desc"> Deep Rock Galactic Visual Mod</p>
     </article>
     <article class="project-entry " id="2">
-      <h3 class="project-title baraliot"> Baraliot Fantasia </h3>
+      <h3 class="project-title baraliot-title"> Baraliot Fantasia </h3>
       <p class="project-desc"> Deckbuilding Fantasy TRPG</p>
     </article>
     <article class="project-entry" id="3">
-      <h3 class="project-title tf2map"> Koth_Billabong </h3>
+      <h3 class="project-title tf2map-title"> Koth_Billabong </h3>
       <p class="project-desc"> Team Fortress 2 Map</p>
     </article>
     <article class="project-entry" id="4">
-      <h3 class="project-title tokyogrunge"> Tokyo Grunge </h3>
-      <p class="project-desc"> Photo Series of Paint, Vinyl, and Urban Entropy</p>
+      <h3 class="project-title tokyogrunge-title"> Tokyo Grunge </h3>
+      <p class="project-desc"> Photo Series of Paint and Vinyl</p>
     </article>
     <article class="project-entry" id="5">
       <h3 class="project-title"> Portfolio Website </h3>
       <p class="project-desc"> No Website Builders, just Pure Code </p>
     </article>
-    <article class="project-entry" >
-      <h3 class="project-title personalblog"> Personal Blog </h3>
+    <article class="project-entry" id="6">
+      <h3 class="project-title personalblog-title"> Personal Blog </h3>
       <p class="project-desc"> Video Game Topics I'm Passionate About</p>
     </article>
   </section>
@@ -65,7 +73,12 @@ import "../styles/project-styles.css";
         });
         currentIndex = closestIndex;
 
-        entries.forEach((entry, i) => entry.classList.toggle("is-active", i === currentIndex));
+        entries.forEach((entry, i) => {
+          const distance = Math.abs(i - currentIndex);
+
+          entry.classList.toggle("is-active", distance === 0);
+          entry.classList.toggle("is-hovering", distance === 1);
+        });
         const activeId = entries[currentIndex].id;// sync preview
         previews.forEach(p => p.classList.toggle("active", p.id === activeId));
       };

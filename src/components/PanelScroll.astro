@@ -1,83 +1,124 @@
----
----
-<script >
+<script>
 	import { gsap } from "gsap";
 	import { ScrollTrigger } from "gsap/ScrollTrigger";
 	import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-	gsap.registerPlugin(ScrollTrigger,ScrollToPlugin);
-	
-	let sections = gsap.utils.toArray(".panel");
-	ScrollTrigger.create({
-		id: "mainpage",
-		markers: false,
-		trigger: document.body,
-		start: "top top",	end: "bottom bottom",
-		scrub: 1,
-		snap: {
-			directional: false, 
-			snapTo: (progress) => {
-				const totalSteps = sections.length - 1;const step = 1 / totalSteps;
-				
-				const closestIndex = Math.round(progress / step); // 1. Find the NEAREST panel index (0, 1, 2, etc.)
-				const distanceToClosest = (progress - (closestIndex * step)) / step; 
 
-				const threshold = 0.2;//Threshold
-				if (Math.abs(distanceToClosest) > threshold) {
-					const direction = distanceToClosest > 0 ? 1 : -1;
-					return Math.max(0, Math.min(1, (closestIndex + direction) * step));// Delta > threshold = snap to the NEXT panel in that direction
-				} else {
-					return Math.max(0, Math.min(1, closestIndex * step));// Delta < threshold = snap back
-				}
+	gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+	const upArrow = document.querySelector<HTMLElement>(".fa-angle-up");
+	const downArrow = document.querySelector<HTMLElement>(".fa-angle-down");
+	const sidebarElements = document.querySelectorAll<HTMLElement>(".nav-section, .nav-circle");
+	const panels = gsap.utils.toArray<HTMLElement>(".panel");
+
+	const totalSteps = panels.length - 1;
+	const step = 1 / totalSteps;
+
+	let currentIndex = 0;
+
+	/* ------- PAGE REFRESH CORRECTIONS --------- */
+
+  window.addEventListener("load", () => {
+    window.scrollTo(0, 0);
+		// Force ScrollTrigger to recalc and update immediately
+		ScrollTrigger.refresh();
+		mainTrigger.update();
+  });
+	function updateUI(progress: number) {
+		const scrollPercent = progress * 100;
+
+		currentIndex = Math.round(progress / step);
+
+		updateArrowVisibility();
+
+		sidebarElements.forEach((el, i) => {
+			const delta = Math.abs(scrollPercent - elementPercentages[i]);
+			const scale = 1.5 - Math.min(delta / 30, 1) * 0.5;
+			el.style.transform = `scale(${scale})`;
+		});
+	}
+	/* ------- SIDEBAR SETUP --------- */
+
+	const totalItems = sidebarElements.length;
+	const elementPercentages = Array.from(sidebarElements).map(
+		(_, i) => (i / (totalItems - 1)) * 100
+	);
+
+	/* ------- MASTER SCROLLTRIGGER --------- */
+
+	const mainTrigger = ScrollTrigger.create({
+		id: "mainpage",
+		trigger: document.body,
+		start: "top top",
+		end: "bottom bottom",
+		scrub: 1,
+		onUpdate: (self) => {
+			updateUI(self.progress);
+		},
+		snap: {
+			directional: false,
+			snapTo: (progress) => {
+				const closestIndex = Math.round(progress / step);
+				const delta = (progress - closestIndex * step) / step;
+				const threshold = 0.1;
+
+				const targetIndex =
+					Math.abs(delta) > threshold
+						? closestIndex + (delta > 0 ? 1 : -1)
+						: closestIndex;
+
+				return gsap.utils.clamp(0, 1, targetIndex * step);
 			},
-			duration: { min: 0.4, max: 0.6 },
-			delay: 0.1,
+			duration: { min: 0.2, max: 0.4 },
+			delay: 0.03,
 			ease: "power1.inOut"
 		}
 	});
-	/* ------- NAV ANIMATION --------- */
-	const sidebarElements = Array.from(document.querySelectorAll<HTMLElement>(".nav-section, .nav-circle"));
 
-	if (sidebarElements.length > 0) {
-		const totalItems = sidebarElements.length;
-		const elementPercentages = sidebarElements.map((el, i) => (i / (totalItems - 1)) * 100);
+	/* ------- CENTRAL SCROLL FUNCTION --------- */
 
-		function updateSidebarScale() {
-			const scrollPercent =
-				(window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+	function scrollToIndex(index: number) {
+		const clamped = gsap.utils.clamp(0, totalSteps, index);
+		const targetProgress = clamped * step;
 
-			sidebarElements.forEach((el, i) => {
-				const delta = Math.abs(scrollPercent - elementPercentages[i]);
-				const scale = 1.5 - Math.min(delta / 30, 1) * 0.5;
-				el.style.transform = `scale(${scale})`;
-			});
-		}
-
-		// Run once immediately
-		updateSidebarScale();
-
-		// Then run on scroll
-		window.addEventListener("scroll", updateSidebarScale);
+		gsap.to(window, {
+			duration: 0.8,
+			scrollTo: {
+				y:
+					targetProgress *
+					(document.body.scrollHeight - window.innerHeight)
+			},
+			ease: "power2.inOut"
+		});
 	}
 
-	const panels = gsap.utils.toArray<HTMLElement>(".panel");
-	const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
+	/* ------- NAV CLICK --------- */
 
-	navSections.forEach((section) => {
-		section.style.cursor = "pointer";
+	document.querySelectorAll<HTMLElement>(".nav-section").forEach(
+		(section) => {
+			section.style.cursor = "pointer";
 
-		section.addEventListener("click", () => {
-			const index = Number(section.dataset.index) / 2; 
-			// because panels are 0,2,4,6 in your nav structure
+			section.addEventListener("click", () => {
+				const index = Number(section.dataset.index) / 2;
+				scrollToIndex(index);
+			});
+		}
+	);
 
-			const targetPanel = panels[index];
+	/* ------- ARROWS --------- */
 
-			if (targetPanel) {
-				gsap.to(window, {
-					duration: 1,
-					scrollTo: targetPanel,
-					ease: "power2.inOut"
-				});
-			}
-		});
-	});
+	upArrow?.addEventListener("click", () => { scrollToIndex(currentIndex - 1); });
+	downArrow?.addEventListener("click", () => { scrollToIndex(currentIndex + 1); });
+
+	function updateArrowVisibility() {
+		if (!upArrow || !downArrow) return;
+
+		const atTop = currentIndex === 0;
+		const atBottom = currentIndex === totalSteps;
+
+		gsap.to(upArrow, { autoAlpha: atTop ? 0 : 0.6, duration: 0.3 });
+		gsap.to(downArrow, { autoAlpha: atBottom ? 0 : 0.6, duration: 0.3 });
+	}
+
+	updateArrowVisibility();
+	updateUI(mainTrigger.progress);
 </script>

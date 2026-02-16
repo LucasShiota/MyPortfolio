@@ -1,8 +1,9 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import VantaFogBG from '../components/VantaFogBG.astro';
+import DarkMode from '../components/DarkMode.astro';
 
 interface Props {
   title: string;
@@ -13,11 +14,22 @@ const { title, description } = Astro.props;
 ---
 <html lang="en" >
   <head>
+    <script is:inline>
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+    </script>
     <script src="https://kit.fontawesome.com/575b9c1578.js" crossorigin="anonymous"></script>
     <BaseHead title={title} description={description} />
   </head>
   <body>
     <VantaFogBG/>
+    <DarkMode />
+    <header>
+      <div class="name">Lucas Shiota</div>
+      <div class="path">Designer</div>
+    </header>
     <slot />
   </body>
 </html>
