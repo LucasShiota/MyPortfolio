@@ -188,7 +188,7 @@ export async function initMatter() {
 
   const wallThickness = 100;
 
-  const walls = [
+  let walls = [
     Bodies.rectangle(width / 2, -wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false }}),
     Bodies.rectangle(width / 2, height + wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false }}),
     Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false }}),
@@ -342,7 +342,7 @@ export async function initMatter() {
       const iconSize = radius * 1.2 * scale;
 
       if (isHovering) {
-        ctx.shadowColor = "#FFD60A";
+        ctx.shadowColor = "#6161e7";
         ctx.shadowBlur = 20;
       }
 
@@ -375,4 +375,77 @@ export async function initMatter() {
   }, { threshold: 0.1 });
 
   observer.observe(document.querySelector(".contacts-panel"));
+  
+  function handleResize() {
+  const newWidth = container.clientWidth;
+  const newHeight = container.clientHeight;
+
+  // ------------------------
+  // 1️⃣ Resize Canvas
+  // ------------------------
+
+  render.options.width = newWidth;
+  render.options.height = newHeight;
+
+  render.canvas.width = newWidth;
+  render.canvas.height = newHeight;
+
+  // ------------------------
+  // 2️⃣ Reposition Walls
+  // ------------------------
+
+  const wallThickness = 100;
+
+  // Top
+  Body.setPosition(walls[0], { x: newWidth / 2, y: -wallThickness / 2 });
+  Body.setVertices(
+    walls[0],
+    Bodies.rectangle(newWidth / 2, -wallThickness / 2, newWidth, wallThickness).vertices
+  );
+
+  // Bottom
+  Body.setPosition(walls[1], { x: newWidth / 2, y: newHeight + wallThickness / 2 });
+  Body.setVertices(
+    walls[1],
+    Bodies.rectangle(newWidth / 2, newHeight + wallThickness / 2, newWidth, wallThickness).vertices
+  );
+
+  // Left
+  Body.setPosition(walls[2], { x: -wallThickness / 2, y: newHeight / 2 });
+  Body.setVertices(
+    walls[2],
+    Bodies.rectangle(-wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
+  );
+
+  // Right
+  Body.setPosition(walls[3], { x: newWidth + wallThickness / 2, y: newHeight / 2 });
+  Body.setVertices(
+    walls[3],
+    Bodies.rectangle(newWidth + wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
+  );
+
+  // ------------------------
+  // 3️⃣ Clamp Bodies Inside
+  // ------------------------
+
+  driftBodies.forEach(body => {
+    const r = body.circleRadius;
+
+    const clampedX = Math.max(r, Math.min(newWidth - r, body.position.x));
+    const clampedY = Math.max(r, Math.min(newHeight - r, body.position.y));
+
+    Body.setPosition(body, { x: clampedX, y: clampedY });
+  });
+}
+let resizeTimeout;
+
+const resizeObserver = new ResizeObserver(() => {
+  clearTimeout(resizeTimeout);
+
+  resizeTimeout = setTimeout(() => {
+    handleResize();
+  }, 100); // wait 100ms after resize stops
+});
+
+resizeObserver.observe(container);
 }
