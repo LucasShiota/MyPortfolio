@@ -20,6 +20,7 @@
 
 .project-list {
 	height: 70%; width: 100%;
+  gap: 1.5em;
   overflow-x: visible; overflow-y: auto;
 	display: flex; flex-direction: column;
   padding-top: 30%; padding-bottom: 30%;
@@ -46,8 +47,6 @@
   transform-origin: left center;
   transition: 0.5s ease;
   opacity: 0.6; transform: scale(0.95);
-  
-  margin-top: 1rem;
 }
   .project-entry.is-active { 
     opacity: 1; 

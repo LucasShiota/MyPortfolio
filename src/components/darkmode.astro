@@ -1,8 +1,6 @@
 ---
 ---
-<button id="theme-toggle">
-  <i class="fa-solid fa-moon"></i>
-</button>
+
 <script is:inline>
   const root = document.documentElement;
   const toggleBtn = document.getElementById('theme-toggle');
@@ -94,34 +92,3 @@
     animateVanta(800);
   });
 </script>
-
-
-<style>
-  /* -------- BUTTON STYLES -------- */
-  #theme-toggle {
-    position: fixed;
-    width: 50px; height: 50px;
-    top: 10px; right: 15px;
-    border-radius: 50%;
-    background: transparent; border: transparent;
-    
-    display: flex;
-    align-items: center; justify-content: center;
-    
-    cursor: pointer;
-    transition: background 0.3s;
-    z-index: 30;
-  }
-
-  /* optional hover effect */
-  #theme-toggle:hover {
-    background: rgba(var(--gray), 0.3);
-  }
-
-  /* -------- ICON STYLES -------- */
-  #theme-toggle i {
-    color: var(--text-color);
-    font-size: 1.5rem;
-    transition: color 0.3s, transform 0.3s;
-  }
-</style>

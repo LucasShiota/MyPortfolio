@@ -66,6 +66,11 @@ export async function initMatter() {
       name: "BlueSky",
       svg: "/svg/bluesky.svg",
       link: LINKS.bluesky
+    },
+    {
+      name: "Itch.io",
+      svg: "/svg/itchio.svg",
+      link: LINKS.itchio
     }
   ];
   await preloadImages(entries);
@@ -127,7 +132,7 @@ export async function initMatter() {
           category: 0x0001 /* Clickable category for interaction */
         },
         render: {
-          fillStyle: "#4545ee"
+          fillStyle: "#0062F5"
         }
       }
     );
@@ -168,7 +173,7 @@ export async function initMatter() {
           category: 0x0002 /* Draggable category for mouse interaction */
         },
         render: {
-          fillStyle: "#FFD60A"
+          fillStyle: "#F5A300"
         }
       }
     );
@@ -342,7 +347,7 @@ export async function initMatter() {
       const iconSize = radius * 1.2 * scale;
 
       if (isHovering) {
-        ctx.shadowColor = "#6161e7";
+        ctx.shadowColor = "#00A1F5";
         ctx.shadowBlur = 20;
       }
 

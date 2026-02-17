@@ -8,95 +8,114 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
 <!doctype html>
 <BaseLayout  title={SITE_TITLE} description={SITE_DESCRIPTION}>
-<i class="panel-arrow nav-arrow-button fa-solid fa-angle-up"></i>
-<i class="panel-arrow nav-arrow-button fa-solid fa-angle-down"></i>
-<div class="sidebar">
-	<div class="nav">
-		<div class="nav-section hero-link" data-index="0">Hey</div>
-		<div class="nav-circle" data-index="1"></div>
-		<div class="nav-section projects-link" data-index="2">Projects</div>
-		<div class="nav-circle" data-index="3"></div>
-		<div class="nav-section about-link" data-index="4">A Bit About Me</div>
-		<div class="nav-circle" data-index="5"></div>
-		<div class="nav-section contacts-link" data-index="6">Contacts</div>
-	</div>
-</div>
-<div class="panel-parent">
-	<div class="panel hero-panel">
-		<div class="hero-bgtext">
-			<div class="marquee" data-direction="left" data-speed="0.7"> <div class="marquee-track"> <span class="marquee-content">
-				A jack of all trades-&#8201;
-			</span> </div> </div>
-			<div class="marquee" data-direction="right" data-speed="0.5"> <div class="marquee-track"> <span class="marquee-content">
-				is a master of none.&#8201;
-			</span> </div> </div>
-			<div class="marquee" data-direction="left" data-speed="0.8"> <div class="marquee-track"> <span class="marquee-content">
-				But it sure sounds more fun-&#8201;
-			</span> </div> </div>
-			<div class="marquee" data-direction="right" data-speed="0.6"> <div class="marquee-track"> <span class="marquee-content">
-				than a master of one.&#8201;
-			</span> </div> </div>
-		</div>
-	</div>
-	<div class="panel projects-panel">
-			<div class="left"><ProjectShowcase/></div>
-			<div class="right"><ProjectDetails/></div>
-	</div>
-	<div class="panel about-panel"></div>
-	<div class="panel contacts-panel">
-		<div id="matter-container"></div>
-	</div>
-</div>
-<PanelScroll/>
-<script>
-  import { initMatter } from '../scripts/physics.js';
-  import { gsap } from "gsap";
+  <i class="panel-arrow nav-arrow-button fa-solid fa-angle-up"></i>
+  <i class="panel-arrow nav-arrow-button fa-solid fa-angle-down"></i>
+  <div class="sidebar">
+    <div class="nav">
+      <div class="nav-section hero-link" data-index="0">
+        <div class="navsec-text"> Hey </div>
+        <div class="navsec-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon"><path d="M11.312 1C12.073 1 12.687 1.614 12.687 2.375L12.687 11.312L9.937 11.312L9.937 2.375C9.937 1.614 10.552 1 11.312 1ZM15.437 7.875C16.198 7.875 16.812 8.489 16.812 9.25L16.812 12C16.812 12.761 16.198 13.375 15.437 13.375C14.677 13.375 14.062 12.761 14.062 12L14.062 9.25C14.062 8.489 14.677 7.875 15.437 7.875ZM18.187 10.625C18.187 9.864 18.802 9.25 19.562 9.25C20.323 9.25 20.937 9.864 20.937 10.625L20.937 13.375C20.937 14.136 20.323 14.75 19.562 14.75C18.802 14.75 18.187 14.136 18.187 13.375L18.187 10.625ZM5.696 3.2L9.246 11.312L6.246 11.312L3.178 4.3C2.873 3.604 3.191 2.796 3.887 2.491C4.584 2.186 5.391 2.504 5.696 3.2ZM6.857 12.709L6.848 12.688L10.969 12.688C11.918 12.688 12.687 13.457 12.687 14.406C12.687 15.356 11.918 16.125 10.969 16.125L8.562 16.125C8.184 16.125 7.875 16.434 7.875 16.812C7.875 17.191 8.184 17.5 8.562 17.5L10.969 17.5C12.679 17.5 14.062 16.116 14.062 14.406L14.062 14.38C14.466 14.613 14.935 14.75 15.437 14.75C16.005 14.75 16.529 14.578 16.967 14.286C17.341 15.356 18.364 16.125 19.562 16.125C20.065 16.125 20.534 15.992 20.937 15.755L20.937 16.125C20.937 19.923 17.861 23 14.062 23L11.411 23C9.589 23 7.841 22.274 6.552 20.985L6.049 20.486C5.018 19.455 4.437 18.054 4.437 16.598L4.437 15.438C4.437 14.032 5.494 12.872 6.857 12.709Z"/></svg>
+        </div>
+      </div>
+      <div class="nav-circle" data-index="1"></div>
+      <div class="nav-section projects-link" data-index="2">
+        <div class="navsec-text"> Projects </div>
+        <div class="navsec-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon"><path d="M2.591 2.921C2.591 2.4 2.171 1.98 1.65 1.98C1.129 1.98 0.709 2.4 0.709 2.921L0.709 17.348C0.709 18.56 1.693 19.544 2.905 19.544L10.118 19.544L10.118 17.662L2.905 17.662C2.732 17.662 2.591 17.521 2.591 17.348L2.591 8.253L10.118 8.253L10.118 6.371L2.591 6.371L2.591 2.921ZM13.882 10.762L21.409 10.762C22.448 10.762 23.291 9.919 23.291 8.88L23.291 5.117C23.291 4.078 22.448 3.235 21.409 3.235L18.167 3.235C17.834 3.235 17.516 3.102 17.281 2.866L16.944 2.529C16.591 2.176 16.113 1.976 15.615 1.976L13.882 1.98C12.843 1.98 12 2.823 12 3.862L12 8.88C12 9.919 12.843 10.762 13.882 10.762ZM13.882 22.053L21.409 22.053C22.448 22.053 23.291 21.21 23.291 20.171L23.291 16.408C23.291 15.369 22.448 14.526 21.409 14.526L18.167 14.526C17.834 14.526 17.516 14.392 17.281 14.157L16.944 13.82C16.591 13.467 16.113 13.267 15.615 13.267L13.882 13.271C12.843 13.271 12 14.114 12 15.153L12 20.171C12 21.21 12.843 22.053 13.882 22.053Z"/></svg>
+        </div>
+      </div>
+      <div class="nav-circle" data-index="3"></div>
+      <div class="nav-section about-link" data-index="4">
+        <div class="navsec-text"> About Me </div>
+        <div class="navsec-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon"><path d="M11.869 11.633C14.816 11.633 17.203 9.246 17.203 6.299C17.203 3.351 14.816 0.964 11.869 0.964C8.922 0.964 6.535 3.351 6.535 6.299C6.535 9.246 8.922 11.633 11.869 11.633ZM10.549 14.122C6.17 14.122 2.623 17.669 2.623 22.048C2.623 22.777 3.214 23.368 3.943 23.368L19.795 23.368C20.524 23.368 21.115 22.777 21.115 22.048C21.115 17.669 17.568 14.122 13.189 14.122L10.549 14.122Z"/></svg>
+        </div>
+      </div>
+      <div class="nav-circle" data-index="5"></div>
+      <div class="nav-section contacts-link" data-index="6">
+        <div class="navsec-text"> Contacts </div>
+        <div class="navsec-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon">
+            <path d="M11.991,3.376C7.244,3.376 3.393,7.229 3.393,11.979C3.393,16.729 7.244,20.583 11.991,20.583C12.783,20.583 13.424,21.223 13.424,22.017C13.424,22.81 12.783,23.451 11.991,23.451C5.658,23.451 0.526,18.315 0.526,11.979C0.526,5.643 5.658,0.508 11.991,0.508C18.323,0.508 23.455,5.643 23.455,11.979L23.455,13.413C23.455,15.788 21.529,17.715 19.156,17.715C17.844,17.715 16.666,17.123 15.878,16.196C14.857,17.137 13.491,17.715 11.991,17.715C8.825,17.715 6.259,15.147 6.259,11.979C6.259,8.811 8.825,6.244 11.991,6.244C13.24,6.244 14.395,6.642 15.336,7.324C15.591,7.099 15.923,6.961 16.29,6.961C17.082,6.961 17.723,7.601 17.723,8.394L17.723,13.413C17.723,14.206 18.363,14.847 19.156,14.847C19.948,14.847 20.589,14.206 20.589,13.413L20.589,11.979C20.589,7.229 16.738,3.376 11.991,3.376ZM14.857,11.979C14.857,10.397 13.571,9.111 11.991,9.111C10.41,9.111 9.125,10.397 9.125,11.979C9.125,13.561 10.41,14.847 11.991,14.847C13.571,14.847 14.857,13.561 14.857,11.979Z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-parent">
+    <div class="panel hero-panel">
+      <div class="hero-bgtext">
+        <div class="marquee" data-direction="left" data-speed="0.7"> <div class="marquee-track"> <span class="marquee-content">
+          A jack of all trades-&#8201;
+        </span> </div> </div>
+        <div class="marquee" data-direction="right" data-speed="0.5"> <div class="marquee-track"> <span class="marquee-content">
+          is a master of none.&#8201;
+        </span> </div> </div>
+        <div class="marquee" data-direction="left" data-speed="0.8"> <div class="marquee-track"> <span class="marquee-content">
+          But it sure sounds more fun-&#8201;
+        </span> </div> </div>
+        <div class="marquee" data-direction="right" data-speed="0.6"> <div class="marquee-track"> <span class="marquee-content">
+          than a master of one.&#8201;
+        </span> </div> </div>
+      </div>
+    </div>
+    <div class="panel projects-panel">
+        <div class="left"><ProjectShowcase/></div>
+        <div class="right"><ProjectDetails/></div>
+    </div>
+    <div class="panel about-panel"></div>
+    <div class="panel contacts-panel">
+      <div id="matter-container"></div>
+    </div>
+  </div>
+  <PanelScroll/>
+  <script>
+    import { initMatter } from '../scripts/physics.js';
+    import { gsap } from "gsap";
 
-  initMatter();
-  
-  document.addEventListener("DOMContentLoaded", () => {
-    const marquees = document.querySelectorAll('.marquee');
+    initMatter();
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      const marquees = document.querySelectorAll('.marquee');
 
-    marquees.forEach((marquee) => {
-      const track = marquee.querySelector<HTMLElement>(".marquee-track");
-      const content = marquee.querySelector<HTMLElement>(".marquee-content");
-      
-      if (!track || !content) return;
-
-      // Read custom attributes
-      const direction = marquee.getAttribute('data-direction') || 'left';
-      const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
-
-      while (track.scrollWidth < window.innerWidth * 3) {
-        const clone = content.cloneNode(true) as HTMLElement;
-        track.appendChild(clone);
-      }
-
-      let position = 0;
-      let width = content.offsetWidth;
-
-      const resizeObserver = new ResizeObserver(() => {
-        width = content.offsetWidth;
-      });
-      resizeObserver.observe(content);
-
-      gsap.ticker.add(() => {
-        // Use the customSpeed variable here
-        const delta = customSpeed * gsap.ticker.deltaRatio();
+      marquees.forEach((marquee) => {
+        const track = marquee.querySelector<HTMLElement>(".marquee-track");
+        const content = marquee.querySelector<HTMLElement>(".marquee-content");
         
-        if (direction === 'left') {
-          position -= delta;
-          if (Math.abs(position) >= width) position = 0;
-        } else {
-          position += delta;
-          if (position >= 0) position = -width;
+        if (!track || !content) return;
+
+        // Read custom attributes
+        const direction = marquee.getAttribute('data-direction') || 'left';
+        const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
+
+        while (track.scrollWidth < window.innerWidth * 3) {
+          const clone = content.cloneNode(true) as HTMLElement;
+          track.appendChild(clone);
         }
 
-        gsap.set(track, { x: position });
+        let position = 0;
+        let width = content.offsetWidth;
+
+        const resizeObserver = new ResizeObserver(() => {
+          width = content.offsetWidth;
+        });
+        resizeObserver.observe(content);
+
+        gsap.ticker.add(() => {
+          // Use the customSpeed variable here
+          const delta = customSpeed * gsap.ticker.deltaRatio();
+          
+          if (direction === 'left') {
+            position -= delta;
+            if (Math.abs(position) >= width) position = 0;
+          } else {
+            position += delta;
+            if (position >= 0) position = -width;
+          }
+
+          gsap.set(track, { x: position });
+        });
       });
     });
-  });
-</script>
-
-
+  </script>
 </BaseLayout>
