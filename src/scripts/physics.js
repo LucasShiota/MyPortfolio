@@ -14,20 +14,13 @@ const {
   Query
 } = Matter;
 
-function preloadImages(entries) {
-  return Promise.all(
-    entries.map(entry => {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.src = entry.svg;
-
-        img.onload = () => {
-          entry.image = img;   // ← STORE IMAGE
-          resolve();
-        };
-      });
-    })
-  );
+function preloadSpriteSheet() {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = "/web-ui-icon-svg-reformatting.png";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+  });
 }
 
 export async function initMatter() {
@@ -41,34 +34,42 @@ export async function initMatter() {
   // ENTRY DATA (Clickable Circles)
   // --------------------------------
 
+  const sprites = {
+    github: { sx: 42, sy: 30, sw: 196, sh: 191 },
+    substack: { sx: 336, sy: 30, sw: 168, sh: 201 },
+    linkedin: { sx: 612, sy: 27, sw: 177, sh: 177 },
+    itchio: { sx: 881, sy: 39, sw: 198, sh: 178 },
+    steam: { sx: 1162, sy: 30, sw: 196, sh: 196 }
+  };
+
   const entries = [
     {
       name: "GitHub",
-      svg: "/svg/github.svg",   // real file path (NOT data URI)
-      link: LINKS.github
-    },
-    {
-      name: "LinkedIn",
-      svg: "/svg/linkedin.svg",
-      link: LINKS.linkedin
-    },
-    {
-      name: "Steam",
-      svg: "/svg/steam.svg",
-      link: LINKS.steam
+      link: LINKS.github,
+      sprite: sprites.github
     },
     {
       name: "Substack",
-      svg: "/svg/substack.svg",
-      link: LINKS.substack
+      link: LINKS.substack,
+      sprite: sprites.substack
+    },
+    {
+      name: "LinkedIn",
+      link: LINKS.linkedin,
+      sprite: sprites.linkedin
     },
     {
       name: "Itch.io",
-      svg: "/svg/itchio.svg",
-      link: LINKS.itchio
+      link: LINKS.itchio,
+      sprite: sprites.itchio
+    },
+    {
+      name: "Steam",
+      link: LINKS.steam,
+      sprite: sprites.steam
     }
   ];
-  await preloadImages(entries);
+  const spriteSheet = await preloadSpriteSheet();
   // --------------------------------
   // ENGINE
   // --------------------------------
@@ -134,7 +135,8 @@ export async function initMatter() {
 
     circle.plugin = {
       link: entry.link,
-      image: entry.image,
+      image: spriteSheet,
+      sprite: entry.sprite,
       hoverScale: 1,      // animated scale value
       targetScale: 1 
     };
@@ -299,6 +301,24 @@ export async function initMatter() {
   Render.run(render);
   const runner = Runner.create();
   Runner.run(runner, engine);
+  let isPanelVisible = false;
+  let isTabVisible = !document.hidden;
+  let isSimulationRunning = true;
+
+  function updateSimulationState() {
+    const shouldRun = isPanelVisible && isTabVisible;
+    if (shouldRun === isSimulationRunning) return;
+
+    if (shouldRun) {
+      Runner.run(runner, engine);
+      Render.run(render);
+    } else {
+      Runner.stop(runner);
+      Render.stop(render);
+    }
+
+    isSimulationRunning = shouldRun;
+  }
 
   Events.on(render, "afterRender", () => {
     const ctx = render.context;
@@ -312,6 +332,8 @@ export async function initMatter() {
 
       const image = body.plugin?.image;
       if (!image) return;
+      const sprite = body.plugin?.sprite;
+      if (!sprite) return;
 
       // --------------------------------
       // HOVER DETECTION
@@ -348,6 +370,10 @@ export async function initMatter() {
 
       ctx.drawImage(
         image,
+        sprite.sx,
+        sprite.sy,
+        sprite.sw,
+        sprite.sh,
         -iconSize / 2,
         -iconSize / 2,
         iconSize,
@@ -366,15 +392,24 @@ export async function initMatter() {
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        Runner.run(runner, engine);
-      } else {
-        Runner.stop(runner);
-      }
+      isPanelVisible = entry.isIntersecting;
+      updateSimulationState();
     });
   }, { threshold: 0.1 });
 
   observer.observe(document.querySelector(".contacts-panel"));
+  updateSimulationState();
+
+  function handleVisibilityChange() {
+    isTabVisible = !document.hidden;
+    updateSimulationState();
+  }
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+  window.addEventListener("beforeunload", () => {
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+    observer.disconnect();
+  }, { once: true });
   
   function handleResize() {
   const newWidth = container.clientWidth;
@@ -449,3 +484,4 @@ const resizeObserver = new ResizeObserver(() => {
 
 resizeObserver.observe(container);
 }
+

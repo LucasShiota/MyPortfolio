@@ -71,51 +71,99 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
   <PanelScroll/>
   <script>
     import { initMatter } from '../scripts/physics.js';
-    import { gsap } from "gsap";
-
-    initMatter();
     
-    document.addEventListener("DOMContentLoaded", () => {
+    const startMatter = () => {
+      initMatter();
+    };
+
+    const startMarquee = () => {
       const marquees = document.querySelectorAll('.marquee');
+      const cleanups: Array<() => void> = [];
+      const heroPanel = document.querySelector('.hero-panel');
+      let isHeroVisible = true;
 
-      marquees.forEach((marquee) => {
+      const applyMarqueeThrottle = () => {
+        const shouldPause = document.hidden || !isHeroVisible;
+        marquees.forEach((marquee) => {
+          marquee.classList.toggle('marquee--paused', shouldPause);
+        });
+      };
+
+      const setupMarquee = (marquee: Element) => {
         const track = marquee.querySelector<HTMLElement>(".marquee-track");
-        const content = marquee.querySelector<HTMLElement>(".marquee-content");
+        const baseContent = marquee.querySelector<HTMLElement>(".marquee-content");
         
-        if (!track || !content) return;
+        if (!track || !baseContent) return;
 
-        // Read custom attributes
         const direction = marquee.getAttribute('data-direction') || 'left';
         const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
 
-        while (track.scrollWidth < window.innerWidth * 3) {
-          const clone = content.cloneNode(true) as HTMLElement;
-          track.appendChild(clone);
-        }
+        const rebuildTrack = () => {
+          const allSegments = track.querySelectorAll<HTMLElement>(".marquee-content");
+          allSegments.forEach((segment, index) => {
+            if (index > 0) segment.remove();
+          });
 
-        let position = 0;
-        let width = content.offsetWidth;
+          const segmentWidth = baseContent.getBoundingClientRect().width;
+          if (segmentWidth <= 0) return;
 
-        const resizeObserver = new ResizeObserver(() => {
-          width = content.offsetWidth;
-        });
-        resizeObserver.observe(content);
+          const viewportWidth = marquee.clientWidth || window.innerWidth;
+          const segmentsNeeded = Math.max(
+            3,
+            Math.ceil((viewportWidth + segmentWidth) / segmentWidth) + 1
+          );
 
-        gsap.ticker.add(() => {
-          // Use the customSpeed variable here
-          const delta = customSpeed * gsap.ticker.deltaRatio();
-          
-          if (direction === 'left') {
-            position -= delta;
-            if (Math.abs(position) >= width) position = 0;
-          } else {
-            position += delta;
-            if (position >= 0) position = -width;
+          for (let i = 1; i < segmentsNeeded; i++) {
+            const clone = baseContent.cloneNode(true) as HTMLElement;
+            track.appendChild(clone);
           }
 
-          gsap.set(track, { x: position });
-        });
+          const pxPerSecond = Math.max(12, customSpeed * 60);
+          const duration = segmentWidth / pxPerSecond;
+
+          marquee.style.setProperty('--marquee-distance', `${segmentWidth}px`);
+          marquee.style.setProperty('--marquee-duration', `${duration.toFixed(2)}s`);
+          marquee.classList.toggle('marquee--right', direction === 'right');
+          marquee.classList.add('marquee--ready');
+        };
+
+        rebuildTrack();
+
+        const resizeObserver = new ResizeObserver(rebuildTrack);
+        resizeObserver.observe(marquee);
+        resizeObserver.observe(baseContent);
+
+        cleanups.push(() => resizeObserver.disconnect());
+      };
+
+      marquees.forEach(setupMarquee);
+
+      const onVisibilityChange = () => {
+        applyMarqueeThrottle();
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      cleanups.push(() => {
+        document.removeEventListener('visibilitychange', onVisibilityChange);
       });
-    });
+
+      if (heroPanel) {
+        const heroObserver = new IntersectionObserver((entries) => {
+          isHeroVisible = entries.some((entry) => entry.isIntersecting);
+          applyMarqueeThrottle();
+        }, { threshold: 0.1 });
+
+        heroObserver.observe(heroPanel);
+        cleanups.push(() => heroObserver.disconnect());
+      }
+
+      applyMarqueeThrottle();
+
+      window.addEventListener("beforeunload", () => {
+        cleanups.forEach(fn => fn());
+      }, { once: true });
+    };
+
+    window.addEventListener("startup:matter", startMatter, { once: true });
+    window.addEventListener("startup:marquee", startMarquee, { once: true });
   </script>
 </BaseLayout>

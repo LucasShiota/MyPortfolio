@@ -15,11 +15,53 @@ const { title, description } = Astro.props;
     <script is:inline> if ("scrollRestoration" in history) { history.scrollRestoration = "manual"; } window.scrollTo(0, 0); </script>
     <script src="https://kit.fontawesome.com/575b9c1578.js" crossorigin="anonymous"></script>
     <BaseHead title={title} description={description} />
+    <script is:inline>
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme === 'dark' ? 'dark' : '' );
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) { document.documentElement.setAttribute('data-theme', 'dark'); }
+      }
+    </script>
   </head>
   <body>
+    <div id="startup-gate" aria-hidden="false">
+      <div class="startup-gate__label">Loading</div>
+    </div>
     <Header />
     <slot />
     <Footer />
     <VantaFogBG/>
+    <script>
+      import { startStartupGate } from '../scripts/startup-gate.js';
+      startStartupGate();
+    </script>
   </body>
 </html>
+
+<style is:global>
+  #startup-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    background: color-mix(in oklab, var(--bg-color) 82%, black 18%);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.38s ease;
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .startup-gate__label {
+    font-family: "Notable", sans-serif;
+    letter-spacing: 0.08em;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    opacity: 0.75;
+  }
+
+  .startup-ready #startup-gate {
+    opacity: 0;
+  }
+</style>

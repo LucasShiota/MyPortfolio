@@ -35,7 +35,21 @@
   transform: translateZ(0);
   backface-visibility: hidden;
   filter: blur(0.2px);
-  justify-content: center; align-items: center;
+  justify-content: flex-start;
+  align-items: center;
+  animation: marquee-scroll var(--marquee-duration, 20s) linear infinite;
+}
+
+.marquee--right .marquee-track {
+  animation-direction: reverse;
+}
+
+.marquee:not(.marquee--ready) .marquee-track {
+  animation: none;
+}
+
+.marquee--paused .marquee-track {
+  animation-play-state: paused;
 }
 
 :root { --font-size: 24vh; } /* hero BG text clamp sync value*/
@@ -55,6 +69,15 @@
   height: 100%;
   display: flex; flex-direction: column;
   justify-content:space-around;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-1 * var(--marquee-distance, 0px)), 0, 0);
+  }
 }
 /* #endregion */
 

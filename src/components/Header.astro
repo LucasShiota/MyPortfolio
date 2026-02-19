@@ -13,35 +13,44 @@ import DarkMode from '../components/DarkMode.astro';
 		<i class="fa-solid fa-moon"></i>
 	</button>
 	<DarkMode />
+	<script>
+		const icon = document.querySelector<HTMLElement>('.header-icon');
 
+		const animations = ['rock', 'spin', 'tilt-pop', 'flip-horizontal', 'pop-jump'];
+
+		if (icon) {
+			icon.addEventListener('mouseenter', () => {
+				const random = animations[Math.floor(Math.random() * animations.length)];
+				icon.style.animation = `${random} 0.6s ease`;
+			});
+
+			icon.addEventListener('animationend', () => {
+				icon.style.animation = '';
+			});
+		}
+	</script>
 </header>
 
 <style>
 	/* Header Container */
+	
 	:root{
 		--header-height: 4rem;
 	}
 	header {
 		position: fixed; z-index: 20;
 		height: var(--header-height); width: 100%;
-		margin: 0; padding: 0 1em;
+		margin: 0; padding: 0 2rem;
 		background: var(--bg-color); box-shadow: var(--box-shadow);
 		display: flex; flex-direction: row;
  		align-items: center; justify-content: space-between;
 		font-weight: bold;
 	}
 
-	.header-icon {
-		width: 50px;
-		height: 50px;
-		object-fit: contain;
-		display: block;
-	}
 	/* Header Text */
 	.header-left {
 		width: 30%;
 		display: flex; flex-direction: row;
-  	gap: 2em;
   	align-items: center;
 	}
 	.name {
@@ -52,11 +61,16 @@ import DarkMode from '../components/DarkMode.astro';
 		font-size: 1rem;
 	}
 
+/* ---------------- */
+/* THEME */
+/* ---------------- */
+
+/* #region ThemeToggler */
 	#theme-toggle {
     width: 50px; height: 50px;
     border-radius: 50%;
     background: transparent; border: transparent;
-    margin: 0 2em 0 2em;
+    margin: 0 4rem;
     display: flex;
     align-items: center; justify-content: center;
     cursor: pointer;
@@ -71,4 +85,61 @@ import DarkMode from '../components/DarkMode.astro';
     font-size: 1.5rem;
     transition: color 0.3s, transform 0.3s;
   }
-</style>>
+/* #endregion */
+
+/* ---------------- */
+/* LOGO */
+/* ---------------- */
+
+/* #region Logo  */
+	.header-icon {
+		width: 50px; height: 50px;
+		object-fit: contain;
+		display: block;
+		margin: 0 1rem;
+		user-select: none;
+		/* Anim */
+		transform-origin: center;
+		transform-style: preserve-3d;
+	}
+
+	/* Rock */
+	@keyframes rock {
+		0%   { transform: rotate(0deg); }
+		20%  { transform: rotate(30deg); }
+		40%  { transform: rotate(-25deg); }
+		60%  { transform: rotate(20deg); }
+		80%  { transform: rotate(-10deg); }
+		100% { transform: rotate(0deg); }
+	}
+	/* Spin */
+	@keyframes spin {
+		0%   { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+	/* 3D Tilt Pop */
+@keyframes tilt-pop {
+  0%   { transform: rotate(0) scale(1); }
+  25%  { transform: rotateY(40deg) rotateX(18deg) scale(1.2); }
+  55%  { transform: rotateY(-30deg) rotateX(-12deg) scale(1.08); }
+  75%  { transform: rotateY(15deg) rotateX(6deg) scale(1.04); }
+  100% { transform: rotate(0) scale(1); }
+}
+	/* Horizontal Flip */
+	@keyframes flip-horizontal {
+		0%   { transform: rotateY(0deg); }
+		50%  { transform: rotateY(180deg); }
+		100% { transform: rotateY(360deg); }
+	}
+
+	/* Pop Jump Scale */
+	@keyframes pop-jump {
+		0%   { transform: scale(1); }
+		30%  { transform: scale(1.25); }  /* fast punch */
+		55%  { transform: scale(0.95); }  /* gravity dip */
+		75%  { transform: scale(1.05); }  /* small rebound */
+		100% { transform: scale(1); }
+	}
+/* #endregion */
+
+</style>

@@ -2,93 +2,172 @@
 ---
 
 <script is:inline>
-  const root = document.documentElement;
-  const toggleBtn = document.getElementById('theme-toggle');
-  const icon = toggleBtn.querySelector('i');
+  window.addEventListener('DOMContentLoaded', () => {
 
-  let vantaEffect; // make sure this is assigned when you init Vanta
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById('theme-toggle');
+    const icon = toggleBtn?.querySelector('i');
 
-  function getHex(varName) {
-    return getComputedStyle(root)
-      .getPropertyValue(varName)
-      .trim();
-  }
+    if (!toggleBtn) return;
 
-  function hexToRgb(hex) {
-    const bigint = parseInt(hex.replace('#', ''), 16);
-    return [
-      (bigint >> 16) & 255,
-      (bigint >> 8) & 255,
-      bigint & 255
-    ];
-  }
+    /* ----------------------------- */
+    /* Restore Theme On Load         */
+    /* ----------------------------- */
 
-  function rgbToHex(r, g, b) {
-    return (Math.round(r) << 16) | (Math.round(g) << 8) | Math.round(b);
-  }
+    const savedTheme = localStorage.getItem('theme');
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
+    if (savedTheme) {
+      if (savedTheme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+      } else {
+        root.removeAttribute('data-theme');
+      }
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        root.setAttribute('data-theme', 'dark');
+      }
+    }
 
-  function animateVanta(duration = 800) {
-    if (!vantaEffect) return;
+    /* ----------------------------- */
+    /* Set Correct Icon On Load      */
+    /* ----------------------------- */
 
-    const start = performance.now();
+    function updateIcon() {
+      const isDark = root.getAttribute('data-theme') === 'dark';
 
-    const fromHighlight = hexToRgb(getHex('--vanta-highlight'));
-    const fromMid = hexToRgb(getHex('--vanta-midtone'));
-    const fromLow = hexToRgb(getHex('--vanta-lowlight'));
-    const fromBase = hexToRgb(getHex('--vanta-base'));
+      if (!icon) return;
 
-    function step(time) {
-      const t = Math.min((time - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
+      if (isDark) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    }
+
+    updateIcon();
+
+    /* ----------------------------- */
+    /* Vanta Animation Helpers       */
+    /* ----------------------------- */
+
+    function getHex(varName) {
+      return getComputedStyle(root)
+        .getPropertyValue(varName)
+        .trim();
+    }
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.replace('#', ''), 16);
+      return [
+        (bigint >> 16) & 255,
+        (bigint >> 8) & 255,
+        bigint & 255
+      ];
+    }
+
+    function optionHexToRgb(value) {
+      if (typeof value !== 'number') return [0, 0, 0];
+      return [
+        (value >> 16) & 255,
+        (value >> 8) & 255,
+        value & 255
+      ];
+    }
+
+    function rgbToHex(r, g, b) {
+      return (Math.round(r) << 16) | (Math.round(g) << 8) | Math.round(b);
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function animateVanta(duration = 2000) {
+      const vantaEffect = window.vantaEffect;
+      if (!vantaEffect) return;
+
+      const start = performance.now();
+
+      const fromHighlight = optionHexToRgb(vantaEffect.options?.highlightColor);
+      const fromMid = optionHexToRgb(vantaEffect.options?.midtoneColor);
+      const fromLow = optionHexToRgb(vantaEffect.options?.lowlightColor);
+      const fromBase = optionHexToRgb(vantaEffect.options?.baseColor);
 
       const toHighlight = hexToRgb(getHex('--vanta-highlight'));
       const toMid = hexToRgb(getHex('--vanta-midtone'));
       const toLow = hexToRgb(getHex('--vanta-lowlight'));
       const toBase = hexToRgb(getHex('--vanta-base'));
 
-      const h = fromHighlight.map((c,i)=>lerp(c,toHighlight[i],eased));
-      const m = fromMid.map((c,i)=>lerp(c,toMid[i],eased));
-      const l = fromLow.map((c,i)=>lerp(c,toLow[i],eased));
-      const b = fromBase.map((c,i)=>lerp(c,toBase[i],eased));
+      function step(time) {
+        const t = Math.min((time - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+
+        const h = fromHighlight.map((c, i) => lerp(c, toHighlight[i], eased));
+        const m = fromMid.map((c, i) => lerp(c, toMid[i], eased));
+        const l = fromLow.map((c, i) => lerp(c, toLow[i], eased));
+        const b = fromBase.map((c, i) => lerp(c, toBase[i], eased));
+
+        vantaEffect.setOptions({
+          highlightColor: rgbToHex(...h),
+          midtoneColor: rgbToHex(...m),
+          lowlightColor: rgbToHex(...l),
+          baseColor: rgbToHex(...b)
+        });
+
+        if (t < 1) requestAnimationFrame(step);
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    function syncVantaToTheme(retries = 10) {
+      const vantaEffect = window.vantaEffect;
+      if (!vantaEffect) {
+        if (retries > 0) {
+          setTimeout(() => syncVantaToTheme(retries - 1), 100);
+        }
+        return;
+      }
+
+      const toHighlight = hexToRgb(getHex('--vanta-highlight'));
+      const toMid = hexToRgb(getHex('--vanta-midtone'));
+      const toLow = hexToRgb(getHex('--vanta-lowlight'));
+      const toBase = hexToRgb(getHex('--vanta-base'));
 
       vantaEffect.setOptions({
-        highlightColor: rgbToHex(...h),
-        midtoneColor: rgbToHex(...m),
-        lowlightColor: rgbToHex(...l),
-        baseColor: rgbToHex(...b)
+        highlightColor: rgbToHex(...toHighlight),
+        midtoneColor: rgbToHex(...toMid),
+        lowlightColor: rgbToHex(...toLow),
+        baseColor: rgbToHex(...toBase)
       });
-
-      if (t < 1) requestAnimationFrame(step);
     }
 
-    requestAnimationFrame(step);
-  }
+    syncVantaToTheme();
+    window.addEventListener('startup:vanta', () => {
+      syncVantaToTheme(20);
+    });
 
-  toggleBtn.addEventListener('click', () => {
+    /* ----------------------------- */
+    /* Toggle Handler                */
+    /* ----------------------------- */
 
-    // 1️⃣ Toggle theme FIRST (CSS handles UI colors)
-    const isDark = root.getAttribute('data-theme') === 'dark';
+    toggleBtn.addEventListener('click', () => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
 
-    if (isDark) {
-      root.removeAttribute('data-theme');
-    } else {
-      root.setAttribute('data-theme', 'dark');
-    }
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }
 
-    // 2️⃣ Update icon
-    if (isDark) {
-      icon.classList.remove('fa-moon');
-      icon.classList.add('fa-sun');
-    } else {
-      icon.classList.remove('fa-sun');
-      icon.classList.add('fa-moon');
-    }
+      updateIcon();
+      animateVanta(800);
+    });
 
-    // 3️⃣ Animate Vanta separately
-    animateVanta(800);
   });
 </script>
