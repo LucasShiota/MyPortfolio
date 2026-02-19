@@ -145,6 +145,11 @@
   border-radius: 50%;
   margin: 1.5rem 0;
 }
+.nav-section,
+.nav-circle {
+  will-change: transform;
+  transform: translateZ(0);
+}
 .navsec-icon {
   height: 3.5vh; width: 3.5vh;
   position: absolute; top: 50%; left: 50%;

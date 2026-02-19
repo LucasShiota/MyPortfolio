@@ -2,6 +2,7 @@
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import DarkMode from '../components/DarkMode.astro';
+import SimpleMode from '../components/SimpleMode.astro';
 ---
 <header>
 	<div class="header-left">
@@ -9,10 +10,16 @@ import DarkMode from '../components/DarkMode.astro';
 			<img src="/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
 		<div class="path">Designer</div>
 	</div>
-	<button id="theme-toggle">
-		<i class="fa-solid fa-moon"></i>
-	</button>
+	<div class="header-right">
+		<button id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+			<i class="fa-solid fa-moon"></i>
+		</button>
+		<button class="simple-mode-toggle-placeholder" id="performance-toggle" title="Toggle performance mode" aria-label="Toggle performance mode">
+			<i class="fa-solid fa-wand-magic-sparkles"></i>
+		</button>
+	</div>
 	<DarkMode />
+	<SimpleMode />
 	<script>
 		const icon = document.querySelector<HTMLElement>('.header-icon');
 
@@ -53,6 +60,12 @@ import DarkMode from '../components/DarkMode.astro';
 		display: flex; flex-direction: row;
   	align-items: center;
 	}
+	.header-right {
+		width: 15%;
+		display: flex; flex-direction: row;
+		align-items: center; justify-content: right;
+		margin: 0 2rem; gap: 4 rem;
+	}
 	.name {
 		font-size: 1rem;
 		white-space: nowrap;
@@ -70,7 +83,7 @@ import DarkMode from '../components/DarkMode.astro';
     width: 50px; height: 50px;
     border-radius: 50%;
     background: transparent; border: transparent;
-    margin: 0 4rem;
+
     display: flex;
     align-items: center; justify-content: center;
     cursor: pointer;
@@ -85,6 +98,25 @@ import DarkMode from '../components/DarkMode.astro';
     font-size: 1.5rem;
     transition: color 0.3s, transform 0.3s;
   }
+	.simple-mode-toggle-placeholder {
+		width: 50px; height: 50px;
+		border-radius: 50%;
+		background: transparent; border: transparent;
+		margin: 0 0.75rem 0 0;
+		display: flex;
+		align-items: center; justify-content: center;
+		cursor: pointer;
+		transition: background 0.3s;
+		z-index: 30;
+	}
+	.simple-mode-toggle-placeholder:hover {
+		background: rgba(var(--gray), 0.3);
+	}
+	.simple-mode-toggle-placeholder i {
+		color: var(--text-color);
+		font-size: 1.2rem;
+		transition: color 0.3s, transform 0.3s;
+	}
 /* #endregion */
 
 /* ---------------- */

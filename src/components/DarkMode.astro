@@ -68,59 +68,8 @@
       ];
     }
 
-    function optionHexToRgb(value) {
-      if (typeof value !== 'number') return [0, 0, 0];
-      return [
-        (value >> 16) & 255,
-        (value >> 8) & 255,
-        value & 255
-      ];
-    }
-
     function rgbToHex(r, g, b) {
       return (Math.round(r) << 16) | (Math.round(g) << 8) | Math.round(b);
-    }
-
-    function lerp(a, b, t) {
-      return a + (b - a) * t;
-    }
-
-    function animateVanta(duration = 2000) {
-      const vantaEffect = window.vantaEffect;
-      if (!vantaEffect) return;
-
-      const start = performance.now();
-
-      const fromHighlight = optionHexToRgb(vantaEffect.options?.highlightColor);
-      const fromMid = optionHexToRgb(vantaEffect.options?.midtoneColor);
-      const fromLow = optionHexToRgb(vantaEffect.options?.lowlightColor);
-      const fromBase = optionHexToRgb(vantaEffect.options?.baseColor);
-
-      const toHighlight = hexToRgb(getHex('--vanta-highlight'));
-      const toMid = hexToRgb(getHex('--vanta-midtone'));
-      const toLow = hexToRgb(getHex('--vanta-lowlight'));
-      const toBase = hexToRgb(getHex('--vanta-base'));
-
-      function step(time) {
-        const t = Math.min((time - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - t, 3);
-
-        const h = fromHighlight.map((c, i) => lerp(c, toHighlight[i], eased));
-        const m = fromMid.map((c, i) => lerp(c, toMid[i], eased));
-        const l = fromLow.map((c, i) => lerp(c, toLow[i], eased));
-        const b = fromBase.map((c, i) => lerp(c, toBase[i], eased));
-
-        vantaEffect.setOptions({
-          highlightColor: rgbToHex(...h),
-          midtoneColor: rgbToHex(...m),
-          lowlightColor: rgbToHex(...l),
-          baseColor: rgbToHex(...b)
-        });
-
-        if (t < 1) requestAnimationFrame(step);
-      }
-
-      requestAnimationFrame(step);
     }
 
     function syncVantaToTheme(retries = 10) {
@@ -145,6 +94,25 @@
       });
     }
 
+    function applyThemeInstantly(nextTheme) {
+      root.classList.add('theme-switch-instant');
+
+      if (nextTheme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        root.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
+
+      syncVantaToTheme(0);
+      updateIcon();
+
+      requestAnimationFrame(() => {
+        root.classList.remove('theme-switch-instant');
+      });
+    }
+
     syncVantaToTheme();
     window.addEventListener('startup:vanta', () => {
       syncVantaToTheme(20);
@@ -156,18 +124,17 @@
 
     toggleBtn.addEventListener('click', () => {
       const isDark = root.getAttribute('data-theme') === 'dark';
-
-      if (isDark) {
-        root.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      } else {
-        root.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      }
-
-      updateIcon();
-      animateVanta(800);
+      applyThemeInstantly(isDark ? 'light' : 'dark');
     });
 
   });
 </script>
+
+<style is:global>
+  .theme-switch-instant,
+  .theme-switch-instant *,
+  .theme-switch-instant *::before,
+  .theme-switch-instant *::after {
+    transition: none !important;
+  }
+</style>

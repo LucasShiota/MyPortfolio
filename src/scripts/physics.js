@@ -14,6 +14,9 @@ const {
   Query
 } = Matter;
 
+let matterRuntime = null;
+let initVersion = 0;
+
 function preloadSpriteSheet() {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -23,16 +26,76 @@ function preloadSpriteSheet() {
   });
 }
 
+export function destroyMatter() {
+  initVersion += 1;
+  if (!matterRuntime) return;
+
+  const {
+    engine,
+    render,
+    runner,
+    container,
+    driftIntervalId,
+    onMouseMove,
+    onCanvasClick,
+    onVisibilityChange,
+    onBeforeUnload,
+    intersectionObserver,
+    resizeObserver
+  } = matterRuntime;
+
+  if (driftIntervalId) {
+    clearInterval(driftIntervalId);
+  }
+
+  if (render?.canvas && onMouseMove) {
+    render.canvas.removeEventListener("mousemove", onMouseMove);
+  }
+
+  if (render?.canvas && onCanvasClick) {
+    render.canvas.removeEventListener("click", onCanvasClick);
+  }
+
+  if (onVisibilityChange) {
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+  }
+
+  if (onBeforeUnload) {
+    window.removeEventListener("beforeunload", onBeforeUnload);
+  }
+
+  intersectionObserver?.disconnect();
+  resizeObserver?.disconnect();
+
+  Runner.stop(runner);
+  Render.stop(render);
+  Composite.clear(engine.world, false, true);
+  Engine.clear(engine);
+
+  if (render?.canvas?.parentNode) {
+    render.canvas.parentNode.removeChild(render.canvas);
+  }
+
+  if (render?.textures) {
+    render.textures = {};
+  }
+
+  if (container) {
+    container.innerHTML = "";
+  }
+
+  matterRuntime = null;
+}
+
 export async function initMatter() {
+  destroyMatter();
+
+  const myVersion = ++initVersion;
   const container = document.getElementById("matter-container");
-  if (!container) return;
+  if (!container || window.__simpleModeEnabled) return;
 
   const width = container.clientWidth;
   const height = container.clientHeight;
-
-  // --------------------------------
-  // ENTRY DATA (Clickable Circles)
-  // --------------------------------
 
   const sprites = {
     github: { sx: 42, sy: 30, sw: 196, sh: 191 },
@@ -43,36 +106,15 @@ export async function initMatter() {
   };
 
   const entries = [
-    {
-      name: "GitHub",
-      link: LINKS.github,
-      sprite: sprites.github
-    },
-    {
-      name: "Substack",
-      link: LINKS.substack,
-      sprite: sprites.substack
-    },
-    {
-      name: "LinkedIn",
-      link: LINKS.linkedin,
-      sprite: sprites.linkedin
-    },
-    {
-      name: "Itch.io",
-      link: LINKS.itchio,
-      sprite: sprites.itchio
-    },
-    {
-      name: "Steam",
-      link: LINKS.steam,
-      sprite: sprites.steam
-    }
+    { name: "GitHub", link: LINKS.github, sprite: sprites.github },
+    { name: "Substack", link: LINKS.substack, sprite: sprites.substack },
+    { name: "LinkedIn", link: LINKS.linkedin, sprite: sprites.linkedin },
+    { name: "Itch.io", link: LINKS.itchio, sprite: sprites.itchio },
+    { name: "Steam", link: LINKS.steam, sprite: sprites.steam }
   ];
+
   const spriteSheet = await preloadSpriteSheet();
-  // --------------------------------
-  // ENGINE
-  // --------------------------------
+  if (myVersion !== initVersion || window.__simpleModeEnabled) return;
 
   const engine = Engine.create({
     enableSleeping: false,
@@ -81,10 +123,6 @@ export async function initMatter() {
     velocityIterations: 3,
     constraintIterations: 2
   });
-
-  // --------------------------------
-  // RENDERER
-  // --------------------------------
 
   const render = Render.create({
     element: container,
@@ -102,20 +140,11 @@ export async function initMatter() {
   render.canvas.style.top = "0";
   render.canvas.style.left = "0";
 
-  // --------------------------------
-  // BODY STORAGE
-  // --------------------------------
+  const driftBodies = [];
+  const draggableBodies = [];
 
-  const driftBodies = [];        // all bodies that drift
-  const draggableBodies = [];    // drag enabled only
-
-  // --------------------------------
-  // CLICKABLE CIRCLES (SVG + Link)
-  // --------------------------------
-
-  entries.forEach(entry => {
+  entries.forEach((entry) => {
     const radius = 80;
-
     const circle = Bodies.circle(
       Math.random() * width,
       Math.random() * height,
@@ -124,12 +153,8 @@ export async function initMatter() {
         frictionAir: 0.005,
         restitution: 1,
         label: "clickable",
-        collisionFilter: {
-          category: 0x0001 /* Clickable category for interaction */
-        },
-        render: {
-          fillStyle: "#0062F5"
-        }
+        collisionFilter: { category: 0x0001 },
+        render: { fillStyle: "#0062F5" }
       }
     );
 
@@ -137,8 +162,8 @@ export async function initMatter() {
       link: entry.link,
       image: spriteSheet,
       sprite: entry.sprite,
-      hoverScale: 1,      // animated scale value
-      targetScale: 1 
+      hoverScale: 1,
+      targetScale: 1
     };
 
     Body.setVelocity(circle, {
@@ -149,15 +174,9 @@ export async function initMatter() {
     driftBodies.push(circle);
   });
 
-  // --------------------------------
-  // DRAGGABLE CIRCLES (Plain Color)
-  // --------------------------------
-
   const draggableCount = 5;
-
   for (let i = 0; i < draggableCount; i++) {
     const radius = 40 + Math.random() * 25;
-
     const circle = Bodies.circle(
       Math.random() * width,
       Math.random() * height,
@@ -166,12 +185,8 @@ export async function initMatter() {
         frictionAir: 0.005,
         restitution: 1,
         label: "draggable",
-        collisionFilter: {
-          category: 0x0002 /* Draggable category for mouse interaction */
-        },
-        render: {
-          fillStyle: "#F5A300"
-        }
+        collisionFilter: { category: 0x0002 },
+        render: { fillStyle: "#F5A300" }
       }
     );
 
@@ -184,129 +199,85 @@ export async function initMatter() {
     draggableBodies.push(circle);
   }
 
-  // --------------------------------
-  // WALLS
-  // --------------------------------
-
   const wallThickness = 100;
-
-  let walls = [
-    Bodies.rectangle(width / 2, -wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false }}),
-    Bodies.rectangle(width / 2, height + wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false }}),
-    Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false }}),
-    Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false }})
+  const walls = [
+    Bodies.rectangle(width / 2, -wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false } }),
+    Bodies.rectangle(width / 2, height + wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false } }),
+    Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false } }),
+    Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false } })
   ];
 
   Composite.add(engine.world, [...driftBodies, ...walls]);
 
-  // --------------------------------
-  // MOUSE
-  // --------------------------------
-
   const mouse = Mouse.create(render.canvas);
-
   const mouseConstraint = MouseConstraint.create(engine, {
     mouse,
-    constraint: {
-      stiffness: 0.2,
-      render: { visible: false }
-    },
-    collisionFilter: {
-      mask: 0x0002
-    }
+    constraint: { stiffness: 0.2, render: { visible: false } },
+    collisionFilter: { mask: 0x0002 }
   });
-
   Composite.add(engine.world, mouseConstraint);
   render.mouse = mouse;
 
   let mousePosition = { x: 0, y: 0 };
 
-  render.canvas.addEventListener("mousemove", (event) => {
+  const onMouseMove = (event) => {
     const rect = render.canvas.getBoundingClientRect();
-
     mousePosition = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top
     };
-  });
+  };
+  render.canvas.addEventListener("mousemove", onMouseMove);
 
-  // --------------------------------
-  // CLICK HANDLER (for clickable only)
-  // --------------------------------
-
-  render.canvas.addEventListener("click", event => {
+  const onCanvasClick = (event) => {
     const rect = render.canvas.getBoundingClientRect();
-
-    const mousePosition = {
+    const clickPosition = {
       x: event.clientX - rect.left,
       y: event.clientY - rect.top
     };
-
     const bodies = Composite.allBodies(engine.world);
-    const clicked = Query.point(bodies, mousePosition);
+    const clicked = Query.point(bodies, clickPosition);
 
     if (clicked.length > 0) {
       const body = clicked[0];
-
       if (body.label === "clickable" && body.plugin?.link) {
-          window.open(body.plugin.link, "_blank", "noopener,noreferrer");
+        window.open(body.plugin.link, "_blank", "noopener,noreferrer");
       }
     }
-  });
+  };
+  render.canvas.addEventListener("click", onCanvasClick);
 
-  // --------------------------------
-  // SUBTLE DRIFT
-  // --------------------------------
+  const DRIFT_INTERVAL_MS = 200;
+  const DRIFT_FORCE = 0.0005;
+  const DRIFT_MAX_ANGLE = Math.PI / 12;
 
-  // CONFIGURABLE DRIFT SETTINGS
-  const DRIFT_INTERVAL_MS = 200;       // Interval between drift nudges
-  const DRIFT_FORCE = 0.0005;         // Magnitude of the applied force
-  const DRIFT_MAX_ANGLE = Math.PI / 12; // Max random angle change (radians, PI/12 ≈ 15°)
-
-  // INITIALIZE DRIFT ANGLES
-  driftBodies.forEach(body => {
+  driftBodies.forEach((body) => {
     const vel = body.velocity;
-    body.plugin.driftAngle = Math.atan2(vel.y, vel.x); // initial angle
+    body.plugin.driftAngle = Math.atan2(vel.y, vel.x);
   });
-
-  // DRIFT FUNCTION
 
   function applyBoundedDrift(body) {
-    // Pick random delta angle within [-DRIFT_MAX_ANGLE, +DRIFT_MAX_ANGLE]
     const delta = (Math.random() * 2 - 1) * DRIFT_MAX_ANGLE;
-
-    // Update body drift angle
     body.plugin.driftAngle += delta;
-
-    // Compute force vector
     const fx = Math.cos(body.plugin.driftAngle) * DRIFT_FORCE;
     const fy = Math.sin(body.plugin.driftAngle) * DRIFT_FORCE;
-
-    // Apply the force to the body
     Body.applyForce(body, body.position, { x: fx, y: fy });
   }
 
-  // APPLY DRIFT ON INTERVAL
-  setInterval(() => {
-    driftBodies.forEach(body => {
-      applyBoundedDrift(body);
-    });
+  const driftIntervalId = window.setInterval(() => {
+    driftBodies.forEach((body) => applyBoundedDrift(body));
   }, DRIFT_INTERVAL_MS);
-
-
-  // --------------------------------
-  // RUN
-  // --------------------------------
 
   Render.run(render);
   const runner = Runner.create();
   Runner.run(runner, engine);
+
   let isPanelVisible = false;
   let isTabVisible = !document.hidden;
   let isSimulationRunning = true;
 
   function updateSimulationState() {
-    const shouldRun = isPanelVisible && isTabVisible;
+    const shouldRun = isPanelVisible && isTabVisible && !window.__simpleModeEnabled;
     if (shouldRun === isSimulationRunning) return;
 
     if (shouldRun) {
@@ -323,46 +294,30 @@ export async function initMatter() {
   Events.on(render, "afterRender", () => {
     const ctx = render.context;
 
-    driftBodies.forEach(body => {
+    driftBodies.forEach((body) => {
       if (body.label !== "clickable") return;
 
       const { x, y } = body.position;
       const angle = body.angle;
       const radius = body.circleRadius;
-
       const image = body.plugin?.image;
-      if (!image) return;
       const sprite = body.plugin?.sprite;
-      if (!sprite) return;
-
-      // --------------------------------
-      // HOVER DETECTION
-      // --------------------------------
+      if (!image || !sprite) return;
 
       const dx = mousePosition.x - x;
       const dy = mousePosition.y - y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-
       const isHovering = distance < radius;
 
       body.plugin.targetScale = isHovering ? 1.15 : 1;
-
-      // Smooth lerp animation
-      body.plugin.hoverScale +=
-        (body.plugin.targetScale - body.plugin.hoverScale) * 0.15;
-
+      body.plugin.hoverScale += (body.plugin.targetScale - body.plugin.hoverScale) * 0.15;
       const scale = body.plugin.hoverScale;
-
-      // --------------------------------
-      // DRAW ICON
-      // --------------------------------
 
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
 
       const iconSize = radius * 1.2 * scale;
-
       if (isHovering) {
         ctx.shadowColor = "#00A1F5";
         ctx.shadowBlur = 20;
@@ -379,109 +334,99 @@ export async function initMatter() {
         iconSize,
         iconSize
       );
+
       ctx.shadowBlur = 0;
       ctx.restore();
     });
   });
 
+  const contactsPanel = document.querySelector(".contacts-panel");
+  const intersectionObserver = contactsPanel
+    ? new IntersectionObserver((observerEntries) => {
+        observerEntries.forEach((entry) => {
+          isPanelVisible = entry.isIntersecting;
+          updateSimulationState();
+        });
+      }, { threshold: 0.1 })
+    : null;
 
-
-  // --------------------------------
-  // INTERSECTION OBSERVER
-  // --------------------------------
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      isPanelVisible = entry.isIntersecting;
-      updateSimulationState();
-    });
-  }, { threshold: 0.1 });
-
-  observer.observe(document.querySelector(".contacts-panel"));
+  if (contactsPanel && intersectionObserver) {
+    intersectionObserver.observe(contactsPanel);
+  }
   updateSimulationState();
 
-  function handleVisibilityChange() {
+  const onVisibilityChange = () => {
     isTabVisible = !document.hidden;
     updateSimulationState();
+  };
+  document.addEventListener("visibilitychange", onVisibilityChange);
+
+  function handleResize() {
+    const newWidth = container.clientWidth;
+    const newHeight = container.clientHeight;
+
+    render.options.width = newWidth;
+    render.options.height = newHeight;
+    render.canvas.width = newWidth;
+    render.canvas.height = newHeight;
+
+    Body.setPosition(walls[0], { x: newWidth / 2, y: -wallThickness / 2 });
+    Body.setVertices(
+      walls[0],
+      Bodies.rectangle(newWidth / 2, -wallThickness / 2, newWidth, wallThickness).vertices
+    );
+
+    Body.setPosition(walls[1], { x: newWidth / 2, y: newHeight + wallThickness / 2 });
+    Body.setVertices(
+      walls[1],
+      Bodies.rectangle(newWidth / 2, newHeight + wallThickness / 2, newWidth, wallThickness).vertices
+    );
+
+    Body.setPosition(walls[2], { x: -wallThickness / 2, y: newHeight / 2 });
+    Body.setVertices(
+      walls[2],
+      Bodies.rectangle(-wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
+    );
+
+    Body.setPosition(walls[3], { x: newWidth + wallThickness / 2, y: newHeight / 2 });
+    Body.setVertices(
+      walls[3],
+      Bodies.rectangle(newWidth + wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
+    );
+
+    driftBodies.forEach((body) => {
+      const r = body.circleRadius;
+      const clampedX = Math.max(r, Math.min(newWidth - r, body.position.x));
+      const clampedY = Math.max(r, Math.min(newHeight - r, body.position.y));
+      Body.setPosition(body, { x: clampedX, y: clampedY });
+    });
   }
 
-  document.addEventListener("visibilitychange", handleVisibilityChange);
-  window.addEventListener("beforeunload", () => {
-    document.removeEventListener("visibilitychange", handleVisibilityChange);
-    observer.disconnect();
-  }, { once: true });
-  
-  function handleResize() {
-  const newWidth = container.clientWidth;
-  const newHeight = container.clientHeight;
-
-  // ------------------------
-  // 1️⃣ Resize Canvas
-  // ------------------------
-
-  render.options.width = newWidth;
-  render.options.height = newHeight;
-
-  render.canvas.width = newWidth;
-  render.canvas.height = newHeight;
-
-  // ------------------------
-  // 2️⃣ Reposition Walls
-  // ------------------------
-
-  const wallThickness = 100;
-
-  // Top
-  Body.setPosition(walls[0], { x: newWidth / 2, y: -wallThickness / 2 });
-  Body.setVertices(
-    walls[0],
-    Bodies.rectangle(newWidth / 2, -wallThickness / 2, newWidth, wallThickness).vertices
-  );
-
-  // Bottom
-  Body.setPosition(walls[1], { x: newWidth / 2, y: newHeight + wallThickness / 2 });
-  Body.setVertices(
-    walls[1],
-    Bodies.rectangle(newWidth / 2, newHeight + wallThickness / 2, newWidth, wallThickness).vertices
-  );
-
-  // Left
-  Body.setPosition(walls[2], { x: -wallThickness / 2, y: newHeight / 2 });
-  Body.setVertices(
-    walls[2],
-    Bodies.rectangle(-wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
-  );
-
-  // Right
-  Body.setPosition(walls[3], { x: newWidth + wallThickness / 2, y: newHeight / 2 });
-  Body.setVertices(
-    walls[3],
-    Bodies.rectangle(newWidth + wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
-  );
-
-  // ------------------------
-  // 3️⃣ Clamp Bodies Inside
-  // ------------------------
-
-  driftBodies.forEach(body => {
-    const r = body.circleRadius;
-
-    const clampedX = Math.max(r, Math.min(newWidth - r, body.position.x));
-    const clampedY = Math.max(r, Math.min(newHeight - r, body.position.y));
-
-    Body.setPosition(body, { x: clampedX, y: clampedY });
+  let resizeTimeout;
+  const resizeObserver = new ResizeObserver(() => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      handleResize();
+    }, 100);
   });
+  resizeObserver.observe(container);
+
+  const onBeforeUnload = () => {
+    destroyMatter();
+  };
+  window.addEventListener("beforeunload", onBeforeUnload, { once: true });
+
+  matterRuntime = {
+    engine,
+    render,
+    runner,
+    container,
+    driftIntervalId,
+    onMouseMove,
+    onCanvasClick,
+    onVisibilityChange,
+    onBeforeUnload,
+    intersectionObserver,
+    resizeObserver
+  };
 }
-let resizeTimeout;
-
-const resizeObserver = new ResizeObserver(() => {
-  clearTimeout(resizeTimeout);
-
-  resizeTimeout = setTimeout(() => {
-    handleResize();
-  }, 100); // wait 100ms after resize stops
-});
-
-resizeObserver.observe(container);
-}
-

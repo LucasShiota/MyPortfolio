@@ -16,4 +16,17 @@ interface VantaEffect {
 
 interface Window {
   vantaEffect?: VantaEffect;
+  __simpleModeEnabled?: boolean;
+  simpleModeVanta?: {
+    freeze: () => void;
+    resume: () => void;
+  };
+  simpleModeMatter?: {
+    start: () => void;
+    stop: () => void;
+  };
+  simpleModeMarquee?: {
+    start: () => void;
+    refresh: () => void;
+  };
 }

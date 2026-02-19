@@ -11,9 +11,12 @@
 	const panels = gsap.utils.toArray<HTMLElement>(".panel");
 
 	const totalSteps = panels.length - 1;
-	const step = 1 / totalSteps;
+	const step = totalSteps > 0 ? 1 / totalSteps : 1;
 
 	let currentIndex = 0;
+	let lastIndex = -1;
+	let activeScrollTween: gsap.core.Tween | null = null;
+	let lastArrowState = { atTop: false, atBottom: false };
 
 	/* ------- PAGE REFRESH CORRECTIONS --------- */
 
@@ -28,7 +31,10 @@
 
 		currentIndex = Math.round(progress / step);
 
-		updateArrowVisibility();
+		if (currentIndex !== lastIndex) {
+			updateArrowVisibility();
+			lastIndex = currentIndex;
+		}
 
 		sidebarElements.forEach((el, i) => {
 			const delta = Math.abs(scrollPercent - elementPercentages[i]);
@@ -36,6 +42,7 @@
 			el.style.transform = `scale(${scale})`;
 		});
 	}
+
 	/* ------- SIDEBAR SETUP --------- */
 
 	const totalItems = sidebarElements.length;
@@ -57,6 +64,7 @@
 		snap: {
 			directional: false,
 			snapTo: (progress) => {
+				if (totalSteps <= 0) return 0;
 				const closestIndex = Math.round(progress / step);
 				const delta = (progress - closestIndex * step) / step;
 				const threshold = 0.1;
@@ -77,10 +85,13 @@
 	/* ------- CENTRAL SCROLL FUNCTION --------- */
 
 	function scrollToIndex(index: number) {
+		if (totalSteps <= 0) return;
 		const clamped = gsap.utils.clamp(0, totalSteps, index);
+		if (clamped === currentIndex) return;
 		const targetProgress = clamped * step;
 
-		gsap.to(window, {
+		activeScrollTween?.kill();
+		activeScrollTween = gsap.to(window, {
 			duration: 0.8,
 			scrollTo: {
 				y:
@@ -98,7 +109,9 @@
 			section.style.cursor = "pointer";
 
 			section.addEventListener("click", () => {
-				const index = Number(section.dataset.index) / 2;
+				const sectionIndex = Number(section.dataset.index);
+				if (Number.isNaN(sectionIndex)) return;
+				const index = sectionIndex / 2;
 				scrollToIndex(index);
 			});
 		}
@@ -115,10 +128,20 @@
 		const atTop = currentIndex === 0;
 		const atBottom = currentIndex === totalSteps;
 
-		gsap.to(upArrow, { autoAlpha: atTop ? 0 : 0.6, duration: 0.3 });
-		gsap.to(downArrow, { autoAlpha: atBottom ? 0 : 0.6, duration: 0.3 });
+		if (lastArrowState.atTop === atTop && lastArrowState.atBottom === atBottom) {
+			return;
+		}
+
+		lastArrowState = { atTop, atBottom };
+		gsap.set(upArrow, { autoAlpha: atTop ? 0 : 0.6 });
+		gsap.set(downArrow, { autoAlpha: atBottom ? 0 : 0.6 });
 	}
 
 	updateArrowVisibility();
 	updateUI(mainTrigger.progress);
+
+	window.addEventListener("beforeunload", () => {
+		activeScrollTween?.kill();
+		mainTrigger.kill();
+	}, { once: true });
 </script>

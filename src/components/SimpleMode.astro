@@ -1,0 +1,50 @@
+---
+---
+
+<script>
+  const SIMPLE_MODE_BUTTON_SELECTOR = ".simple-mode-toggle-placeholder";
+  const SIMPLE_MODE_STORAGE_KEY = "simple-mode";
+
+  function setSimpleMode(enabled: boolean) {
+    window.__simpleModeEnabled = enabled;
+    document.documentElement.classList.toggle("simple-mode", enabled);
+
+    const icon = document.querySelector<HTMLElement>(`${SIMPLE_MODE_BUTTON_SELECTOR} i`);
+    if (icon) {
+      icon.classList.remove("fa-wand-magic-sparkles", "fa-wand-magic");
+      icon.classList.add(enabled ? "fa-wand-magic" : "fa-wand-magic-sparkles");
+    }
+
+    if (enabled) {
+      window.simpleModeVanta?.freeze();
+      window.simpleModeMatter?.stop();
+      window.simpleModeMarquee?.refresh();
+      return;
+    }
+
+    window.simpleModeVanta?.resume();
+    window.simpleModeMatter?.start();
+    window.simpleModeMarquee?.refresh();
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const initialState = localStorage.getItem(SIMPLE_MODE_STORAGE_KEY) === "on";
+    setSimpleMode(initialState);
+
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) return;
+
+      const button = event.target.closest(SIMPLE_MODE_BUTTON_SELECTOR);
+      if (!button) return;
+
+      const nextState = !window.__simpleModeEnabled;
+      setSimpleMode(nextState);
+      localStorage.setItem(SIMPLE_MODE_STORAGE_KEY, nextState ? "on" : "off");
+
+      if (button instanceof HTMLElement) {
+        button.setAttribute("aria-pressed", String(nextState));
+      }
+    });
+  });
+</script>
+

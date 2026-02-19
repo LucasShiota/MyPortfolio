@@ -12,9 +12,10 @@
 
 <script>
   declare const VANTA: any;
+  const vantaBgSelector = "#vanta-bg";
 
   function initVantaWithRetry(retries = 30) {
-    if (window.vantaEffect) return;
+    if (window.__simpleModeEnabled || window.vantaEffect) return;
 
     if (typeof VANTA === "undefined" || typeof VANTA.FOG !== "function") {
       if (retries > 0) {
@@ -27,7 +28,7 @@
     const hexToNumber = (hex: string) => Number(hex.replace('#', '0x'));
 
     window.vantaEffect = VANTA.FOG({
-      el: '#vanta-bg',
+      el: vantaBgSelector,
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
@@ -38,12 +39,51 @@
       lowlightColor: hexToNumber(css.getPropertyValue('--vanta-lowlight').trim()),
       baseColor: hexToNumber(css.getPropertyValue('--vanta-base').trim()),
       blurFactor: 0.9,
-      speed: 1.2,
-      zoom: 0.8
+      speed: 0.7,
+      zoom: 0.8,
+      scale: 1,
+      scaleMobile: 0.6
     });
   }
 
-  window.addEventListener("startup:vanta", () => {
+  function freezeVanta() {
+    const container = document.querySelector<HTMLElement>(vantaBgSelector);
+    const canvas = container?.querySelector<HTMLCanvasElement>("canvas");
+
+    if (container && canvas) {
+      try {
+        container.style.backgroundImage = `url("${canvas.toDataURL("image/png")}")`;
+      } catch {
+        container.style.backgroundImage = "";
+      }
+      container.style.backgroundSize = "cover";
+      container.style.backgroundPosition = "center";
+      container.style.backgroundRepeat = "no-repeat";
+    }
+
+    if (window.vantaEffect?.destroy) {
+      window.vantaEffect.destroy();
+    }
+    delete window.vantaEffect;
+  }
+
+  function resumeVanta() {
+    const container = document.querySelector<HTMLElement>(vantaBgSelector);
+    if (container) {
+      container.style.backgroundImage = "";
+      container.style.backgroundSize = "";
+      container.style.backgroundPosition = "";
+      container.style.backgroundRepeat = "";
+    }
     initVantaWithRetry();
-  }, { once: true });
+  }
+
+  window.simpleModeVanta = {
+    freeze: freezeVanta,
+    resume: resumeVanta
+  };
+
+  window.addEventListener("startup:vanta", () => {
+    resumeVanta();
+  });
 </script>

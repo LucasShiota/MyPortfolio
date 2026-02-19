@@ -1,0 +1,142 @@
+<div class="hero-bgtext">
+  <div class="marquee" data-direction="left" data-speed="0.7"> <div class="marquee-track"> <span class="marquee-content">
+    A jack of all trades-&#8201;
+  </span> </div> </div>
+  <div class="marquee" data-direction="right" data-speed="0.5"> <div class="marquee-track"> <span class="marquee-content">
+    is a master of none.&#8201;
+  </span> </div> </div>
+  <div class="marquee" data-direction="left" data-speed="0.8"> <div class="marquee-track"> <span class="marquee-content">
+    But it sure sounds more fun-&#8201;
+  </span> </div> </div>
+  <div class="marquee" data-direction="right" data-speed="0.6"> <div class="marquee-track"> <span class="marquee-content">
+    than a master of one.&#8201;
+  </span> </div> </div>
+  <script>
+    import { destroyMatter, initMatter } from '../scripts/physics.js';
+
+    let isMatterInitialized = false;
+    let isMarqueeInitialized = false;
+    let marqueeApplyThrottle = () => {};
+    
+    const startMatter = () => {
+      if (window.__simpleModeEnabled || isMatterInitialized) return;
+      initMatter();
+      isMatterInitialized = true;
+    };
+
+    const stopMatter = () => {
+      if (!isMatterInitialized) return;
+      destroyMatter();
+      isMatterInitialized = false;
+    };
+
+    const startMarquee = () => {
+      if (isMarqueeInitialized) return;
+      isMarqueeInitialized = true;
+
+      const marquees = document.querySelectorAll<HTMLElement>('.marquee');
+      const cleanups: Array<() => void> = [];
+      const heroPanel = document.querySelector('.hero-panel');
+      let isHeroVisible = true;
+
+      const applyMarqueeThrottle = () => {
+        const shouldPause = document.hidden || !isHeroVisible || Boolean(window.__simpleModeEnabled);
+        marquees.forEach((marquee) => {
+          marquee.classList.toggle('marquee--paused', shouldPause);
+        });
+      };
+      marqueeApplyThrottle = applyMarqueeThrottle;
+
+      const setupMarquee = (marquee: HTMLElement) => {
+        const track = marquee.querySelector<HTMLElement>(".marquee-track");
+        const baseContent = marquee.querySelector<HTMLElement>(".marquee-content");
+        
+        if (!track || !baseContent) return;
+
+        const direction = marquee.getAttribute('data-direction') || 'left';
+        const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
+
+        const rebuildTrack = () => {
+          const allSegments = track.querySelectorAll<HTMLElement>(".marquee-content");
+          allSegments.forEach((segment, index) => {
+            if (index > 0) segment.remove();
+          });
+
+          const segmentWidth = baseContent.getBoundingClientRect().width;
+          if (segmentWidth <= 0) return;
+
+          const viewportWidth = marquee.clientWidth || window.innerWidth;
+          const segmentsNeeded = Math.max(
+            3,
+            Math.ceil((viewportWidth + segmentWidth) / segmentWidth) + 1
+          );
+
+          for (let i = 1; i < segmentsNeeded; i++) {
+            const clone = baseContent.cloneNode(true) as HTMLElement;
+            track.appendChild(clone);
+          }
+
+          const pxPerSecond = Math.max(12, customSpeed * 60);
+          const duration = segmentWidth / pxPerSecond;
+
+          marquee.style.setProperty('--marquee-distance', `${segmentWidth}px`);
+          marquee.style.setProperty('--marquee-duration', `${duration.toFixed(2)}s`);
+          marquee.classList.toggle('marquee--right', direction === 'right');
+          marquee.classList.add('marquee--ready');
+        };
+
+        rebuildTrack();
+
+        const resizeObserver = new ResizeObserver(rebuildTrack);
+        resizeObserver.observe(marquee);
+        resizeObserver.observe(baseContent);
+
+        cleanups.push(() => resizeObserver.disconnect());
+      };
+
+      marquees.forEach(setupMarquee);
+
+      const onVisibilityChange = () => {
+        applyMarqueeThrottle();
+      };
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      cleanups.push(() => {
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+      });
+
+      if (heroPanel) {
+        const heroObserver = new IntersectionObserver((entries) => {
+          isHeroVisible = entries.some((entry) => entry.isIntersecting);
+          applyMarqueeThrottle();
+        }, { threshold: 0.1 });
+
+        heroObserver.observe(heroPanel);
+        cleanups.push(() => heroObserver.disconnect());
+      }
+
+      applyMarqueeThrottle();
+
+      window.addEventListener("beforeunload", () => {
+        cleanups.forEach(fn => fn());
+      }, { once: true });
+    };
+
+    window.simpleModeMatter = {
+      start: startMatter,
+      stop: stopMatter
+    };
+
+    window.simpleModeMarquee = {
+      start: startMarquee,
+      refresh: () => {
+        if (!isMarqueeInitialized) {
+          startMarquee();
+        }
+        marqueeApplyThrottle();
+      }
+    };
+
+    window.addEventListener("startup:matter", startMatter);
+    window.addEventListener("startup:marquee", startMarquee);
+  </script>
+</div>
