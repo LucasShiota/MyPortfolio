@@ -6,6 +6,7 @@ import DarkMode from '../components/DarkMode.astro';
 <header>
 	<div class="header-left">
 		<div class="name">Lucas Shiota</div>
+			<img src="/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
 		<div class="path">Designer</div>
 	</div>
 	<button id="theme-toggle">
@@ -28,6 +29,13 @@ import DarkMode from '../components/DarkMode.astro';
 		display: flex; flex-direction: row;
  		align-items: center; justify-content: space-between;
 		font-weight: bold;
+	}
+
+	.header-icon {
+		width: 50px;
+		height: 50px;
+		object-fit: contain;
+		display: block;
 	}
 	/* Header Text */
 	.header-left {

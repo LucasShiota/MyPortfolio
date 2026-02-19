@@ -63,11 +63,6 @@ export async function initMatter() {
       link: LINKS.substack
     },
     {
-      name: "BlueSky",
-      svg: "/svg/bluesky.svg",
-      link: LINKS.bluesky
-    },
-    {
       name: "Itch.io",
       svg: "/svg/itchio.svg",
       link: LINKS.itchio
