@@ -48,12 +48,12 @@ export function destroyMatter() {
     clearInterval(driftIntervalId);
   }
 
-  if (render?.canvas && onMouseMove) {
-    render.canvas.removeEventListener("mousemove", onMouseMove);
+  if (container && onMouseMove) {
+    container.removeEventListener("mousemove", onMouseMove);
   }
 
-  if (render?.canvas && onCanvasClick) {
-    render.canvas.removeEventListener("click", onCanvasClick);
+  if (container && onCanvasClick) {
+    container.removeEventListener("click", onCanvasClick);
   }
 
   if (onVisibilityChange) {
@@ -141,6 +141,7 @@ export async function initMatter() {
   render.canvas.style.position = "absolute";
   render.canvas.style.top = "0";
   render.canvas.style.left = "0";
+  render.canvas.style.pointerEvents = "none";
 
   const a11yLayer = document.createElement("div");
   a11yLayer.setAttribute("aria-hidden", "false");
@@ -236,7 +237,8 @@ export async function initMatter() {
 
   Composite.add(engine.world, [...driftBodies, ...walls]);
 
-  const mouse = Mouse.create(render.canvas);
+  const mouse = Mouse.create(container);
+  container.removeEventListener("wheel", mouse.mousewheel);
   const mouseConstraint = MouseConstraint.create(engine, {
     mouse,
     constraint: { stiffness: 0.2, render: { visible: false } },
@@ -254,9 +256,12 @@ export async function initMatter() {
       y: event.clientY - rect.top
     };
   };
-  render.canvas.addEventListener("mousemove", onMouseMove);
+  container.addEventListener("mousemove", onMouseMove);
 
   const onCanvasClick = (event) => {
+    const target = event.target;
+    if (target instanceof Element && target.closest("a")) return;
+
     const rect = render.canvas.getBoundingClientRect();
     const clickPosition = {
       x: event.clientX - rect.left,
@@ -272,7 +277,7 @@ export async function initMatter() {
       }
     }
   };
-  render.canvas.addEventListener("click", onCanvasClick);
+  container.addEventListener("click", onCanvasClick);
 
   const DRIFT_INTERVAL_MS = 200;
   const DRIFT_FORCE = 0.0005;

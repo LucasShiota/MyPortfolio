@@ -1,0 +1,15 @@
+---
+import ProjectShowcase from '../ProjectShowcase.astro';
+import ProjectDetails from '../ProjectDetails.astro';
+---
+<div class="panel projects-panel">
+    <div class="left"><ProjectShowcase/></div>
+    <div class="right"><ProjectDetails/></div>
+</div>
+
+<style>
+  .projects-panel {
+    flex-direction: row; display: flex;
+    align-items: center; justify-content: center;
+  }
+</style>

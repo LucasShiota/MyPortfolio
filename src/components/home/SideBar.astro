@@ -1,3 +1,9 @@
+---
+import PanelScroll from "./PanelScroll.astro"
+---
+
+<i class="panel-arrow nav-arrow-button fa-solid fa-angle-up"></i>
+<i class="panel-arrow nav-arrow-button fa-solid fa-angle-down"></i>
 <div class="sidebar">
   <div class="nav">
     <div class="nav-section hero-link" data-index="0">
@@ -29,29 +35,28 @@
       </div>
     </div>
   </div>
+  <PanelScroll/>
 </div>
 
 <style>
   .sidebar {
-    --sidebar-footer-padding: 0px;
-    height: 93vh; width: var(--sidebar-width); /* size */
+    position: fixed;
+    height: 93vh; width: var(--sidebar-width); right:0; top:0;
     padding-top: var(--header-height);
-    position:fixed; /* position */
-    right:0; top:0; 
-    display: flex; /* child alignment */
-    flex-direction: column;
-    align-items: center; justify-content: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
     user-select: none;
+
+    --footer-padding: 0px;
+    padding-bottom: calc(var(--footer-padding));
+    transition: padding-bottom 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
+    transform: translateY(calc(var(--footer-padding) * -0.5));
   }
   .nav {
     height: 100%;
-    padding-bottom: calc(var(--sidebar-footer-padding));
-    transition: padding-bottom 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
-    transform: translateY(calc(var(--sidebar-footer-padding) * -0.5));
     gap: 1rem; align-items: center; justify-content: center;
     display: flex; flex-direction: column;
   }
-  .sidebar.contacts-entering { --sidebar-footer-padding: var(--header-height); }
+  .sidebar.contacts-entering { --footer-padding: var(--footer-height); }
     
   .nav-section {
     display: flex; flex-direction: column;
@@ -93,5 +98,8 @@
     .navsec-text { display: block;}
     .navsec-icon { display: none;}
   }
+
+  .fa-angle-up { top: calc(var(--header-height) + 5%); } .fa-angle-down{bottom: 5%;  }
+  .panel-arrow { position: fixed; right:50%; }
 </style>
 

@@ -12,12 +12,12 @@
     than a master of one.&#8201;
   </span> </div> </div>
   <script>
-    import { destroyMatter, initMatter } from '../scripts/physics.js';
+    import { destroyMatter, initMatter } from '../../scripts/physics.js';
 
     let isMatterInitialized = false;
     let isMarqueeInitialized = false;
     let marqueeApplyThrottle = () => {};
-    
+
     const startMatter = () => {
       if (window.__simpleModeEnabled || isMatterInitialized) return;
       initMatter();
@@ -48,16 +48,16 @@
       marqueeApplyThrottle = applyMarqueeThrottle;
 
       const setupMarquee = (marquee: HTMLElement) => {
-        const track = marquee.querySelector<HTMLElement>(".marquee-track");
-        const baseContent = marquee.querySelector<HTMLElement>(".marquee-content");
-        
+        const track = marquee.querySelector<HTMLElement>('.marquee-track');
+        const baseContent = marquee.querySelector<HTMLElement>('.marquee-content');
+
         if (!track || !baseContent) return;
 
         const direction = marquee.getAttribute('data-direction') || 'left';
         const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
 
         const rebuildTrack = () => {
-          const allSegments = track.querySelectorAll<HTMLElement>(".marquee-content");
+          const allSegments = track.querySelectorAll<HTMLElement>('.marquee-content');
           allSegments.forEach((segment, index) => {
             if (index > 0) segment.remove();
           });
@@ -116,9 +116,16 @@
 
       applyMarqueeThrottle();
 
-      window.addEventListener("beforeunload", () => {
-        cleanups.forEach(fn => fn());
+      window.addEventListener('beforeunload', () => {
+        cleanups.forEach((fn) => fn());
       }, { once: true });
+    };
+
+    const bootstrapIfMissedStartup = () => {
+      startMarquee();
+      if (!window.__simpleModeEnabled) {
+        startMatter();
+      }
     };
 
     window.simpleModeMatter = {
@@ -136,7 +143,96 @@
       }
     };
 
-    window.addEventListener("startup:matter", startMatter);
-    window.addEventListener("startup:marquee", startMarquee);
+    window.addEventListener('startup:matter', startMatter);
+    window.addEventListener('startup:marquee', startMarquee);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrapIfMissedStartup, { once: true });
+    } else {
+      bootstrapIfMissedStartup();
+    }
   </script>
 </div>
+
+<style>
+  .hero-background {
+    height: var(--panel-height);
+    width: 100vw;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+  }
+
+  .marquee {
+    width: 100vw;
+    height: 23.25vw;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent
+    );
+  }
+
+  .marquee-track {
+    height: 100%;
+    display: inline-flex;
+    white-space: nowrap;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    filter: blur(0.2px);
+    justify-content: flex-start;
+    align-items: center;
+    animation: marquee-scroll var(--marquee-duration, 20s) linear infinite;
+  }
+
+  .marquee--right .marquee-track {
+    animation-direction: reverse;
+  }
+
+  .marquee:not(.marquee--ready) .marquee-track {
+    animation: none;
+  }
+
+  .marquee--paused .marquee-track {
+    animation-play-state: paused;
+  }
+
+  .marquee-content {
+    height: 100%;
+    font-size: var(--font-size);
+    font-family: 'Notable';
+    line-height: 0.62;
+    letter-spacing: calc(0.1 * var(--font-size));
+    word-spacing: calc(0.01 * var(--font-size));
+    -webkit-text-stroke: calc(0.12 * var(--font-size)) currentColor;
+    opacity: 5%;
+    display: inline-block;
+    user-select: none;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: translate3d(calc(-1 * var(--marquee-distance, 0px)), 0, 0);
+    }
+  }
+</style>

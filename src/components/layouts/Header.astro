@@ -1,8 +1,8 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE } from '../../consts';
 import HeaderLink from './HeaderLink.astro';
-import DarkMode from '../components/DarkMode.astro';
-import SimpleMode from '../components/SimpleMode.astro';
+import DarkMode from '../features/DarkMode.astro';
+import SimpleMode from '../features/SimpleMode.astro';
 ---
 <header>
 	<div class="header-left">
@@ -40,9 +40,10 @@ import SimpleMode from '../components/SimpleMode.astro';
 
 <style>
 	header {
-		position: fixed; z-index: 30;
+		position: fixed;
 		height: var(--header-height); width: 100%;
 		margin: 0; padding: 0 2rem;
+		opacity: var(--headfoot-opacity);
 		background: var(--bg-color); box-shadow: var(--box-shadow);
 		display: flex; flex-direction: row;
  		align-items: center; justify-content: space-between;

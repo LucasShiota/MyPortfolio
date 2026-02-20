@@ -1,7 +1,7 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import VantaFogBG from '../components/VantaFogBG.astro';
+import BaseHead from './BaseHead.astro';
+import Header from './Header.astro';
+import VantaFogBG from '../features/VantaFogBG.astro';
 interface Props {
   title: string;
   description: string;
@@ -32,7 +32,7 @@ const { title, description } = Astro.props;
     <slot />
     <VantaFogBG/>
     <script>
-      import { startStartupGate } from '../scripts/startup-gate.js';
+      import { startStartupGate } from '../../scripts/startup-gate.js';
       startStartupGate();
     </script>
   </body>

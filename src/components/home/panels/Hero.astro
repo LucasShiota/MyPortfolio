@@ -1,0 +1,75 @@
+---
+import HeroBGText from "../HeroBGText.astro"
+---
+<div class="panel hero-panel">
+  <div class="hero-foreground">
+    <div class="hero-fgtext-parent">
+      <div class="hero-fgtext-hello"> I'm Lucas </div>
+      <div class="hero-fgtext-description"> 
+        My heart is imaginitive and curious. And I follow my heart wherever it goes.
+      </div>
+    </div>
+    <div class="headshot-wrapper">
+      <img class="headshot" src="../images/headshot.webp" alt="Headshot" />
+    </div>
+  </div>
+  <HeroBGText />
+</div>
+<style>
+  .hero-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-foreground {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    z-index: 2;
+    position: absolute;
+    inset: 0;
+    height: var(--panel-height);
+    width: calc(100vw - var(--sidebar-width));
+    padding: 2rem;
+    gap: 1rem;
+  }
+
+  .hero-fgtext-parent, .headshot-wrapper {
+    height: 70%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-fgtext-hello, .hero-fgtext-description {
+    font-family: "Sigmar";
+    text-align: center;
+    justify-content: right;
+    display: flex;
+  }
+
+  .hero-fgtext-hello {
+    font-size: 8vh;
+    align-items: flex-end;
+  }
+
+  .hero-fgtext-description {
+    font-size: 4vh;
+    align-items: flex-start;
+  }
+
+  .headshot {
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    box-shadow: var(--box-shadow);
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+</style>
