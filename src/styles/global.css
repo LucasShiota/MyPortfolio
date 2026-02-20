@@ -4,6 +4,17 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+/* --------------------------------------------- */
+/* --------------- Z-AXIS LAYERS --------------- */
+/* --------------------------------------------- */
+/* #region Layers */
+
+footer{z-index: 20;}
+.sidebar{z-index: 10;}
+.nav-arrow-button{z-index: 10;}
+
+/* #endregion */
+
 /* --------------------------------------------------- */
 /* --------------- THEMES / GLOBAL VAR --------------- */
 /* --------------------------------------------------- */
@@ -11,11 +22,15 @@
 /* #region Themes */
 
 /* ------ DEBUG WIREFRAME ------ */
-/*
-* { outline: 1px solid red; }
-*/
+/* * { outline: 1px solid red; } */
+
 :root{
   --herobgtext-font-size: 24vh;
+  --font-size: 26vh;
+  --sidebar-width: 20vw;
+  --header-height: 4rem;
+  --panel-height: calc(100vh - var(--header-height));
+  --footer-height: calc(var(--header-height) * 2);
 }
 html {
   transition:
@@ -216,7 +231,7 @@ hr {border: none;border-top: 1px solid rgb(var(--gray-light));}
   border-radius: 50%;
 
   background: transparent;
-  z-index: 10;
+  
 
   display: flex; justify-content: center;
   align-items: center;

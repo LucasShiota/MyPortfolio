@@ -116,6 +116,8 @@ export async function initMatter() {
   const spriteSheet = await preloadSpriteSheet();
   if (myVersion !== initVersion || window.__simpleModeEnabled) return;
 
+  container.style.position = "relative";
+
   const engine = Engine.create({
     enableSleeping: false,
     gravity: { x: 0, y: 0 },
@@ -140,6 +142,14 @@ export async function initMatter() {
   render.canvas.style.top = "0";
   render.canvas.style.left = "0";
 
+  const a11yLayer = document.createElement("div");
+  a11yLayer.setAttribute("aria-hidden", "false");
+  a11yLayer.style.position = "absolute";
+  a11yLayer.style.inset = "0";
+  a11yLayer.style.pointerEvents = "none";
+  a11yLayer.style.zIndex = "2";
+  container.appendChild(a11yLayer);
+
   const driftBodies = [];
   const draggableBodies = [];
 
@@ -160,11 +170,28 @@ export async function initMatter() {
 
     circle.plugin = {
       link: entry.link,
+      name: entry.name,
       image: spriteSheet,
       sprite: entry.sprite,
       hoverScale: 1,
       targetScale: 1
     };
+
+    const linkEl = document.createElement("a");
+    linkEl.href = entry.link;
+    linkEl.target = "_blank";
+    linkEl.rel = "noopener noreferrer";
+    linkEl.setAttribute("aria-label", `Open ${entry.name}`);
+    linkEl.title = entry.name;
+    linkEl.style.position = "absolute";
+    linkEl.style.display = "block";
+    linkEl.style.borderRadius = "50%";
+    linkEl.style.pointerEvents = "auto";
+    linkEl.style.background = "transparent";
+    linkEl.style.outlineOffset = "3px";
+    a11yLayer.appendChild(linkEl);
+
+    circle.plugin.linkEl = linkEl;
 
     Body.setVelocity(circle, {
       x: (Math.random() - 0.5) * 1,
@@ -312,6 +339,16 @@ export async function initMatter() {
       body.plugin.targetScale = isHovering ? 1.15 : 1;
       body.plugin.hoverScale += (body.plugin.targetScale - body.plugin.hoverScale) * 0.15;
       const scale = body.plugin.hoverScale;
+
+      const linkEl = body.plugin?.linkEl;
+      if (linkEl) {
+        const hitbox = radius * 1.2;
+        linkEl.style.width = `${hitbox}px`;
+        linkEl.style.height = `${hitbox}px`;
+        linkEl.style.left = `${x - hitbox / 2}px`;
+        linkEl.style.top = `${y - hitbox / 2}px`;
+        linkEl.style.transform = `rotate(${angle}rad)`;
+      }
 
       ctx.save();
       ctx.translate(x, y);

@@ -1,0 +1,47 @@
+---
+const today = new Date();
+---
+<div class="panel contacts-panel">
+	<div id="matter-container"></div>	
+</div>
+<div class="footerino">
+	<div class="extra-info">
+		<div class="extra-part"> <i class="fa-solid fa-timeline"></i>&#8194;Resume </div>
+		<div class="extra-part"> <i class="fa-solid fa-envelope"></i>&#8194;Get in touch <a href="mailto:lucasshiota@protonmail.com"></a></div>
+		<div class="extra-part"> <i class="fa-solid fa-location-dot"></i>&#8201;Tokyo, Japan</div>
+	</div>
+	<div> &copy; {today.getFullYear()} Lucas Shiota. All rights reserved. </div>
+</div>
+
+<style>
+	.contacts-panel{
+		flex-direction: column; display: flex;
+		padding-bottom: var(--footer-height);
+		height: calc(var(--panel-height) - var(--footer-height));
+	}
+	#matter-container {
+		width: 100%;
+		height: 100%;
+		display: flex; flex-direction: column;
+		touch-action: auto;
+	}
+	.footerino {
+		position: absolute; bottom: -300vh;
+    width: 100vw; height: var(--footer-height);
+		padding: 0 2em; gap: 0.5em;
+		background: var(--bg-color); box-shadow: var(--box-shadow); opacity: 0.7;
+    align-items: center; justify-content: center; display: flex; flex-direction: column;
+    box-sizing: border-box; /*Stop being wider than viewport*/
+	}
+	.extra-info {
+		display: flex; flex-direction: row;
+		width: 40%;
+		justify-content: space-evenly; align-items: center;
+		gap: 0.5em; padding: 0 1em;
+	}
+	.extra-part {
+		width: 25%;
+		display: flex; flex: 1;
+		align-items: center; justify-content: center;
+	}
+</style>

@@ -5,6 +5,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PanelScroll from '../components/PanelScroll.astro';
 import SideBar from '../components/SideBar.astro';
 import HeroBGText from '../components/HeroBGText.astro';
+import Contacts from '../components/Contacts.astro';
+
+const today = new Date();
 import '../styles/index-styles.css';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
@@ -15,6 +18,17 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
   <SideBar />
   <div class="panel-parent">
     <div class="panel hero-panel">
+      <div class="hero-foreground">
+        <div class="hero-fgtext-parent">
+          <div class="hero-fgtext-hello"> I'm Lucas </div>
+          <div class="hero-fgtext-description"> 
+            My heart follows imagination & divergence. And I follow my heart wherever it goes.
+          </div>
+        </div>
+        <div class="headshot-wrapper">
+          <img class="headshot" src="../images/headshot.webp" alt="Headshot" />
+        </div>
+      </div>
       <HeroBGText />
     </div>
     <div class="panel projects-panel">
@@ -22,9 +36,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
         <div class="right"><ProjectDetails/></div>
     </div>
     <div class="panel about-panel"></div>
-    <div class="panel contacts-panel">
-      <div id="matter-container"></div>
-    </div>
+    <Contacts />
   </div>
   <PanelScroll/>
 </BaseLayout>
