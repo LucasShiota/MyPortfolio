@@ -5,11 +5,19 @@
 
 	gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-	const upArrow = document.querySelector<HTMLElement>(".fa-angle-up");
-	const downArrow = document.querySelector<HTMLElement>(".fa-angle-down");
+	const upArrow = document.querySelector<HTMLElement>('[data-panel-nav="up"]');
+	const downArrow = document.querySelector<HTMLElement>('[data-panel-nav="down"]');
 	const sidebar = document.querySelector<HTMLElement>(".sidebar");
-	const sidebarElements = document.querySelectorAll<HTMLElement>(".nav-section, .nav-circle");
+	const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
 	const panels = gsap.utils.toArray<HTMLElement>(".panel");
+	const SECTION_INDEX_STEP = 2;
+	const ICON_BASE_SCALE = 1;
+	const SIDEBAR_SCALE = {
+		min: 1,
+		max: 1.45,
+		falloffRate: 1,
+		falloffPower: 1.7
+	} as const;
 
 	const totalSteps = panels.length - 1;
 	const step = totalSteps > 0 ? 1 / totalSteps : 1;
@@ -25,6 +33,17 @@
 		sidebar.classList.toggle("contacts-entering", progress >= contactsEnterThreshold);
 	}
 
+	// Curve shape:
+	// - steep drop after the active section (peak)
+	// - then quickly settles toward min scale (short plateau)
+	function getSidebarScaleByDistance(distanceFromActive: number): number {
+		const falloff = Math.exp(
+			-SIDEBAR_SCALE.falloffRate *
+			Math.pow(distanceFromActive, SIDEBAR_SCALE.falloffPower)
+		);
+		return SIDEBAR_SCALE.min + (SIDEBAR_SCALE.max - SIDEBAR_SCALE.min) * falloff;
+	}
+
 	/* ------- PAGE REFRESH CORRECTIONS --------- */
 
   window.addEventListener("load", () => {
@@ -34,8 +53,6 @@
 		mainTrigger.update();
   });
 	function updateUI(progress: number) {
-		const scrollPercent = progress * 100;
-
 		currentIndex = Math.round(progress / step);
 
 		if (currentIndex !== lastIndex) {
@@ -43,21 +60,20 @@
 			lastIndex = currentIndex;
 		}
 
-		sidebarElements.forEach((el, i) => {
-			const delta = Math.abs(scrollPercent - elementPercentages[i]);
-			const scale = 1.5 - Math.min(delta / 30, 1) * 0.5;
-			el.style.transform = `scale(${scale})`;
+		const activeSectionPosition = progress * totalSteps;
+		navSections.forEach((sectionEl, sectionIndex) => {
+			const sectionDistanceFromActive = Math.abs(sectionIndex - activeSectionPosition);
+			const sectionScale = getSidebarScaleByDistance(sectionDistanceFromActive);
+			sectionEl.style.transform = `scale(${sectionScale})`;
+
+			const iconEl = sectionEl.querySelector<HTMLElement>(".navsec-icon");
+			if (iconEl) {
+				iconEl.style.transform = `translate(-50%, -50%) scale(${ICON_BASE_SCALE * sectionScale})`;
+			}
 		});
 
 		updateSidebarFooterSpacing(progress);
 	}
-
-	/* ------- SIDEBAR SETUP --------- */
-
-	const totalItems = sidebarElements.length;
-	const elementPercentages = Array.from(sidebarElements).map(
-		(_, i) => (i / (totalItems - 1)) * 100
-	);
 
 	/* ------- MASTER SCROLLTRIGGER --------- */
 
@@ -113,18 +129,16 @@
 
 	/* ------- NAV CLICK --------- */
 
-	document.querySelectorAll<HTMLElement>(".nav-section").forEach(
-		(section) => {
-			section.style.cursor = "pointer";
+	navSections.forEach((section) => {
+		section.style.cursor = "pointer";
 
-			section.addEventListener("click", () => {
-				const sectionIndex = Number(section.dataset.index);
-				if (Number.isNaN(sectionIndex)) return;
-				const index = sectionIndex / 2;
-				scrollToIndex(index);
-			});
-		}
-	);
+		section.addEventListener("click", () => {
+			const navDataIndex = Number(section.dataset.index);
+			if (Number.isNaN(navDataIndex)) return;
+			const panelIndex = navDataIndex / SECTION_INDEX_STEP;
+			scrollToIndex(panelIndex);
+		});
+	});
 
 	/* ------- ARROWS --------- */
 
@@ -154,4 +168,3 @@
 		mainTrigger.kill();
 	}, { once: true });
 </script>
-

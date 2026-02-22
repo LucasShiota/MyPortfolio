@@ -20,7 +20,7 @@ let initVersion = 0;
 function preloadSpriteSheet() {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.src = "/web-ui-icon-svg-reformatting.png";
+    img.src = "/svg/spritesheet/contact-icon-spritesheet@x2.png";
     img.onload = () => resolve(img);
     img.onerror = reject;
   });
@@ -97,13 +97,32 @@ export async function initMatter() {
   const width = container.clientWidth;
   const height = container.clientHeight;
 
-  const sprites = {
+  const BASE_SPRITE_SHEET_WIDTH = 1400;
+  const BASE_SPRITE_SHEET_HEIGHT = 256;
+  const baseSprites = {
     github: { sx: 42, sy: 30, sw: 196, sh: 191 },
     substack: { sx: 336, sy: 30, sw: 168, sh: 201 },
     linkedin: { sx: 612, sy: 27, sw: 177, sh: 177 },
     itchio: { sx: 881, sy: 39, sw: 198, sh: 178 },
     steam: { sx: 1162, sy: 30, sw: 196, sh: 196 }
   };
+
+  const spriteSheet = await preloadSpriteSheet();
+  if (myVersion !== initVersion || window.__simpleModeEnabled) return;
+
+  const spriteScaleX = spriteSheet.naturalWidth / BASE_SPRITE_SHEET_WIDTH;
+  const spriteScaleY = spriteSheet.naturalHeight / BASE_SPRITE_SHEET_HEIGHT;
+  const sprites = Object.fromEntries(
+    Object.entries(baseSprites).map(([key, sprite]) => [
+      key,
+      {
+        sx: Math.round(sprite.sx * spriteScaleX),
+        sy: Math.round(sprite.sy * spriteScaleY),
+        sw: Math.round(sprite.sw * spriteScaleX),
+        sh: Math.round(sprite.sh * spriteScaleY)
+      }
+    ])
+  );
 
   const entries = [
     { name: "GitHub", link: LINKS.github, sprite: sprites.github },
@@ -112,9 +131,6 @@ export async function initMatter() {
     { name: "Itch.io", link: LINKS.itchio, sprite: sprites.itchio },
     { name: "Steam", link: LINKS.steam, sprite: sprites.steam }
   ];
-
-  const spriteSheet = await preloadSpriteSheet();
-  if (myVersion !== initVersion || window.__simpleModeEnabled) return;
 
   container.style.position = "relative";
 

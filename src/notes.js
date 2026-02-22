@@ -1,19 +1,14 @@
 /* 
 
-
-<div class="top">
-		<h1 class="hero-text">🧑‍🚀 Hello, Astronaut!</h1>
-		<script>
-			import { gsap } from "gsap";
-			import { SplitText } from "gsap/SplitText";
-			gsap.registerPlugin(SplitText);
-			let split = SplitText.create(".hero-text", {type:"words,chars"});
-			var tl = gsap.timeline();
-			tl.from(split.chars, {duration: .5, opacity: 0, stagger: .125,  ease: 'power1. In'});
-		</script>
-	</div>
+  --vanta-highlight: #ffd787;
+  --vanta-midtone: #ff9ee2;
+  --vanta-lowlight: #eebcff;
+  --vanta-base: #ffebcd;
 	
-		
+	--vanta-highlight: #006476;
+  --vanta-midtone: #560296;
+  --vanta-lowlight: #006837;
+  --vanta-base: #000147;
 		
   --vanta-highlight: #002e31;
   --vanta-midtone: #35007b;

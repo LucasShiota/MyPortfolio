@@ -3,10 +3,12 @@ import HeroBGText from "../HeroBGText.astro"
 ---
 <div class="panel hero-panel">
   <div class="hero-foreground">
-    <div class="hero-fgtext-parent">
-      <div class="hero-fgtext-hello"> I'm Lucas </div>
-      <div class="hero-fgtext-description"> 
-        My heart is imaginitive and curious. And I follow my heart wherever it goes.
+    <div class="hero-fg-parent">
+      <div class="hero-fg-hello"> I'm Lucas </div>
+      <div class="hero-fg-tagline"> 
+        Eclectic Solo Game Dev. 
+        Always fantasizing & experimenting to bring something fresh, new, & different to the table.
+        Because thats whats most fun & interesting.
       </div>
     </div>
     <div class="headshot-wrapper">
@@ -38,7 +40,7 @@ import HeroBGText from "../HeroBGText.astro"
     gap: 1rem;
   }
 
-  .hero-fgtext-parent, .headshot-wrapper {
+  .hero-fg-parent, .headshot-wrapper {
     height: 70%;
     width: 50%;
     display: flex;
@@ -47,19 +49,19 @@ import HeroBGText from "../HeroBGText.astro"
     justify-content: center;
   }
 
-  .hero-fgtext-hello, .hero-fgtext-description {
+  .hero-fg-hello, .hero-fg-tagline {
     font-family: "Sigmar";
     text-align: center;
     justify-content: right;
     display: flex;
   }
 
-  .hero-fgtext-hello {
+  .hero-fg-hello {
     font-size: 8vh;
     align-items: flex-end;
   }
 
-  .hero-fgtext-description {
+  .hero-fgtext-tagline {
     font-size: 4vh;
     align-items: flex-start;
   }

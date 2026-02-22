@@ -1,0 +1,104 @@
+---
+import type { Project } from "./projectsData";
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+---
+
+<div class="projects-preview-parent">
+  {projects.map((project) => (
+    <div class="preview-entry" data-project-id={project.id}>
+      <div class="preview-header">
+        {project.description && <p class="preview-desc">{project.description}</p>}
+      </div>
+      <p class="preview-body">{project.preview}</p>
+      <a
+        class="preview-link-btn"
+        href={project.previewButton.href}
+        aria-label={project.previewButton.ariaLabel}
+      >
+        {project.previewButton.text}
+      </a>
+    </div>
+  ))}
+</div>
+<style is:global>
+  .projects-preview-parent {
+    width: 100%;
+    height: 50%;
+    position: relative;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(var(--black), 0.05);
+    box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    border-radius: 50px;
+  }
+
+  .project-entry.is-filtered-out, .preview-entry.is-filtered-out { display: none; }
+
+  .preview-entry {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90%;
+    height: 90%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .preview-header {
+    width: 100%;
+    margin-bottom: 0.6rem;
+    text-align: left;
+  }
+
+  .preview-desc {
+    margin: 0;
+    opacity: 0.95;
+    font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+    font-weight: 700;
+    letter-spacing: 0.015em;
+  }
+
+  .preview-body { margin: 0; }
+  .preview-entry.active { opacity: 1; z-index: 10; }
+    
+  .preview-link-btn {
+    margin-top: auto;
+    align-self: flex-end;
+    margin-right: 0.2rem;
+    margin-bottom: 0.2rem;
+    padding: 0.55em 1.2em;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--accent-reverse) 50%, transparent);
+    background: color-mix(in srgb, var(--accent-reverse) 20%, transparent);
+    color: var(--accent-reverse);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-link-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: var(--box-shadow);
+  }
+
+  .preview-link-btn:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--accent-reverse) 75%, transparent);
+    outline-offset: 2px;
+  }
+</style>

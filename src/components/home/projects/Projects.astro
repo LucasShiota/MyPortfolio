@@ -1,0 +1,64 @@
+---
+import ProjectList from "./ProjectList.astro";
+import ProjectPreviews from "./ProjectPreviews.astro";
+import { projects, filterTags } from "./projectsData";
+---
+<div class="panel projects-panel">
+  <div class="left">
+    <div class="projects-filter-parent">
+      <i class="fa-solid fa-filter"></i>
+      <div class="project-filters" role="group" aria-label="Filter projects">
+        <button type="button" class="project-filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
+        {filterTags.map((tag) => (
+          <button type="button" class="project-filter-btn" data-filter={tag} aria-pressed="false">
+            {tag}
+          </button>
+        ))}
+      </div>
+    </div>
+    <div class="projects-list-parent">
+      <div class="project-list-nav" aria-label="Project navigation">
+        <button class="nav-arrow-button" type="button" data-nav="up" aria-label="Select previous project">
+          <i class="fa-solid fa-angle-up" aria-hidden="true"></i>
+        </button>
+        <button class="nav-arrow-button" type="button" data-nav="down" aria-label="Select next project">
+          <i class="fa-solid fa-angle-down" aria-hidden="true"></i>
+        </button>
+      </div>
+      <ProjectList projects={projects} />
+    </div>
+  </div>
+
+  <div class="right">
+    <ProjectPreviews projects={projects} />
+  </div>
+</div>
+
+<script>
+  import { initProjectsPanel } from "../../../scripts/projects/initProjectsPanel";
+
+  if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", initProjectsPanel, { once: true });
+  } else {
+    initProjectsPanel();
+  }
+</script>
+
+<style>
+  .projects-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .left {
+    overflow: hidden;
+  }
+
+  .left, .right {
+    height: 100%; flex: 1;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+  }
+</style>
