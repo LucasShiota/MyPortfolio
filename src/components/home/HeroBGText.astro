@@ -12,23 +12,8 @@
     than a master of one.&#8201;
   </span> </div> </div>
   <script>
-    import { destroyMatter, initMatter } from '../../scripts/physics.js';
-
-    let isMatterInitialized = false;
     let isMarqueeInitialized = false;
     let marqueeApplyThrottle = () => {};
-
-    const startMatter = () => {
-      if (window.__simpleModeEnabled || isMatterInitialized) return;
-      initMatter();
-      isMatterInitialized = true;
-    };
-
-    const stopMatter = () => {
-      if (!isMatterInitialized) return;
-      destroyMatter();
-      isMatterInitialized = false;
-    };
 
     const startMarquee = () => {
       if (isMarqueeInitialized) return;
@@ -123,14 +108,6 @@
 
     const bootstrapIfMissedStartup = () => {
       startMarquee();
-      if (!window.__simpleModeEnabled) {
-        startMatter();
-      }
-    };
-
-    window.simpleModeMatter = {
-      start: startMatter,
-      stop: stopMatter
     };
 
     window.simpleModeMarquee = {
@@ -143,7 +120,6 @@
       }
     };
 
-    window.addEventListener('startup:matter', startMatter);
     window.addEventListener('startup:marquee', startMarquee);
 
     if (document.readyState === 'loading') {
@@ -157,15 +133,28 @@
 <style>
   .hero-background {
     height: var(--panel-height);
-    width: 100vw;
+    width: 100%;
     z-index: 1;
     display: flex;
     flex-direction: column;
     position: absolute;
     left: 0;
   }
+
+  @media (hover: none) and (pointer: coarse) {
+    .hero-background{
+      display: none;
+    }
+  }
+
+  @media (max-width: 48rem), (max-height: 48rem) {
+    .hero-background{
+      display: none;
+    }
+  }
+  
   .marquee {
-    width: 100vw;
+    width: 100%;
     height: 23.25vw;
     overflow: hidden;
     position: relative;

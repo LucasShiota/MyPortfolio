@@ -1,6 +1,8 @@
 export type Project = {
   id: string;
   title: string;
+  thumbnailSrc: string;
+  thumbnailAlt: string;
   description: string;
   preview: string;
   tags: string[];
@@ -14,7 +16,9 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: "0",
-    title: "My\nProjects:",
+    title: "My Projects:",
+    thumbnailSrc: "/logo/crazyblender-sm.webp",
+    thumbnailAlt: "Projects overview thumbnail",
     description: "Intro",
     preview: "Select a project from the list to view details.",
     tags: ["all"],
@@ -23,49 +27,61 @@ export const projects: Project[] = [
   {
     id: "1",
     title: "Destructively\nExpressive Icons",
+    thumbnailSrc: "/svg/sidebar/projects.svg",
+    thumbnailAlt: "Destructively Expressive Icons thumbnail",
     description: "Deep Rock Galactic Visual Mod",
     preview: "A visual mod replacing default class icons with stylized vector art.",
-    tags: ["modding", "ui"],
+    tags: ["Mod"],
     previewButton: { text: "Mod Page", href: "#", ariaLabel: "Open mod page" },
   },
   {
     id: "2",
     title: "Baraliot Fantasia",
+    thumbnailSrc: "/svg/sidebar/about.svg",
+    thumbnailAlt: "Baraliot Fantasia thumbnail",
     description: "Deckbuilding Fantasy TRPG",
     preview: "A tabletop system prototype focused on deckbuilding combat.",
-    tags: ["game-design"],
+    tags: ["TRPG"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
     id: "3",
     title: "Koth_Billabong",
+    thumbnailSrc: "/svg/sidebar/contact.svg",
+    thumbnailAlt: "Koth Billabong thumbnail",
     description: "Team Fortress 2 Map",
     preview: "A TF2 map project focused on layout flow and readability.",
-    tags: ["level-design"],
+    tags: ["Level", "Mod"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
     id: "4",
     title: "Tokyo Grunge",
+    thumbnailSrc: "/images/headshot.webp",
+    thumbnailAlt: "Tokyo Grunge thumbnail",
     description: "Photo Series of Paint and Vinyl",
     preview: "A visual study of urban textures and graffiti in Tokyo.",
-    tags: ["photography"],
+    tags: ["Misc"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
     id: "5",
     title: "Portfolio Website",
+    thumbnailSrc: "/logo/crazyblender.webp",
+    thumbnailAlt: "Portfolio Website thumbnail",
     description: "No Website Builders, just Pure Code",
     preview: "Built with custom UI and animation behavior.",
-    tags: ["web", "frontend"],
+    tags: ["Misc"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
     id: "6",
     title: "Personal Blog",
+    thumbnailSrc: "/logo/crazyblender.svg",
+    thumbnailAlt: "Personal Blog thumbnail",
     description: "Video Game Topics I'm Passionate About",
     preview: "Long-form writing about game design and player experience.",
-    tags: ["writing"],
+    tags: ["Misc"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
 ];

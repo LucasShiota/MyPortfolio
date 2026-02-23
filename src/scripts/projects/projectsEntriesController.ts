@@ -11,20 +11,18 @@ export const initProjectsEntriesController = ({
 }: InitProjectsEntriesControllerOptions): void => {
   const container = panel.querySelector<HTMLElement>(".project-list");
   const entries = Array.from(
-    panel.querySelectorAll<HTMLElement>(".project-entry")
+    panel.querySelectorAll<HTMLElement>('.project-entry[data-project-selectable="true"]')
   );
   const filterButtons = Array.from(
     panel.querySelectorAll<HTMLButtonElement>(".project-filter-btn")
   );
-  const upButton = panel.querySelector<HTMLButtonElement>('[data-nav="up"]');
-  const downButton = panel.querySelector<HTMLButtonElement>('[data-nav="down"]');
 
   if (!container || entries.length === 0) return;
 
   let visibleEntries = [...entries];
   let currentVisibleIndex = 0;
   let isProgrammaticScroll = false;
-  let touchStartY: number | null = null;
+  let touchStartX: number | null = null;
   const selectedFilters = new Set<string>();
   let programmaticScrollReleaseTimer: number | null = null;
 
@@ -37,34 +35,27 @@ export const initProjectsEntriesController = ({
     );
   };
 
-  const updateArrowState = (): void => {
-    const canMoveUp = currentVisibleIndex > 0;
-    const canMoveDown = currentVisibleIndex < visibleEntries.length - 1;
-    if (upButton) upButton.disabled = !canMoveUp;
-    if (downButton) downButton.disabled = !canMoveDown;
-  };
-
   const updateEdgePadding = (): void => {
     const firstVisible = visibleEntries[0];
     const lastVisible = visibleEntries[visibleEntries.length - 1];
 
     if (!firstVisible || !lastVisible) {
-      container.style.paddingTop = "0px";
-      container.style.paddingBottom = "0px";
+      container.style.paddingLeft = "0px";
+      container.style.paddingRight = "0px";
       return;
     }
 
-    const topPadding = Math.max(
+    const leftPadding = Math.max(
       0,
-      (container.clientHeight - firstVisible.offsetHeight) / 2
+      (container.clientWidth - firstVisible.offsetWidth) / 2
     );
-    const bottomPadding = Math.max(
+    const rightPadding = Math.max(
       0,
-      (container.clientHeight - lastVisible.offsetHeight) / 2
+      (container.clientWidth - lastVisible.offsetWidth) / 2
     );
 
-    container.style.paddingTop = `${topPadding}px`;
-    container.style.paddingBottom = `${bottomPadding}px`;
+    container.style.paddingLeft = `${leftPadding}px`;
+    container.style.paddingRight = `${rightPadding}px`;
   };
 
   const updateVisuals = (index: number): void => {
@@ -78,7 +69,6 @@ export const initProjectsEntriesController = ({
 
     if (!activeEntry) {
       onActiveIdChange("");
-      updateArrowState();
       return;
     }
 
@@ -90,11 +80,13 @@ export const initProjectsEntriesController = ({
     });
 
     onActiveIdChange(activeId);
-    updateArrowState();
   };
 
-  const getEntryCenterInContainer = (entry: HTMLElement): number =>
-    entry.offsetTop - container.offsetTop + entry.offsetHeight / 2;
+  const getEntryCenterInContainer = (entry: HTMLElement): number => {
+    const entryRect = entry.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    return entryRect.left - containerRect.left + container.scrollLeft + entryRect.width / 2;
+  };
 
   const scrollEntryToCenter = (
     index: number,
@@ -103,11 +95,11 @@ export const initProjectsEntriesController = ({
     const entry = visibleEntries[index];
     if (!entry) return;
 
-    const top = getEntryCenterInContainer(entry) - container.clientHeight / 2;
-    const maxScrollTop = container.scrollHeight - container.clientHeight;
+    const left = getEntryCenterInContainer(entry) - container.clientWidth / 2;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
 
     container.scrollTo({
-      top: Math.max(0, Math.min(top, maxScrollTop)),
+      left: Math.max(0, Math.min(left, maxScrollLeft)),
       behavior,
     });
   };
@@ -140,7 +132,7 @@ export const initProjectsEntriesController = ({
 
   const getClosestVisibleIndexToCenter = (): number => {
     if (visibleEntries.length === 0) return 0;
-    const center = container.scrollTop + container.clientHeight / 2;
+    const center = container.scrollLeft + container.clientWidth / 2;
 
     let closestIndex = 0;
     let closestDistance = Number.POSITIVE_INFINITY;
@@ -166,39 +158,44 @@ export const initProjectsEntriesController = ({
     }
   };
 
-  const canScrollForDelta = (deltaY: number): boolean => {
-    const maxScrollTop = container.scrollHeight - container.clientHeight;
-    if (maxScrollTop <= 0) return false;
+  const canScrollForDelta = (deltaX: number): boolean => {
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+    if (maxScrollLeft <= 0) return false;
 
     const edgeEpsilon = 1;
-    if (deltaY < 0) return container.scrollTop > edgeEpsilon;
-    if (deltaY > 0) return container.scrollTop < maxScrollTop - edgeEpsilon;
+    if (deltaX < 0) return container.scrollLeft > edgeEpsilon;
+    if (deltaX > 0) return container.scrollLeft < maxScrollLeft - edgeEpsilon;
     return true;
   };
 
   const handleWheel = (event: WheelEvent): void => {
-    if (canScrollForDelta(event.deltaY)) return;
+    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+    if (canScrollForDelta(delta)) {
+      container.scrollLeft += delta;
+      event.preventDefault();
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
   };
 
   const handleTouchStart = (event: TouchEvent): void => {
-    touchStartY = event.touches[0]?.clientY ?? null;
+    touchStartX = event.touches[0]?.clientX ?? null;
   };
 
   const handleTouchMove = (event: TouchEvent): void => {
-    const currentTouchY = event.touches[0]?.clientY;
-    if (touchStartY == null || currentTouchY == null) return;
+    const currentTouchX = event.touches[0]?.clientX;
+    if (touchStartX == null || currentTouchX == null) return;
 
-    const deltaY = touchStartY - currentTouchY;
-    if (canScrollForDelta(deltaY)) return;
+    const deltaX = touchStartX - currentTouchX;
+    if (canScrollForDelta(deltaX)) return;
 
     event.preventDefault();
     event.stopPropagation();
   };
 
   const resetTouchStart = (): void => {
-    touchStartY = null;
+    touchStartX = null;
   };
 
   const isVisibleForFilter = (
@@ -264,20 +261,6 @@ export const initProjectsEntriesController = ({
       const index = visibleEntries.findIndex((visibleEntry) => visibleEntry === entry);
       if (index < 0) return;
       selectVisibleIndex(index, { shouldScroll: true, behavior: "smooth" });
-    });
-  });
-
-  upButton?.addEventListener("click", () => {
-    selectVisibleIndex(currentVisibleIndex - 1, {
-      shouldScroll: true,
-      behavior: "smooth",
-    });
-  });
-
-  downButton?.addEventListener("click", () => {
-    selectVisibleIndex(currentVisibleIndex + 1, {
-      shouldScroll: true,
-      behavior: "smooth",
     });
   });
 

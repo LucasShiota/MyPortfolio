@@ -2,8 +2,10 @@
 import PanelScroll from "./PanelScroll.astro"
 ---
 
+{/* Archived panel arrow nav (disabled by request)
 <i class="panel-arrow nav-arrow-button fa-solid fa-angle-up" data-panel-nav="up"></i>
 <i class="panel-arrow nav-arrow-button fa-solid fa-angle-down" data-panel-nav="down"></i>
+*/}
 <div class="sidebar">
   <div class="nav">
     <div class="nav-section hero-link" data-index="0">
@@ -50,6 +52,18 @@ import PanelScroll from "./PanelScroll.astro"
     padding-bottom: calc(var(--footer-padding));
     transition: padding-bottom 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
     transform: translateY(calc(var(--footer-padding) * -0.5));
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .sidebar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 48rem), (max-height: 48rem) {
+    .sidebar{
+      display: none;
+    }
   }
   .nav {
     height: 100%;
@@ -99,7 +113,10 @@ import PanelScroll from "./PanelScroll.astro"
     .navsec-icon { display: none;}
   }
 
-  .fa-angle-up { top: calc(var(--header-height) + 5%); } .fa-angle-down{bottom: 5%;  }
-  .panel-arrow { position: fixed; right:50%; }
+  /* Archived panel arrow nav styles
+  .fa-angle-up { top: calc(var(--header-height) + 2%); }
+  .fa-angle-down { bottom: 2%; }
+  .panel-arrow { position: fixed; right: 50%; }
+  */
 </style>
 

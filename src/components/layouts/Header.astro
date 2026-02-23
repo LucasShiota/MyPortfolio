@@ -8,7 +8,13 @@ import SimpleMode from '../features/SimpleMode.astro';
 	<div class="header-left">
 		<div class="name">Lucas Shiota</div>
 			<img src="/logo/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
-		<div class="path">Designer</div>
+		<div class="path">Game Designer</div>
+	</div>
+	<div class="header-middle">
+		<div class="extra-part"> <i class="fa-solid fa-file-lines"></i></i>&#8194;CV </div>
+		<div class="extra-part"> <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn </div>
+		<div class="extra-part"> <i class="fa-solid fa-envelope"></i>&#8194;Let's Talk <a href="mailto:lucasshiota@protonmail.com"></a></div>
+		<div class="extra-part"> <i class="fa-solid fa-user"></i>&#8194;About </div>
 	</div>
 	<div class="header-right">
 		<button id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
@@ -62,18 +68,35 @@ import SimpleMode from '../features/SimpleMode.astro';
 		align-items: center; justify-content: right;
 		margin: 0 2rem; gap: 4 rem;
 	}
-	.name {
-		font-size: 1rem;
-		white-space: nowrap;
-	}
-	.path {
-		font-size: 1rem;
-	}
 
+	.header-middle {
+		width: 40%; height: 50%;
+		display: flex; flex-direction: row;
+  	align-items: center;
+		gap: 0.5rem;
+	}
+	.name { font-size: 1.33rem; white-space: nowrap; }
+	.path { font-size: 1.33rem; }
+
+	.extra-part {
+		height: 100%; padding: 0 1rem;
+		display: flex; align-items: center; justify-content: center;
+    border-radius: 9999px;
+		background: color-mix(in srgb, var(--accent-reverse) 20%, transparent);
+		border: 1px solid color-mix(in srgb, var(--accent-reverse) 50%, transparent);
+		color: var(--accent-reverse);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+	}
+	
+	.extra-part:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: var(--box-shadow);
+  }
 /* ---------------- */
 /* THEME */
 /* ---------------- */
-
 /* #region ThemeToggler */
 	#theme-toggle {
     width: 50px; height: 50px;
@@ -118,7 +141,6 @@ import SimpleMode from '../features/SimpleMode.astro';
 /* ---------------- */
 /* LOGO */
 /* ---------------- */
-
 /* #region Logo  */
 	.header-icon {
 		width: 50px; height: 50px;
@@ -168,6 +190,13 @@ import SimpleMode from '../features/SimpleMode.astro';
 		75%  { transform: scale(1.05); }  /* small rebound */
 		100% { transform: scale(1); }
 	}
+/* #endregion */
+
+/* ---------------- */
+/* MEDIA QUERIES*/
+/* ---------------- */
+/* #region Media Queries */
+
 /* #endregion */
 
 </style>

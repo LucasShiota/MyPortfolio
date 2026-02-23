@@ -5,8 +5,9 @@
 
 	gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-	const upArrow = document.querySelector<HTMLElement>('[data-panel-nav="up"]');
-	const downArrow = document.querySelector<HTMLElement>('[data-panel-nav="down"]');
+	// Archived panel arrow nav (disabled by request)
+	// const upArrow = document.querySelector<HTMLElement>('[data-panel-nav="up"]');
+	// const downArrow = document.querySelector<HTMLElement>('[data-panel-nav="down"]');
 	const sidebar = document.querySelector<HTMLElement>(".sidebar");
 	const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
 	const panels = gsap.utils.toArray<HTMLElement>(".panel");
@@ -25,7 +26,7 @@
 	let currentIndex = 0;
 	let lastIndex = -1;
 	let activeScrollTween: gsap.core.Tween | null = null;
-	let lastArrowState = { atTop: false, atBottom: false };
+	// let lastArrowState = { atTop: false, atBottom: false };
 	const contactsEnterThreshold = gsap.utils.clamp(0, 1, 1 - step * 0.5);
 
 	function updateSidebarFooterSpacing(progress: number) {
@@ -56,7 +57,6 @@
 		currentIndex = Math.round(progress / step);
 
 		if (currentIndex !== lastIndex) {
-			updateArrowVisibility();
 			lastIndex = currentIndex;
 		}
 
@@ -140,8 +140,7 @@
 		});
 	});
 
-	/* ------- ARROWS --------- */
-
+	/* ------- ARROWS (ARCHIVED / DISABLED) ---------
 	upArrow?.addEventListener("click", () => { scrollToIndex(currentIndex - 1); });
 	downArrow?.addEventListener("click", () => { scrollToIndex(currentIndex + 1); });
 
@@ -156,11 +155,12 @@
 		}
 
 		lastArrowState = { atTop, atBottom };
-		gsap.set(upArrow, { autoAlpha: atTop ? 0 : 0.6 });
-		gsap.set(downArrow, { autoAlpha: atBottom ? 0 : 0.6 });
+		gsap.set(upArrow, { autoAlpha: atTop ? 0 : 0.2 });
+		gsap.set(downArrow, { autoAlpha: atBottom ? 0 : 0.2 });
 	}
 
 	updateArrowVisibility();
+	*/
 	updateUI(mainTrigger.progress);
 
 	window.addEventListener("beforeunload", () => {

@@ -12,7 +12,16 @@ import HeroBGText from "../HeroBGText.astro"
       </div>
     </div>
     <div class="headshot-wrapper">
-      <img class="headshot" src="../images/headshot.webp" alt="Headshot" />
+      <div id="flip-card" class="flip-container">
+        <div class="flipper">
+          <div class="front">
+            <img class="headshot" src="../images/headshot.webp" alt="Headshot" />
+          </div>
+          <div class="back">
+            <img class="headshot" src="/logo/crazyblender.webp" alt="CrazyBlender" />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <HeroBGText />
@@ -35,7 +44,7 @@ import HeroBGText from "../HeroBGText.astro"
     position: absolute;
     inset: 0;
     height: var(--panel-height);
-    width: calc(100vw - var(--sidebar-width));
+    width: 100%;
     padding: 2rem;
     gap: 1rem;
   }
@@ -66,12 +75,61 @@ import HeroBGText from "../HeroBGText.astro"
     align-items: flex-start;
   }
 
-  .headshot {
+  /* Flip Container */
+  .flip-container {
     width: 360px;
     height: 360px;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .flipper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+  }
+
+  .flip-container.flipped .flipper {
+    transform: rotateY(540deg);
+  }
+
+  .front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 50%;
+  }
+
+  .front {
+    z-index: 2;
+    transform: rotateY(0deg);
+  }
+
+  .back {
+    transform: rotateY(180deg);
+  }
+
+  .headshot {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
     border-radius: 50%;
     box-shadow: var(--box-shadow);
     pointer-events: none;
     -webkit-user-drag: none;
   }
 </style>
+
+<script>
+  const card = document.getElementById('flip-card');
+  if (card) {
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+    });
+  }
+</script>
