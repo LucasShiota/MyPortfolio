@@ -27,11 +27,11 @@ import HeroBGText from "../HeroBGText.astro"
   <HeroBGText />
 </div>
 <style>
+  /* Panel */
+  /* #region Panel */
   .hero-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
   }
 
   .hero-foreground {
@@ -74,8 +74,11 @@ import HeroBGText from "../HeroBGText.astro"
     font-size: 4vh;
     align-items: flex-start;
   }
+  /* #endregion */
 
   /* Flip Container */
+  /* #region Flip Container */
+
   .flip-container {
     width: 360px;
     height: 360px;
@@ -121,8 +124,10 @@ import HeroBGText from "../HeroBGText.astro"
     border-radius: 50%;
     box-shadow: var(--box-shadow);
     pointer-events: none;
+    user-select: none;
     -webkit-user-drag: none;
   }
+  /* #endregion */
 </style>
 
 <script>
