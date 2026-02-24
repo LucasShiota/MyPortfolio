@@ -39,29 +39,26 @@ import HeroBGText from "../HeroBGText.astro"
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    height: 100%;
     z-index: 2;
     position: absolute;
     inset: 0;
     height: var(--panel-height);
-    width: 100%;
+    width: calc(100% - var(--sidebar-width));
     padding: 2rem;
     gap: 1rem;
   }
 
   .hero-fg-parent, .headshot-wrapper {
-    height: 70%;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    height: 70%; width: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    user-select: none;
   }
 
   .hero-fg-hello, .hero-fg-tagline {
     font-family: "Sigmar";
-    text-align: center;
-    justify-content: right;
+    text-align: center; justify-content: right;
+    
     display: flex;
   }
 
@@ -80,52 +77,33 @@ import HeroBGText from "../HeroBGText.astro"
   /* #region Flip Container */
 
   .flip-container {
-    width: 360px;
-    height: 360px;
-    perspective: 1000px;
-    cursor: pointer;
+    width: 360px; height: 360px; perspective: 1000px;
+    cursor: pointer; user-select: none; -webkit-user-select: none;
   }
 
   .flipper {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: relative; width: 100%; height: 100%;
+    user-select: none;
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-style: preserve-3d;
   }
 
-  .flip-container.flipped .flipper {
-    transform: rotateY(540deg);
-  }
+  .flip-container.flipped .flipper { transform: rotateY(540deg); }
 
   .front, .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    position: absolute; width: 100%; height: 100%;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
     border-radius: 50%;
-  }
-
-  .front {
-    z-index: 2;
-    transform: rotateY(0deg);
-  }
-
-  .back {
-    transform: rotateY(180deg);
-  }
-
-  .headshot {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: 50%;
-    box-shadow: var(--box-shadow);
-    pointer-events: none;
     user-select: none;
-    -webkit-user-drag: none;
+  }
+
+  .front { z-index: 2; transform: rotateY(0deg); }
+  .back { transform: rotateY(180deg); }
+  .headshot {
+    width: 100%; height: 100%;
+    aspect-ratio: 1 / 1; object-fit: cover;
+    border-radius: 50%; box-shadow: var(--box-shadow);
+    user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
   }
   /* #endregion */
 </style>
