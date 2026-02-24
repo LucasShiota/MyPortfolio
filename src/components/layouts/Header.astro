@@ -160,6 +160,18 @@ const today = new Date();
 				<i class="fa-solid fa-wand-magic-sparkles"></i>
 			</button>
 		</div>
+		<div class="credits-parent">
+			<div class="credits-imadethis"> Site coded from scratch by me </div>
+			<div class="credits">
+				<div class="credits-set"> <div class="credits-contribution"> Physics </div> <div class="credits-source"> Matter.js </div> </div>
+				<div class="credits-set"> <div class="credits-contribution"> Background </div> <div class="credits-source"> Vanta.js </div> </div>
+				<div class="credits-set"> <div class="credits-contribution"> Animation </div> <div class="credits-source"> GSAP </div> </div>
+				<div class="credits-set"> <div class="credits-contribution"> Images </div> <div class="credits-source"> TextureLabs </div> </div>
+				<div class="credits-set"> <div class="credits-contribution"> Framework </div> <div class="credits-source"> Astro </div> </div>
+				<div class="credits-set"> <div class="credits-contribution"> Hosting </div> <div class="credits-source"> Cloudflare </div> </div>
+			</div>
+			<div class="credits-set"> <div class="credits-contribution"> Font :  Atkinson Hyperlegible Next </div> <div class="credits-source"> Braille Institute of America </div> </div>
+		</div>
 		<div class="copyright"> &copy; {today.getFullYear()} Lucas Shiota </div>
 	</div>
 <style>
@@ -185,7 +197,9 @@ const today = new Date();
 	.header-contacts, .header-toggles { display: none; }
 	.header-brand { justify-content: flex-start; justify-self: flex-start; }
 	.header-contacts { justify-content: center; justify-self: center;
-		flex: 1; font-weight: bold; }
+		flex: 1; font-weight: bold; 
+		gap: clamp(0.5rem, 1vw, 1rem);
+	}
 	.header-toggles, .hamburger-menu-toggle-wrapper {
 		justify-content: flex-end; justify-self: flex-end;}
 
@@ -258,11 +272,12 @@ const today = new Date();
 
 
 /* ---------------------------------------------------------------- */
-/* -----CONTACTS ----- */
+/* ----- CONTACTS ----- */
 /* ---------------------------------------------------------------- */
 /* #region Contacts */
 	.header-contact-btn {
-		height: 75%; padding: 0 1rem;
+		height: 75%; 
+		padding-right: clamp(0.6rem, 1vw, 2rem); padding-left: clamp(0.6rem, 1vw, 2rem);
 		display: flex; align-items: center; justify-content: center;
 		border-radius: 9999px;
 		background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
@@ -361,9 +376,31 @@ const today = new Date();
 		#hamburger-menu-toggle i { color: var(--text-color); }
 		.hamburger-row { display: flex; flex-direction: row; justify-content: center;
 			width: 100%; padding: 0.5rem 0; }
-		.copyright { display: flex; justify-content: center; align-items: center; 
-			width: 100%; padding: 1rem 0 }
 
+	/* #endregion */
+
+	/* #region Credits */
+		
+		.credits-parent {
+			display: flex; flex-direction: column;
+			align-items: center; justify-content: center;
+			width: 70%; padding: 1rem 0; gap: 0.5rem;
+			border-bottom: var(--border);
+		}
+		.credits-imadethis { font-size: 1.1rem; color: var(--accent-reverse)}
+		.credits {
+			display: flex; flex-direction: row;
+			align-items: center; justify-content: center;
+ 			gap: 1rem;
+		}
+		.credits-contribution{font-weight: 200;}
+		.credits-contribution, .credits-source { font-size: 0.8rem; line-height: 1.1;}
+		.credits-set {
+			display: flex; flex-direction: column; 
+			align-items: center; justify-content: center;
+		}
+
+		.copyright { display: flex; justify-content: center; align-items: center; padding: 1rem 0; }
 	/* #endregion */
 
 	/* #region Ham Toggle */
@@ -392,11 +429,12 @@ const today = new Date();
 
 	.hamburger-contacts { border-right: var(--border) }
 	.hamburger-contact-btn {
-		width: 50%;
+		width: 60%;
 		display: flex; align-items: center; justify-content: center;
 		border-radius: 9999px;
 		background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
 		border: 1px solid color-mix(in srgb, var(--accent-reverse) 50%, transparent);
+		box-shadow: none;
 		color: var(--accent-reverse); font-size: 1.1rem; line-height: 1;
 		cursor: pointer;
 		transition: all 0.3s ease;
