@@ -16,17 +16,22 @@ interface VantaEffect {
 
 interface Window {
   vantaEffect?: VantaEffect;
-  __simpleModeEnabled?: boolean;
-  simpleModeVanta?: {
+  __performanceModeEnabled?: boolean;
+  performanceModeVanta?: {
     freeze: () => void;
     resume: () => void;
   };
-  simpleModeMatter?: {
+  performanceModeMatter?: {
     start: () => void;
     stop: () => void;
   };
-  simpleModeMarquee?: {
+  performanceModeMarquee?: {
     start: () => void;
+    refresh: () => void;
+  };
+  performanceModeScroll?: {
+    enableSnap: () => void;
+    disableSnap: () => void;
     refresh: () => void;
   };
 }

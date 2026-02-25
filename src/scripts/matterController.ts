@@ -1,7 +1,6 @@
 import { destroyMatter, initMatter } from "./physics.js";
 
-const MATTER_DISABLE_MQ =
-  "(max-width: 48rem), (max-height: 48rem), (hover: none) and (pointer: coarse)";
+const MATTER_DISABLE_MQ = "(hover: none) and (pointer: coarse)";
 
 let isMatterInitialized = false;
 let isControllerInitialized = false;
@@ -13,7 +12,7 @@ const isMatterBlockedByViewport = (): boolean =>
 
 const startMatter = (): void => {
   if (
-    window.__simpleModeEnabled ||
+    window.__performanceModeEnabled ||
     isMatterInitialized ||
     isMatterBlockedByViewport()
   ) {
@@ -36,7 +35,7 @@ const syncMatterWithViewport = (): void => {
     return;
   }
 
-  if (!window.__simpleModeEnabled) {
+  if (!window.__performanceModeEnabled) {
     startMatter();
   }
 };
@@ -78,7 +77,7 @@ export function initMatterController(): void {
 
   matterDisableMediaQuery = window.matchMedia(MATTER_DISABLE_MQ);
 
-  window.simpleModeMatter = {
+  window.performanceModeMatter = {
     start: startMatter,
     stop: stopMatter,
   };

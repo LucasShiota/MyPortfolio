@@ -33,21 +33,8 @@
     /* Set Correct Icon On Load      */
     /* ----------------------------- */
 
-    function updateIcon() {
-      const isDark = root.getAttribute('data-theme') === 'dark';
+    // updateIcon removed - handled by CSS
 
-      if (!icon) return;
-
-      if (isDark) {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-      } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-      }
-    }
-
-    updateIcon();
 
     /* ----------------------------- */
     /* Vanta Animation Helpers       */
@@ -106,7 +93,7 @@
       }
 
       syncVantaToTheme(0);
-      updateIcon();
+      /* updateIcon() removed - Handled by CSS */
 
       requestAnimationFrame(() => {
         root.classList.remove('theme-switch-instant');

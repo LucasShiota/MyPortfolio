@@ -1,0 +1,55 @@
+---
+---
+
+<script>
+  interface Window {
+    performanceModeVanta?: any;
+    performanceModeMatter?: any;
+    performanceModeMarquee?: any;
+    performanceModeScroll?: any;
+    __performanceModeEnabled?: boolean;
+  }
+
+  const PERFORMANCE_MODE_BUTTON_SELECTOR = ".performance-toggle";
+  const PERFORMANCE_MODE_STORAGE_KEY = "performance-mode";
+  window.__performanceModeEnabled = localStorage.getItem(PERFORMANCE_MODE_STORAGE_KEY) === "on";
+
+  function setPerformanceMode(enabled: boolean) {
+    window.__performanceModeEnabled = enabled;
+    document.documentElement.classList.toggle("performance-mode", enabled);
+
+    const buttons = document.querySelectorAll<HTMLElement>(PERFORMANCE_MODE_BUTTON_SELECTOR);
+    buttons.forEach(button => {
+      button.setAttribute("aria-pressed", String(enabled));
+    });
+
+    if (enabled) {
+      window.performanceModeVanta?.freeze();
+      window.performanceModeMatter?.stop();
+      window.performanceModeMarquee?.refresh();
+      window.performanceModeScroll?.disableSnap();
+      return;
+    }
+
+    window.performanceModeVanta?.resume();
+    window.performanceModeMatter?.start();
+    window.performanceModeMarquee?.refresh();
+    window.performanceModeScroll?.enableSnap();
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const initialState = localStorage.getItem(PERFORMANCE_MODE_STORAGE_KEY) === "on";
+    setPerformanceMode(initialState);
+
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) return;
+
+      const button = event.target.closest(PERFORMANCE_MODE_BUTTON_SELECTOR);
+      if (!button) return;
+
+      const nextState = !window.__performanceModeEnabled;
+      setPerformanceMode(nextState);
+      localStorage.setItem(PERFORMANCE_MODE_STORAGE_KEY, nextState ? "on" : "off");
+    });
+  });
+</script>

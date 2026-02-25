@@ -4,6 +4,12 @@
     position: fixed;
     inset: 0;
     z-index: -1;
+    background-color: var(--wallpaper);
+    transition: background-color 0.5s ease;
+  }
+  html.performance-mode #vanta-bg {
+    background-image: none !important;
+    background-color: var(--wallpaper);
   }
 </style>
 
@@ -15,7 +21,7 @@
   const vantaBgSelector = "#vanta-bg";
 
   function initVantaWithRetry(retries = 30) {
-    if (window.__simpleModeEnabled || window.vantaEffect) return;
+    if (window.__performanceModeEnabled || window.vantaEffect) return;
 
     if (typeof VANTA === "undefined" || typeof VANTA.FOG !== "function") {
       if (retries > 0) {
@@ -46,44 +52,24 @@
     });
   }
 
-  function freezeVanta() {
-    const container = document.querySelector<HTMLElement>(vantaBgSelector);
-    const canvas = container?.querySelector<HTMLCanvasElement>("canvas");
-
-    if (container && canvas) {
-      try {
-        container.style.backgroundImage = `url("${canvas.toDataURL("image/png")}")`;
-      } catch {
-        container.style.backgroundImage = "";
-      }
-      container.style.backgroundSize = "cover";
-      container.style.backgroundPosition = "center";
-      container.style.backgroundRepeat = "no-repeat";
-    }
-
+  function stopVanta() {
     if (window.vantaEffect?.destroy) {
       window.vantaEffect.destroy();
     }
     delete window.vantaEffect;
   }
 
-  function resumeVanta() {
-    const container = document.querySelector<HTMLElement>(vantaBgSelector);
-    if (container) {
-      container.style.backgroundImage = "";
-      container.style.backgroundSize = "";
-      container.style.backgroundPosition = "";
-      container.style.backgroundRepeat = "";
-    }
+  function startVanta() {
+    stopVanta();
     initVantaWithRetry();
   }
 
-  window.simpleModeVanta = {
-    freeze: freezeVanta,
-    resume: resumeVanta
+  window.performanceModeVanta = {
+    freeze: stopVanta,
+    resume: startVanta
   };
 
   window.addEventListener("startup:vanta", () => {
-    resumeVanta();
+    startVanta();
   });
 </script>

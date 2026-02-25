@@ -25,7 +25,7 @@
       let isHeroVisible = true;
 
       const applyMarqueeThrottle = () => {
-        const shouldPause = document.hidden || !isHeroVisible || Boolean(window.__simpleModeEnabled);
+        const shouldPause = document.hidden || !isHeroVisible || Boolean(window.__performanceModeEnabled);
         marquees.forEach((marquee) => {
           marquee.classList.toggle('marquee--paused', shouldPause);
         });
@@ -110,7 +110,7 @@
       startMarquee();
     };
 
-    window.simpleModeMarquee = {
+    window.performanceModeMarquee = {
       start: startMarquee,
       refresh: () => {
         if (!isMarqueeInitialized) {
@@ -195,6 +195,7 @@
   }
   .marquee--paused .marquee-track {
     animation-play-state: paused;
+    display: none;
   }
   .marquee-content {
     height: 100%;

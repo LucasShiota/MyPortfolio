@@ -1,4 +1,9 @@
 <script>
+	interface Window {
+		performanceModeScroll?: any;
+		__performanceModeEnabled?: boolean;
+	}
+
 	import { gsap } from "gsap";
 	import { ScrollTrigger } from "gsap/ScrollTrigger";
 	import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -51,7 +56,7 @@
     window.scrollTo(0, 0);
 		// Force ScrollTrigger to recalc and update immediately
 		ScrollTrigger.refresh();
-		mainTrigger.update();
+		uiTrigger.update();
   });
 	function updateUI(progress: number) {
 		currentIndex = Math.round(progress / step);
@@ -76,43 +81,78 @@
 	}
 
 	/* ------- MASTER SCROLLTRIGGER --------- */
+	let snapTrigger: any = null;
 
-	const mainTrigger = ScrollTrigger.create({
-		id: "mainpage",
+	const uiTrigger = ScrollTrigger.create({
+		id: "ui-updates",
 		trigger: document.body,
 		start: "top top",
 		end: "bottom bottom",
-		scrub: 1,
+		scrub: 0.5,
 		onUpdate: (self) => {
 			updateUI(self.progress);
-		},
-		snap: {
-			directional: false,
-			snapTo: (progress) => {
-				if (totalSteps <= 0) return 0;
-				const closestIndex = Math.round(progress / step);
-				const delta = (progress - closestIndex * step) / step;
-				const threshold = 0.1;
-
-				const targetIndex =
-					Math.abs(delta) > threshold
-						? closestIndex + (delta > 0 ? 1 : -1)
-						: closestIndex;
-
-				return gsap.utils.clamp(0, 1, targetIndex * step);
-			},
-			duration: { min: 0.2, max: 0.4 },
-			delay: 0.03,
-			ease: "power1.inOut"
 		}
 	});
+
+	const enableSnapping = () => {
+		if (snapTrigger) return;
+		snapTrigger = ScrollTrigger.create({
+			id: "snapping",
+			trigger: document.body,
+			start: "top top",
+			end: "bottom bottom",
+			snap: {
+				directional: false,
+				snapTo: (progress) => {
+					if (totalSteps <= 0) return 0;
+					const closestIndex = Math.round(progress / step);
+					const delta = (progress - closestIndex * step) / step;
+					const threshold = 0.1;
+
+					const targetIndex =
+						Math.abs(delta) > threshold
+							? closestIndex + (delta > 0 ? 1 : -1)
+							: closestIndex;
+
+					return gsap.utils.clamp(0, 1, targetIndex * step);
+				},
+				duration: { min: 0.2, max: 0.4 },
+				delay: 0.03,
+				ease: "power1.inOut"
+			}
+		});
+	};
+
+	const disableSnapping = () => {
+		if (snapTrigger) {
+			snapTrigger.kill();
+			snapTrigger = null;
+		}
+	};
+
+	window.performanceModeScroll = {
+		enableSnap: enableSnapping,
+		disableSnap: disableSnapping,
+		refresh: () => {
+			uiTrigger.refresh();
+			if (snapTrigger) snapTrigger.refresh();
+		}
+	};
+
+	// Only init snapping if performance mode is NOT enabled
+	if (!window.__performanceModeEnabled) {
+		enableSnapping();
+	}
+	
+	// Initial UI update
+	updateUI(uiTrigger.progress);
+
 
 	/* ------- CENTRAL SCROLL FUNCTION --------- */
 
 	function scrollToIndex(index: number) {
 		if (totalSteps <= 0) return;
 		const clamped = gsap.utils.clamp(0, totalSteps, index);
-		if (clamped === currentIndex) return;
 		const targetProgress = clamped * step;
 
 		activeScrollTween?.kill();
@@ -161,10 +201,12 @@
 
 	updateArrowVisibility();
 	*/
-	updateUI(mainTrigger.progress);
+	// Removed redundant direct call since createMainTrigger handles it
+	// updateUI(mainTrigger.progress);
 
 	window.addEventListener("beforeunload", () => {
 		activeScrollTween?.kill();
-		mainTrigger.kill();
+		uiTrigger.kill();
+		if (snapTrigger) snapTrigger.kill();
 	}, { once: true });
 </script>

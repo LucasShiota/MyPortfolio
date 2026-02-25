@@ -92,8 +92,7 @@ export async function initMatter() {
 
   const myVersion = ++initVersion;
   const container = document.getElementById("matter-container");
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
-  if (!container || window.__simpleModeEnabled || isMobile) return;
+  if (!container || window.__performanceModeEnabled) return;
 
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -109,7 +108,7 @@ export async function initMatter() {
   };
 
   const spriteSheet = await preloadSpriteSheet();
-  if (myVersion !== initVersion || window.__simpleModeEnabled) return;
+  if (myVersion !== initVersion || window.__performanceModeEnabled) return;
 
   const spriteScaleX = spriteSheet.naturalWidth / BASE_SPRITE_SHEET_WIDTH;
   const spriteScaleY = spriteSheet.naturalHeight / BASE_SPRITE_SHEET_HEIGHT;
@@ -326,7 +325,7 @@ export async function initMatter() {
   let isSimulationRunning = true;
 
   function updateSimulationState() {
-    const shouldRun = isPanelVisible && isTabVisible && !window.__simpleModeEnabled;
+    const shouldRun = isPanelVisible && isTabVisible && !window.__performanceModeEnabled;
     if (shouldRun === isSimulationRunning) return;
 
     if (shouldRun) {
