@@ -1,8 +1,8 @@
 ---
 import PanelScroll from "./PanelScroll.astro"
 ---
-<div class="sidebar">
-  <div class="nav">
+<div class="sidebar flx-cntr-clmn crsr-none">
+  <div class="nav flx-cntr-clmn">
     <div class="nav-section hero-link" data-index="0">
       <div class="navsec-text"> Hey </div>
       <div class="navsec-icon" >
@@ -39,41 +39,40 @@ import PanelScroll from "./PanelScroll.astro"
 </div>
 
 <style>
+  @reference "../../styles/global.css";
+  
   .sidebar {
     position: fixed;
     height: 93vh; width: var(--sidebar-width); right:0; top:0;
-    padding-top: var(--header-height);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    user-select: none;
-    pointer-events: none;
-
+    padding-top: var(--header-height); padding-bottom: calc(var(--footer-padding));
     --footer-padding: 0px;
-    padding-bottom: calc(var(--footer-padding));
     transition: padding-bottom 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
     transform: translateY(calc(var(--footer-padding) * -0.5));
   }
 
-  .sidebar > * { pointer-events: auto; }
+  .sidebar > * { 
+    pointer-events: auto; 
+  }
   .nav {
     height: 40%; width: 80%;
-    gap: 1rem; align-items: center; justify-content: center;
-    display: flex; flex-direction: column;
-    border-left: 0px solid rgba(var(--black), 0.05);
+    gap: 1rem; border-left: 0px solid rgba(var(--black), 0.05);
   }
-  .sidebar.contacts-entering { --footer-padding: var(--footer-height); }
+  .sidebar.contacts-entering { 
+    --footer-padding: var(--footer-height);
+  }
     
-  .nav-section {
-    display: flex; flex-direction: column;
-    cursor: pointer;
+  .nav-section { 
+    @apply flx-clmn;
+    cursor: pointer; 
     color: var(--text-color);
     transition: color 0.3s ease;
   }
 
   /* Efficient hover: one rule handles everything */
-  @media (hover: hover) {
-    .nav-section:hover {
-      color: var(--accent-reverse);
-    }
+  @media (hover: hover) { 
+    .nav-section:hover { 
+      color: var(--accent-reverse); 
+    } 
   }
 
   .nav-circle {
@@ -89,15 +88,18 @@ import PanelScroll from "./PanelScroll.astro"
   }
   .navsec-icon {
     display: none;
-    position: absolute; top: 50%; left: 50%; height: 2.2rem; width: 2.2rem;
+    position: absolute; top: 50%; left: 50%; height: 1.75rem; width: 1.75rem;
     transform: translate(-50%, -50%) scale(1.2);
   }
-  .navsec-icon .icon {
-    width: 100%; height: 100%;
+  .navsec-icon .icon { 
+    @apply wh100;
     fill: currentColor; /* Inherits the color from .nav-section */
     transition: fill 0.3s, transform 0.3s;
   }
-  .navsec-text { display: none; text-align: center; font-weight: bolder; margin: -1rem 0; }
+  .navsec-text { 
+    display: none; text-align: center; 
+    font-weight: bolder; margin: -1rem 0; 
+  }
 
 /* -------------- */
 /* --- QUERY ---- */
@@ -112,17 +114,11 @@ import PanelScroll from "./PanelScroll.astro"
 	@media (min-width: 768px) { /* #3: Tablet - Start Shrink, Remove Elements */
     .sidebar, .nav-circle{ display: flex; }
     .navsec-icon { display: block;}
-    
 	}
 	@media (min-width: 1200px) { /* #4: Laptop */
     .navsec-icon { display: none;}
     .navsec-text {display: flex;}
 	}
-/* #endregion */
-  /* Archived panel arrow nav styles
-  .fa-angle-up { top: calc(var(--header-height) + 2%); }
-  .fa-angle-down { bottom: 2%; }
-  .panel-arrow { position: fixed; right: 50%; }
-  */
+
 </style>
 
