@@ -11,7 +11,7 @@ const { projects } = Astro.props;
 <div class="projects-preview-parent">
   {projects.map((project) => (
     <div class="preview-entry" data-project-id={project.id}>
-      <div class="preview-header">
+      <h2 class="preview-header">
         <h3 class="preview-title">
           {project.title.split("\n").map((line, lineIndex, lines) => (
             <>
@@ -21,7 +21,7 @@ const { projects } = Astro.props;
           ))}
         </h3>
         {project.description && <p class="preview-desc">{project.description}</p>}
-      </div>
+      </h2>
       <p class="preview-body">{project.preview}</p>
       <a
         class="preview-link-btn"

@@ -21,24 +21,10 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
   </div>
 </BaseLayout>
 <style is:global>
-  .panel-parent {
-    width: calc(100% - var(--sidebar-width));
-  }
+  
+  .panel-parent { width: calc(100% - var(--sidebar-width)); }
+  .panel { height: var(--panel-height); width: 100%; margin-top: var(--header-height); }
+  @media (hover: none) and (pointer: coarse) { .panel-parent { width: 100%; } }
+  @media (max-width: 48rem), (max-height: 48rem) { .panel-parent { width: 100%;} }
 
-  .panel {
-    height: var(--panel-height); width: 100%;
-    margin-top: var(--header-height);
-  }
-
-  @media (hover: none) and (pointer: coarse) {
-    .panel-parent {
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 48rem), (max-height: 48rem) {
-    .panel-parent {
-      width: 100%;
-    }
-  }
 </style>
