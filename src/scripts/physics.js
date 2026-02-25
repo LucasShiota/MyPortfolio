@@ -92,7 +92,8 @@ export async function initMatter() {
 
   const myVersion = ++initVersion;
   const container = document.getElementById("matter-container");
-  if (!container || window.__simpleModeEnabled) return;
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  if (!container || window.__simpleModeEnabled || isMobile) return;
 
   const width = container.clientWidth;
   const height = container.clientHeight;
