@@ -7,7 +7,7 @@ const today = new Date();
 <header class="flx-cntr-rw">
 	<div class="header-brand">
 		<img src="/logo/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
-		<a href={LINKS.homepage} class="header-brand-link">
+		<a href={LINKS.homepage.url} aria-label={LINKS.homepage.label} title={LINKS.homepage.title} class="header-brand-link">
 			<div class="name-path flx-clmn justify-start"> 
 				<div class="name font-bold">Lucas Shiota</div>
 				<div class="path font-light">Game Designer</div>
@@ -16,7 +16,7 @@ const today = new Date();
 	</div>
 	<div class="header-contacts">
 		<div class="contact-btn"> <i class="contact-icon fa-solid fa-file-lines"></i></i>CV </div>
-		<a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" class="contact-btn"> <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn </a>
+		<a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn </a>
 		<a href="mailto:lucasshiota@protonmail.com" class="contact-btn"> <i class="contact-icon fa-solid fa-envelope"></i> Let's Talk </a>
 		<a href="/#about" class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i> About </a>
 	</div>
@@ -157,8 +157,8 @@ const today = new Date();
 		<div class="hmbrgr-row">
 			<div class="hmbrgr-contacts">
 				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-file-lines"></i></i>&#8194;CV </div>
-				<div class="hmbrgr-contact-btn"> <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn </div>
-				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-envelope"></i>&#8194;Let's Talk <a href="mailto:lucasshiota@protonmail.com"></a></div>
+				<a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="hmbrgr-contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn </a>
+				<a href="mailto:lucasshiota@protonmail.com" class="hmbrgr-contact-btn"> <i class="fa-solid fa-envelope"></i>&#8194;Let's Talk </a>
 				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-user"></i>&#8194;About </div>
 			</div>
 			<div class="hmbrgr-nav-parent">
@@ -244,7 +244,7 @@ const today = new Date();
 	}
 	.header-brand-link:hover { color: var(--text-color); }
 
-	.name, .path { font-size: 1.3; line-height: 1.2; }
+	.name, .path { font-size: 1.3rem; line-height: 1.2; }
 	.header-icon {
 		width: 50px; height: 50px;
 		object-fit: contain; display: block; margin-left: 1rem;

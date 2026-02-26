@@ -125,11 +125,11 @@ export async function initMatter() {
   );
 
   const entries = [
-    { name: "GitHub", link: LINKS.github, sprite: sprites.github },
-    { name: "Substack", link: LINKS.substack, sprite: sprites.substack },
-    { name: "LinkedIn", link: LINKS.linkedin, sprite: sprites.linkedin },
-    { name: "Itch.io", link: LINKS.itchio, sprite: sprites.itchio },
-    { name: "Steam", link: LINKS.steam, sprite: sprites.steam }
+    { name: "GitHub", link: LINKS.github.url, sprite: sprites.github },
+    { name: "Substack", link: LINKS.substack.url, sprite: sprites.substack },
+    { name: "LinkedIn", link: LINKS.linkedin.url, sprite: sprites.linkedin },
+    { name: "Itch.io", link: LINKS.itchio.url, sprite: sprites.itchio },
+    { name: "Steam", link: LINKS.steam.url, sprite: sprites.steam }
   ];
 
   container.style.position = "relative";
