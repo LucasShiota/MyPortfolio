@@ -1,21 +1,24 @@
 ---
 import DarkMode from '../features/DarkMode.astro';
 import PerformanceMode from '../features/PerformanceMode.astro';
+import { LINKS } from "../../config/links.ts";
 const today = new Date();
 ---
 <header class="flx-cntr-rw">
 	<div class="header-brand">
 		<img src="/logo/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
-		<div class="name-path flx-clmn justify-start">
-			<div class="name font-bold">Lucas Shiota</div>
-		<div class="path font-light">Game Designer</div>
-		</div>
+		<a href={LINKS.homepage} class="header-brand-link">
+			<div class="name-path flx-clmn justify-start"> 
+				<div class="name font-bold">Lucas Shiota</div>
+				<div class="path font-light">Game Designer</div>
+			</div>
+		</a>
 	</div>
 	<div class="header-contacts">
 		<div class="contact-btn"> <i class="contact-icon fa-solid fa-file-lines"></i></i>CV </div>
-		<div class="contact-btn"> <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn </div>
-		<div class="contact-btn"> <i class="contact-icon fa-solid fa-envelope"></i>Let's Talk <a href="mailto:lucasshiota@protonmail.com"></a></div>
-		<div class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i>About </div>
+		<a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" class="contact-btn"> <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn </a>
+		<a href="mailto:lucasshiota@protonmail.com" class="contact-btn"> <i class="contact-icon fa-solid fa-envelope"></i> Let's Talk </a>
+		<a href="/#about" class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i> About </a>
 	</div>
 	<div class="header-toggles">
 		<button id="theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
@@ -32,8 +35,7 @@ const today = new Date();
 			<i class="fa-solid fa-bars fa-xl" style="color: color-mix(in srgb, var(--accent-reverse) 100%, transparent);"></i>
 		</button>
 	</div>
-	<DarkMode />
-	<PerformanceMode />
+	<DarkMode /> <PerformanceMode />
 	<script>
 		const icon = document.querySelector<HTMLElement>('.header-icon');
 
@@ -232,6 +234,15 @@ const today = new Date();
 /* ----- BRAND ----- */
 /* ---------------------------------------------------------------- */
 /* #region Brand */
+
+	.header-brand-link {
+		text-decoration: none;
+		color: var(--text-color);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.header-brand-link:hover { color: var(--text-color); }
 
 	.name, .path { font-size: 1.3; line-height: 1.2; }
 	.header-icon {

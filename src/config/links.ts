@@ -1,4 +1,5 @@
 export const LINKS = {
+  homepage: "https://lucasshiota.com",
   linkedin: "https://www.linkedin.com/in/lucasshiota/",
   github: "https://github.com/LucasShiota",
   steam: "https://steamcommunity.com/id/ulsca",

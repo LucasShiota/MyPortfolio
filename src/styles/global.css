@@ -29,6 +29,7 @@ header{z-index: 30;}
 }
 html {
   background-color: var(--bg-color);
+  scroll-behavior: smooth;
   transition:
     background-color 0.6s cubic-bezier(.4,0,.2,1),
     color 0.6s cubic-bezier(.4,0,.2,1);
