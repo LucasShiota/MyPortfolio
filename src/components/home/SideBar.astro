@@ -68,13 +68,6 @@ import PanelScroll from "./PanelScroll.astro"
     transition: color 0.3s ease;
   }
 
-  /* Efficient hover: one rule handles everything */
-  @media (hover: hover) { 
-    .nav-section:hover { 
-      color: var(--accent-reverse); 
-    } 
-  }
-
   .nav-circle {
     width: 10px; height: 10px;
     background: var(--text-color);
@@ -82,24 +75,15 @@ import PanelScroll from "./PanelScroll.astro"
     margin: 1.5rem 0;
     display: none;
   }
-  .nav-section, .nav-circle { 
-    will-change: transform; transform: translateZ(0); 
-    flex-shrink: 0;
-  }
+  
   .navsec-icon {
     display: none;
     position: absolute; top: 50%; left: 50%; height: 1.75rem; width: 1.75rem;
     transform: translate(-50%, -50%) scale(1.2);
   }
-  .navsec-icon .icon { 
-    @apply wh100;
-    fill: currentColor; /* Inherits the color from .nav-section */
-    transition: fill 0.3s, transform 0.3s;
-  }
-  .navsec-text { 
-    display: none; text-align: center; 
-    font-weight: bolder; margin: -1rem 0; 
-  }
+  .nav-section, .nav-circle { will-change: transform; transform: translateZ(0); flex-shrink: 0; }
+  .navsec-icon .icon { @apply wh100 btn-hvracnt; fill: currentColor; transition: fill 0.3s, transform 0.3s; }
+  .navsec-text { @apply emphasis btn-hvracnt; display: none; margin: -1rem 0; }
 
 /* -------------- */
 /* --- QUERY ---- */

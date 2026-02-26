@@ -22,9 +22,23 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 </BaseLayout>
 <style is:global>
   
-  .panel-parent { width: calc(100% - var(--sidebar-width)); }
-  .panel { height: var(--panel-height); width: 100%; margin-top: var(--header-height); }
-  @media (hover: none) and (pointer: coarse) { .panel-parent { width: 100%; } }
-  @media (max-width: 48rem), (max-height: 48rem) { .panel-parent { width: 100%;} }
+  .panel-parent { 
+    width: auto; 
+    margin-right: var(--sidebar-width); 
+  }
+  
+  .panel { 
+    height: var(--panel-height); 
+    width: 100%; 
+    margin-top: var(--header-height); 
+  }
+
+  /* Mobile/Tablet Overrides */
+  @media (max-width: 768px), (hover: none) and (pointer: coarse) { 
+    .panel-parent { 
+      margin-right: 0;
+      width: 100%; 
+    } 
+  }
 
 </style>

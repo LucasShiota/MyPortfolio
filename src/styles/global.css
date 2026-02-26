@@ -9,7 +9,7 @@ header{z-index: 30;}
 .sidebar{z-index: 10;}
 .marquee-content{z-index: 5;}
 #hmbrgr-menu-toggle {z-index: 50;}
-#hmbrgr-menu{z-index: 40;}
+#hmbrgr-menu{z-index: 20;}
 
 /* #endregion */
 
@@ -135,8 +135,7 @@ strong,b {font-weight: 700;} /* bold, strong */
 /* links */
 a { color: var(--link-color); }
 @media (hover: hover) {
-	.button-accent-hover:hover { color: var(--accent-reverse); fill: var(--accent-reverse); }
-	a:hover { color: var(--link-color); }
+	a:not(.preview-link-btn):hover { color: var(--link-color); }
 }
 
 /* paragrah */ p { margin-bottom: 1em; } .prose p {margin-bottom:2em; } /* relaxed p class */
@@ -206,6 +205,13 @@ body {
 /* --------------- UTILITY CLASSES --------------- */
 /* ------------------------------------ */
 /* #region utility */
+
+
+@utility emphasis {
+  font-size: 1.1rem; line-height: 1.4;
+  font-weight: bold; text-align:center;
+}
+
 @utility flx-clmn { display: flex; flex-direction: column; }
 @utility flx-rw { display: flex; flex-direction: row; }
 
@@ -224,21 +230,23 @@ body {
 
 
 @utility btn { user-select: none; cursor: pointer; }
-@utility btn-hvracnt { @apply btn; 
-  :hover { color: var(--accent-reverse); } 
+@utility btn-hvracnt { 
+  @apply btn; 
+  &:hover { color: var(--accent-reverse); } 
 }
 
 @utility btn-accent {
+  @apply flx-cntr btn;
   height: 2rem; 
+  padding-top: 1.2rem; padding-bottom: 1.2rem;
   padding-right: clamp(0.6rem, 1vw, 2rem); padding-left: clamp(0.6rem, 1vw, 2rem);
   border-radius: 9999px;
   background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent-reverse) 50%, transparent);
   color: var(--accent-reverse);
-  font-size: 1rem;
+  font-size: 1rem; font-weight: 600;
   transition: all 0.3s ease;
-  @apply flx-cntr btn;
-
+  
   &:hover {
     transform: translateY(-2px) scale(1.03);
     box-shadow: var(--box-shadow);

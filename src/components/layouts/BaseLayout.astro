@@ -23,9 +23,9 @@ const { title, description } = Astro.props;
         if (prefersDark) { document.documentElement.setAttribute('data-theme', 'dark'); }
       }
 
-      // Performance Mode Mobile Force
-      const isMobileOrTablet = window.matchMedia("(max-width: 1024px)").matches;
-      if (isMobileOrTablet) {
+      // Performance Mode Mobile Force (Only targets actual mobile hardware)
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobileDevice) {
         localStorage.setItem('performance-mode', 'on');
         document.documentElement.classList.add('performance-mode', 'mobile-device');
       }

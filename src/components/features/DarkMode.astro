@@ -81,9 +81,7 @@
       });
     }
 
-    function applyThemeInstantly(nextTheme) {
-      root.classList.add('theme-switch-instant');
-
+    function setTheme(nextTheme) {
       if (nextTheme === 'dark') {
         root.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
@@ -91,12 +89,21 @@
         root.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
       }
-
       syncVantaToTheme(0);
-      /* updateIcon() removed - Handled by CSS */
+    }
+
+    function applyThemeInstantly(nextTheme) {
+      root.classList.add('theme-switch-instant');
+      setTheme(nextTheme);
+      
+      // Force a reflow to ensure the instant state is computed
+      void root.offsetHeight;
 
       requestAnimationFrame(() => {
-        root.classList.remove('theme-switch-instant');
+        // Double RAF ensures the property change is fully processed before transitions resume
+        requestAnimationFrame(() => {
+          root.classList.remove('theme-switch-instant');
+        });
       });
     }
 
@@ -111,7 +118,17 @@
 
     toggleBtn.addEventListener('click', () => {
       const isDark = root.getAttribute('data-theme') === 'dark';
-      applyThemeInstantly(isDark ? 'light' : 'dark');
+      const nextTheme = isDark ? 'light' : 'dark';
+      const isSimpleMode = root.classList.contains('performance-mode');
+
+      if (isSimpleMode) {
+        // Simple Mode: Consistent 0.6s Fade via CSS
+        setTheme(nextTheme);
+      } else {
+        // Fancy Mode: Snappy Instant Switch
+        // Vanta handles its own transition visually
+        applyThemeInstantly(nextTheme);
+      }
     });
 
   });

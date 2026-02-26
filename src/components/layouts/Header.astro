@@ -7,8 +7,8 @@ const today = new Date();
 	<div class="header-brand">
 		<img src="/logo/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
 		<div class="name-path flx-clmn justify-start">
-			<div class="name">Lucas Shiota</div>
-		<div class="path">Game Designer</div>
+			<div class="name font-bold">Lucas Shiota</div>
+		<div class="path font-light">Game Designer</div>
 		</div>
 	</div>
 	<div class="header-contacts">
@@ -138,11 +138,13 @@ const today = new Date();
 			// Close menu when clicking outside (e.g., below the menu)
 			document.addEventListener('click', (event) => {
 				const target = event.target as HTMLElement;
+				const header = document.querySelector('header');
 				const isMenuOpen = mobileMenu.classList.contains('open');
 				const isClickInsideMenu = mobileMenu.contains(target);
-				const isClickOnToggle = menuToggle.contains(target);
+				const isClickOnHeader = header && header.contains(target);
 
-				if (isMenuOpen && !isClickInsideMenu && !isClickOnToggle) {
+				if (isMenuOpen && !isClickInsideMenu && !isClickOnHeader) {
+					// Toggle it closed via the button logic
 					menuToggle.click();
 				}
 			});
@@ -174,26 +176,27 @@ const today = new Date();
 				<i class="fa-solid fa-wand-magic-sparkles icon-sparkles"></i>
 			</button>
 		</div>
-		<div class="credits-parent">
-			<div class="credits-imadethis"> Site coded from scratch by me </div>
-			<div class="credits-column-parent">
-				<div class="credits-column">
-					<div class="credits-set"> <div class="credits-contribution"> Physics </div> <div class="credits-source"> Matter.js </div> </div>
-					<div class="credits-set"> <div class="credits-contribution"> Background </div> <div class="credits-source"> Vanta.js </div> </div>
-					<div class="credits-set"> <div class="credits-contribution"> Animation </div> <div class="credits-source"> GSAP </div> </div>
-				</div>
-				<div class="credits-column">
-					<div class="credits-set"> <div class="credits-contribution"> Images </div> <div class="credits-source"> TextureLabs </div> </div>
-					<div class="credits-set"> <div class="credits-contribution"> Framework </div> <div class="credits-source"> Astro </div> </div>
-					<div class="credits-set"> <div class="credits-contribution"> Hosting </div> <div class="credits-source"> Cloudflare </div> </div>
-				</div>
+		<div class="qr-parent flx-cntr-rw">
+			<div class="qr-text flx-algncntr-clmn"> 
+				<i class="fa-solid fa-mobile-screen-button qr-icon"></i>
+				<span>Continue on mobile</span>
 			</div>
-			<div class="credits-set"> <div class="credits-contribution"> Main Font </div> 
-				<div class="credits-source"> Atkinson Hyperlegible Next <br> (Braille Institute of America)</div> </div>
-			</div>
+				<svg class="qr-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+				<rect width="500" height="500" fill="#fff" rx="20"/>
+				<path fill="var(--accent-reverse)" d="M18 146h16v16h-16z M18 162h16v16h-16z M18 210h16v16h-16z M18 274h16v16h-16z M18 290h16v16h-16z M18 322h16v16h-16z M18 338h16v16h-16z M34 146h16v16h-16z M34 162h16v16h-16z M34 194h16v16h-16z M34 226h16v16h-16z M34 242h16v16h-16z M34 274h16v16h-16z M34 290h16v16h-16z M34 306h16v16h-16z M34 338h16v16h-16z M50 178h16v16h-16z M50 226h16v16h-16z M50 242h16v16h-16z M50 274h16v16h-16z M66 162h16v16h-16z M66 194h16v16h-16z M66 274h16v16h-16z M66 290h16v16h-16z M66 338h16v16h-16z M82 162h16v16h-16z M82 178h16v16h-16z M82 210h16v16h-16z M82 226h16v16h-16z M82 274h16v16h-16z M82 290h16v16h-16z M82 306h16v16h-16z M82 322h16v16h-16z M82 338h16v16h-16z M98 162h16v16h-16z M98 178h16v16h-16z M98 194h16v16h-16z M98 242h16v16h-16z M98 290h16v16h-16z M98 338h16v16h-16z M114 146h16v16h-16z M114 178h16v16h-16z M114 210h16v16h-16z M114 242h16v16h-16z M114 274h16v16h-16z M114 306h16v16h-16z M114 338h16v16h-16z M130 162h16v16h-16z M130 178h16v16h-16z M130 194h16v16h-16z M130 210h16v16h-16z M130 226h16v16h-16z M130 242h16v16h-16z M130 290h16v16h-16z M130 306h16v16h-16z M130 338h16v16h-16z M146 34h16v16h-16z M146 114h16v16h-16z M146 130h16v16h-16z M146 146h16v16h-16z M146 178h16v16h-16z M146 210h16v16h-16z M146 258h16v16h-16z M146 354h16v16h-16z M146 450h16v16h-16z M146 466h16v16h-16z M162 34h16v16h-16z M162 50h16v16h-16z M162 162h16v16h-16z M162 178h16v16h-16z M162 194h16v16h-16z M162 210h16v16h-16z M162 226h16v16h-16z M162 242h16v16h-16z M162 258h16v16h-16z M162 274h16v16h-16z M162 306h16v16h-16z M162 386h16v16h-16z M162 402h16v16h-16z M162 418h16v16h-16z M162 434h16v16h-16z M162 450h16v16h-16z M178 18h16v16h-16z M178 50h16v16h-16z M178 66h16v16h-16z M178 114h16v16h-16z M178 146h16v16h-16z M178 162h16v16h-16z M178 258h16v16h-16z M178 274h16v16h-16z M178 306h16v16h-16z M178 322h16v16h-16z M178 354h16v16h-16z M178 370h16v16h-16z M178 386h16v16h-16z M194 50h16v16h-16z M194 66h16v16h-16z M194 82h16v16h-16z M194 146h16v16h-16z M194 162h16v16h-16z M194 242h16v16h-16z M194 258h16v16h-16z M194 274h16v16h-16z M194 322h16v16h-16z M194 338h16v16h-16z M194 370h16v16h-16z M194 386h16v16h-16z M194 418h16v16h-16z M210 18h16v16h-16z M210 66h16v16h-16z M210 82h16v16h-16z M210 114h16v16h-16z M210 146h16v16h-16z M210 178h16v16h-16z M210 194h16v16h-16z M210 226h16v16h-16z M210 242h16v16h-16z M210 258h16v16h-16z M210 354h16v16h-16z M210 370h16v16h-16z M210 418h16v16h-16z M210 450h16v16h-16z M226 18h16v16h-16z M226 34h16v16h-16z M226 50h16v16h-16z M226 66h16v16h-16z M226 98h16v16h-16z M226 130h16v16h-16z M226 146h16v16h-16z M226 194h16v16h-16z M226 210h16v16h-16z M226 226h16v16h-16z M226 242h16v16h-16z M226 322h16v16h-16z M226 338h16v16h-16z M226 370h16v16h-16z M226 402h16v16h-16z M226 418h16v16h-16z M226 450h16v16h-16z M226 466h16v16h-16z M242 18h16v16h-16z M242 66h16v16h-16z M242 82h16v16h-16z M242 98h16v16h-16z M242 114h16v16h-16z M242 130h16v16h-16z M242 162h16v16h-16z M242 194h16v16h-16z M242 210h16v16h-16z M242 242h16v16h-16z M242 274h16v16h-16z M242 306h16v16h-16z M242 370h16v16h-16z M242 386h16v16h-16z M258 50h16v16h-16z M258 66h16v16h-16z M258 82h16v16h-16z M258 98h16v16h-16z M258 130h16v16h-16z M258 146h16v16h-16z M258 210h16v16h-16z M258 242h16v16h-16z M258 274h16v16h-16z M258 354h16v16h-16z M258 370h16v16h-16z M258 402h16v16h-16z M258 418h16v16h-16z M258 434h16v16h-16z M258 450h16v16h-16z M274 50h16v16h-16z M274 66h16v16h-16z M274 114h16v16h-16z M274 146h16v16h-16z M274 162h16v16h-16z M274 210h16v16h-16z M274 258h16v16h-16z M274 306h16v16h-16z M274 322h16v16h-16z M274 338h16v16h-16z M274 354h16v16h-16z M274 418h16v16h-16z M274 434h16v16h-16z M274 466h16v16h-16z M290 18h16v16h-16z M290 66h16v16h-16z M290 82h16v16h-16z M290 98h16v16h-16z M290 130h16v16h-16z M290 146h16v16h-16z M290 162h16v16h-16z M290 210h16v16h-16z M290 226h16v16h-16z M290 274h16v16h-16z M290 386h16v16h-16z M290 402h16v16h-16z M290 466h16v16h-16z M306 18h16v16h-16z M306 34h16v16h-16z M306 50h16v16h-16z M306 98h16v16h-16z M306 114h16v16h-16z M306 162h16v16h-16z M306 194h16v16h-16z M306 210h16v16h-16z M306 242h16v16h-16z M306 274h16v16h-16z M306 306h16v16h-16z M306 322h16v16h-16z M306 434h16v16h-16z M306 466h16v16h-16z M322 18h16v16h-16z M322 66h16v16h-16z M322 98h16v16h-16z M322 162h16v16h-16z M322 194h16v16h-16z M322 210h16v16h-16z M322 258h16v16h-16z M322 274h16v16h-16z M322 354h16v16h-16z M322 370h16v16h-16z M322 402h16v16h-16z M322 450h16v16h-16z M322 466h16v16h-16z M338 18h16v16h-16z M338 50h16v16h-16z M338 82h16v16h-16z M338 114h16v16h-16z M338 130h16v16h-16z M338 146h16v16h-16z M338 162h16v16h-16z M338 178h16v16h-16z M338 210h16v16h-16z M338 226h16v16h-16z M338 242h16v16h-16z M338 290h16v16h-16z M338 338h16v16h-16z M338 354h16v16h-16z M338 370h16v16h-16z M338 386h16v16h-16z M338 402h16v16h-16z M338 434h16v16h-16z M354 146h16v16h-16z M354 210h16v16h-16z M354 226h16v16h-16z M354 242h16v16h-16z M354 258h16v16h-16z M354 290h16v16h-16z M354 338h16v16h-16z M354 402h16v16h-16z M354 418h16v16h-16z M354 434h16v16h-16z M370 146h16v16h-16z M370 162h16v16h-16z M370 178h16v16h-16z M370 226h16v16h-16z M370 242h16v16h-16z M370 258h16v16h-16z M370 290h16v16h-16z M370 322h16v16h-16z M370 338h16v16h-16z M370 370h16v16h-16z M370 402h16v16h-16z M386 162h16v16h-16z M386 178h16v16h-16z M386 242h16v16h-16z M386 290h16v16h-16z M386 306h16v16h-16z M386 322h16v16h-16z M386 338h16v16h-16z M386 402h16v16h-16z M386 418h16v16h-16z M386 450h16v16h-16z M402 194h16v16h-16z M402 210h16v16h-16z M402 226h16v16h-16z M402 242h16v16h-16z M402 290h16v16h-16z M402 322h16v16h-16z M402 338h16v16h-16z M402 354h16v16h-16z M402 370h16v16h-16z M402 386h16v16h-16z M402 402h16v16h-16z M402 450h16v16h-16z M418 194h16v16h-16z M418 210h16v16h-16z M418 226h16v16h-16z M418 306h16v16h-16z M418 322h16v16h-16z M418 338h16v16h-16z M418 386h16v16h-16z M418 418h16v16h-16z M418 434h16v16h-16z M418 450h16v16h-16z M434 162h16v16h-16z M434 178h16v16h-16z M434 242h16v16h-16z M434 258h16v16h-16z M434 274h16v16h-16z M434 290h16v16h-16z M434 306h16v16h-16z M434 322h16v16h-16z M434 338h16v16h-16z M434 354h16v16h-16z M434 370h16v16h-16z M434 386h16v16h-16z M434 402h16v16h-16z M434 434h16v16h-16z M434 450h16v16h-16z M450 146h16v16h-16z M450 178h16v16h-16z M450 242h16v16h-16z M450 274h16v16h-16z M450 338h16v16h-16z M450 354h16v16h-16z M450 402h16v16h-16z M450 418h16v16h-16z M450 434h16v16h-16z M450 466h16v16h-16z M466 162h16v16h-16z M466 178h16v16h-16z M466 242h16v16h-16z M466 258h16v16h-16z M466 290h16v16h-16z M466 322h16v16h-16z M466 338h16v16h-16z M466 354h16v16h-16z M466 370h16v16h-16z M466 402h16v16h-16z M466 434h16v16h-16z M 18 18v 112h 112v -112zM 34 34h 80v 80h -80z M50 50h48v48h-48z M 370 18v 112h 112v -112zM 386 34h 80v 80h -80z M402 50h48v48h-48z M 18 370v 112h 112v -112zM 34 386h 80v 80h -80z M50 402h48v48h-48z"/></svg>
+		</div>
+
+		<div class="source-grid">
+			<div class="imadethis"> Site coded from scratch by me </div>
+			<div class="source-big"> Hosting & Edge <span class="font-bold"> Cloudflare </span> </div>
+			<div class="source-big"> Frameworks <span class="font-bold"> Astro & Tailwind </span> </div>
+			<div class="source-big"> Main Font <span class="font-bold"> Atkinson Hyperlegible Next </span> </div>
+			<div class="source-small"> Physics <span class="font-bold"> Matter.js </span> </div> 
+			<div class="source-small"> Background <span class="font-bold"> Vanta.js </span> </div>
+			<div class="source-small"> Animation <span class="font-bold"> GSAP </span> </div> 
+			<div class="source-small "> Images <span class="font-bold"> TextureLabs </span> </div>
 			<div class="copyright"> &copy; {today.getFullYear()} Lucas Shiota </div>
 		</div>
-		
 	</div>
 <style>
 	@reference "../../styles/global.css";
@@ -206,7 +209,7 @@ const today = new Date();
 		position: fixed; height: var(--header-height); width: 100%;
 		@apply justify-between;
 		opacity: var(--headfoot-opacity);
-		background: var(--bg-color); box-shadow: var(--box-shadow);
+		background: var(--bg-color); box-shadow: var(--box-shadow-small);
 	}
 
 	header.menu-open { box-shadow: var(--box-shadow-small); }
@@ -225,15 +228,12 @@ const today = new Date();
 
 /* #endregion */
 
-
 /* ---------------------------------------------------------------- */
 /* ----- BRAND ----- */
 /* ---------------------------------------------------------------- */
 /* #region Brand */
 
-	.name { font-size: 1.33rem; font-weight: 700; white-space: nowrap; line-height: 1.2; }
-	.path { font-size: 1.33rem; font-weight: 300; line-height: 1.2; }
-
+	.name, .path { font-size: 1.3; line-height: 1.2; }
 	.header-icon {
 		width: 50px; height: 50px;
 		object-fit: contain; display: block; margin-left: 1rem;
@@ -242,7 +242,6 @@ const today = new Date();
 	}
  
 /* #endregion */
-
 
 /* ---------------------------------------------------------------- */
 /* -----LOGO ANIMATIONS ----- */
@@ -289,7 +288,6 @@ const today = new Date();
 
 /* #endregion */
 
-
 /* ---------------------------------------------------------------- */
 /* ----- CONTACTS ----- */
 /* ---------------------------------------------------------------- */
@@ -299,7 +297,6 @@ const today = new Date();
 	.contact-icon { display: none; }
 
 /* #endregion */
-
 
 /* ---------------------------------------------------------------- */
 /* ----- TOGGLES ----- */
@@ -387,7 +384,6 @@ const today = new Date();
 
 /* #endregion */
 
-
 /* ---------------------------------------------------------------- */
 /* ----- hmbrgr MENU ----- */
 /* ---------------------------------------------------------------- */
@@ -395,10 +391,12 @@ const today = new Date();
 
 	/* #region Ham Styles */
 		#hmbrgr-menu {
+			@apply flx-cntr-clmn;
+			display: none;
 			position: fixed; width: 100%; left: 0; top: var(--header-height);
+			padding: 1rem 0; gap: 1rem;
 			background: var(--bg-color-tinted); box-shadow: var(--box-shadow); opacity: 1;
 			border-top: 1px solid rgba(var(--gray), 0.2);
-			display: none; flex-direction: column; justify-content: center; align-items: center;
 		}
 		#hmbrgr-menu.open { display: flex; animation: slideDown 0.3s ease-out; }
 		#hmbrgr-menu.closing { animation: slideUp 0.3s ease-in forwards; }
@@ -430,43 +428,38 @@ const today = new Date();
 	/* #endregion */
 
 	/* #region Credits */
-		
-		.credits-parent {
-			display: flex; flex-direction: column;
-			align-items: center; justify-content: center;
-			width: 70%; padding: 1rem 0; gap: 0.2rem;
-			border-bottom: var(--border);
+		.source-grid {
+			width: auto;
+			font-size: 0.8rem; line-height: 1.4; text-align: left;
+			align-items: center; row-gap: 0.2rem;
+			display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; 
 		}
-		.credits-imadethis { font-size: 1.1rem; color: var(--accent-reverse); font-weight: bold;}
-		.credits-column-parent { display: flex; flex-direction: row; justify-content: center; }
-		.credits-column {
-			display: flex; flex-direction: column;
-			align-items: center; justify-content: center;
- 			gap: 0.33rem;
+		.imadethis {
+			@apply emphasis;
+			grid-column: span 2; margin-bottom: 0.5rem;
+			color: var(--accent-reverse); 
 		}
-		.credits-contribution{font-weight: 200;}
-		.credits-source { font-weight: 500;}
-		.credits-contribution, .credits-source { font-size: 0.9rem; line-height: 1.3;}
-		.credits-set {
-			display: flex; flex-direction: row; gap: 0.4rem;
-			align-items: center; justify-content: center;
+		.source-big { grid-column: span 2; }
+		.copyright { 
+			@apply emphasis;
+			grid-column: span 2;
+			padding-top: 0.5rem;
 		}
 
-		.copyright { display: flex; justify-content: center; align-items: center; padding: 1rem 0; }
 	/* #endregion */
 
 	/* #region Ham Toggle */
 	.hmbrgr-toggles {
+		@apply flx-jstfycntr-rw;
 		width: 70%;
-		display: flex; flex-direction: row; justify-content: center;
 		gap: 1rem; padding: 0.5rem 0;
 		border-bottom: var(--border); border-top: var(--border);
 	}
 	#hmbrgr-theme-toggle, #hmbrgr-performance-toggle {
+		@apply flx-cntr;
 		width: 50px; height: 50px;
 		border-radius: 50%;
 		background: transparent; border: transparent;
-		display: flex; align-items: center; justify-content: center;
 		cursor: pointer;
 		transition: background 0.3s;
 	}
@@ -479,18 +472,57 @@ const today = new Date();
 
 	/* #endregion */
 
+
+	/* #region QR Code */
+
+		.qr-parent { 
+			display: flex; /* Show by default on Desktop/Laptop */
+			gap: 0.5rem; padding: 0.75rem;
+			background-color: #ffffff;
+			border-radius: 1.5rem;
+			transition: transform 0.3s ease;
+		}
+
+		/* Hide specifically for Mobile/Tablet hardware (Touch users) */
+		@media (pointer: coarse) {
+			.qr-parent { display: none; }
+		}
+		.qr-text { 
+			@apply emphasis;
+			color: var(--accent);
+			height: auto; width: 100px;
+			text-align: center; gap: 0.2rem;
+			font-size: 0.95rem; /* Slightly smaller to fit with icon */
+		}
+		.qr-icon {
+			font-size: 1.5rem;
+			margin-bottom: 2px;
+			transition: transform 0.3s ease;
+		}
+		.qr-svg {
+			/* width: clamp(100px, 15vw, 150px); */ 
+			height: auto; width: 100px;
+		}
+		.qr-parent:hover { transform: scale(1.03); }
+		.qr-parent:hover .qr-icon { transform: rotate(-10deg) scale(1.1); }
+		.qr-svg path { fill: var(--accent); transition: fill 0.6s ease; }
+		.qr-svg rect { fill: #ffffff; }
+
+	/* #endregion */
+
 	/* #region Ham Contact + Nav */
 
 	.hmbrgr-contacts { border-right: var(--border) }
 	.hmbrgr-contact-btn { @apply btn-accent; }
 	
-	.hmbrgr-nav { @apply btn-hvracnt btn;
-		transition: color 0.3s; font-size: 1.3rem; line-height: 0.9;
+	.hmbrgr-nav { 
+		@apply btn-hvracnt;
+		transition: color 0.3s; font-size: 1.3rem; line-height: 0.9; font-weight: bold;
 		padding: .7rem;
 	}
 
-	.hmbrgr-nav-parent, .hmbrgr-contacts { @apply flx-cntr-clmn;
-		gap: .5rem; width: 40%; padding: 0.5rem 0;
+	.hmbrgr-nav-parent, .hmbrgr-contacts { 
+		@apply flx-cntr-clmn; gap: .5rem; width: 40%;
 	}
 
 	/* #endregion */
