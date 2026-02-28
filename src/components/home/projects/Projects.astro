@@ -3,7 +3,7 @@ import ProjectList from "./ProjectList.astro";
 import ProjectPreviews from "./ProjectPreviews.astro";
 import { projects, filterTags } from "./projectsData";
 ---
-<div class="panel projects-panel flx-algncntr-clmn justify-between">
+<div id="projects" class="panel projects-panel flx-algncntr-clmn justify-between">
   <div class="projects-preview-wrap flx-cntr">
     <ProjectPreviews projects={projects} />
   </div>

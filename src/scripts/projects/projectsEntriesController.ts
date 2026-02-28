@@ -36,26 +36,8 @@ export const initProjectsEntriesController = ({
   };
 
   const updateEdgePadding = (): void => {
-    const firstVisible = visibleEntries[0];
-    const lastVisible = visibleEntries[visibleEntries.length - 1];
-
-    if (!firstVisible || !lastVisible) {
-      container.style.paddingLeft = "0px";
-      container.style.paddingRight = "0px";
-      return;
-    }
-
-    const leftPadding = Math.max(
-      0,
-      (container.clientWidth - firstVisible.offsetWidth) / 2
-    );
-    const rightPadding = Math.max(
-      0,
-      (container.clientWidth - lastVisible.offsetWidth) / 2
-    );
-
-    container.style.paddingLeft = `${leftPadding}px`;
-    container.style.paddingRight = `${rightPadding}px`;
+    // Edge padding is no longer needed since the dummy elements were removed
+    // and we are embracing the native scroll bounds behavior.
   };
 
   const updateVisuals = (index: number): void => {
@@ -63,7 +45,7 @@ export const initProjectsEntriesController = ({
     const activeId = activeEntry ? getEntryId(activeEntry) : "";
 
     entries.forEach((entry) => {
-      entry.classList.remove("is-active", "is-hovering");
+      entry.classList.remove("is-active");
       entry.setAttribute("aria-pressed", "false");
     });
 
@@ -75,11 +57,45 @@ export const initProjectsEntriesController = ({
     visibleEntries.forEach((entry, i) => {
       const distance = Math.abs(i - index);
       entry.classList.toggle("is-active", distance === 0);
-      entry.classList.toggle("is-hovering", distance === 1);
       entry.setAttribute("aria-pressed", distance === 0 ? "true" : "false");
     });
 
     onActiveIdChange(activeId);
+  };
+
+  // --- Unified Physics Scroll System ---
+  let currentScroll = container.scrollLeft;
+  let targetScroll = container.scrollLeft;
+  let lerpRafId: number | null = null;
+  let isDragging = false;
+  let dragStartX = 0;
+  let lastDragPos = 0;
+  let dragVelocity = 0;
+
+  const startLerp = (): void => {
+    if (!lerpRafId && !isDragging) {
+      lerpRafId = requestAnimationFrame(updateLerpScroll);
+    }
+  };
+
+  const updateLerpScroll = (): void => {
+    if (isDragging) return;
+
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+    // Auto-clamp target to natural bounds
+    targetScroll = Math.max(0, Math.min(targetScroll, maxScrollLeft));
+
+    // Lerp interpolation (stiffness = 0.1)
+    currentScroll += (targetScroll - currentScroll) * 0.1;
+
+    if (Math.abs(targetScroll - currentScroll) > 0.5) {
+      container.scrollLeft = currentScroll;
+      lerpRafId = requestAnimationFrame(updateLerpScroll);
+    } else {
+      currentScroll = targetScroll;
+      container.scrollLeft = currentScroll;
+      lerpRafId = null;
+    }
   };
 
   const getEntryCenterInContainer = (entry: HTMLElement): number => {
@@ -88,20 +104,13 @@ export const initProjectsEntriesController = ({
     return entryRect.left - containerRect.left + container.scrollLeft + entryRect.width / 2;
   };
 
-  const scrollEntryToCenter = (
-    index: number,
-    behavior: ScrollBehavior = "smooth"
-  ): void => {
-    const entry = visibleEntries[index];
-    if (!entry) return;
-
-    const left = getEntryCenterInContainer(entry) - container.clientWidth / 2;
-    const maxScrollLeft = container.scrollWidth - container.clientWidth;
-
-    container.scrollTo({
-      left: Math.max(0, Math.min(left, maxScrollLeft)),
-      behavior,
-    });
+  const getDistanceToEdge = (entry: HTMLElement): { left: number; right: number } => {
+    const entryRect = entry.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    return {
+      left: entryRect.left - containerRect.left,
+      right: containerRect.right - entryRect.right,
+    };
   };
 
   const selectVisibleIndex = (
@@ -109,7 +118,7 @@ export const initProjectsEntriesController = ({
     options: { shouldScroll?: boolean; behavior?: ScrollBehavior } = {}
   ): void => {
     if (visibleEntries.length === 0) {
-      updateVisuals(0);
+      updateVisuals(-1);
       return;
     }
 
@@ -117,93 +126,103 @@ export const initProjectsEntriesController = ({
     currentVisibleIndex = Math.max(0, Math.min(visibleEntries.length - 1, index));
     updateVisuals(currentVisibleIndex);
 
-    if (shouldScroll) {
-      isProgrammaticScroll = true;
-      scrollEntryToCenter(currentVisibleIndex, behavior);
-      if (programmaticScrollReleaseTimer !== null) {
-        window.clearTimeout(programmaticScrollReleaseTimer);
+    const entry = visibleEntries[currentVisibleIndex];
+    if (!entry || !shouldScroll) return;
+
+    const { left, right } = getDistanceToEdge(entry);
+    const threshold = container.clientWidth * 0.3;
+
+    if (left < threshold || right < threshold || behavior === "auto") {
+      const entryCenterLeft = getEntryCenterInContainer(entry) - container.clientWidth / 2;
+      targetScroll = entryCenterLeft;
+      
+      if (behavior === "auto") {
+        currentScroll = targetScroll;
+        container.scrollLeft = currentScroll;
+      } else {
+        startLerp();
       }
-      programmaticScrollReleaseTimer = window.setTimeout(() => {
-        isProgrammaticScroll = false;
-        programmaticScrollReleaseTimer = null;
-      }, 250);
     }
   };
 
-  const getClosestVisibleIndexToCenter = (): number => {
-    if (visibleEntries.length === 0) return 0;
-    const center = container.scrollLeft + container.clientWidth / 2;
-
-    let closestIndex = 0;
-    let closestDistance = Number.POSITIVE_INFINITY;
-
-    visibleEntries.forEach((entry, i) => {
-      const entryCenter = getEntryCenterInContainer(entry);
-      const distance = Math.abs(center - entryCenter);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestIndex = i;
-      }
-    });
-
-    return closestIndex;
-  };
-
-  const handleScroll = (): void => {
-    if (isProgrammaticScroll) return;
-    const closest = getClosestVisibleIndexToCenter();
-    if (closest !== currentVisibleIndex) {
-      currentVisibleIndex = closest;
-      updateVisuals(currentVisibleIndex);
-    }
-  };
-
-  const canScrollForDelta = (deltaX: number): boolean => {
-    const maxScrollLeft = container.scrollWidth - container.clientWidth;
-    if (maxScrollLeft <= 0) return false;
-
-    const edgeEpsilon = 1;
-    if (deltaX < 0) return container.scrollLeft > edgeEpsilon;
-    if (deltaX > 0) return container.scrollLeft < maxScrollLeft - edgeEpsilon;
-    return true;
-  };
-
+  // --- Momentum Scrolling Variables ---
   const handleWheel = (event: WheelEvent): void => {
-    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-    if (canScrollForDelta(delta)) {
-      container.scrollLeft += delta;
-      event.preventDefault();
-      return;
-    }
+    // Unconditionally trap the scroll event to prevent layout cascading
+    // (e.g., accidental full-page panel snaps).
     event.preventDefault();
-    event.stopPropagation();
+
+    const isHorizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+    const delta = isHorizontal ? event.deltaX : event.deltaY;
+
+    if (delta !== 0) {
+      // Apply delta directly to target for responsive tracking
+      targetScroll += delta * 1.5; 
+      startLerp();
+    }
+  };
+
+  const initDrag = (clientX: number): void => {
+    isDragging = true;
+    if (lerpRafId) { cancelAnimationFrame(lerpRafId); lerpRafId = null; }
+    container.classList.add("is-grabbing");
+    
+    dragStartX = clientX;
+    lastDragPos = clientX;
+    dragVelocity = 0;
+    
+    // Sync loops to current exact position
+    currentScroll = container.scrollLeft;
+    targetScroll = currentScroll;
+  };
+
+  const processDragMove = (clientX: number, event: Event): void => {
+    if (!isDragging) return;
+    event.preventDefault();
+
+    const walk = dragStartX - clientX;
+    dragVelocity = lastDragPos - clientX;
+    lastDragPos = clientX;
+
+    currentScroll = targetScroll + walk;
+    container.scrollLeft = currentScroll;
+    
+    // Keep target synced for release
+    targetScroll = currentScroll;
+    dragStartX = clientX; // continuous walk offset
+  };
+
+  const releaseDrag = (): void => {
+    if (!isDragging) return;
+    isDragging = false;
+    container.classList.remove("is-grabbing");
+    
+    // Apply inertia multiplier to ending velocity
+    targetScroll = currentScroll + (dragVelocity * 15);
+    startLerp();
   };
 
   const handleTouchStart = (event: TouchEvent): void => {
-    touchStartX = event.touches[0]?.clientX ?? null;
+    if (event.touches[0]) initDrag(event.touches[0].clientX);
   };
 
   const handleTouchMove = (event: TouchEvent): void => {
-    const currentTouchX = event.touches[0]?.clientX;
-    if (touchStartX == null || currentTouchX == null) return;
-
-    const deltaX = touchStartX - currentTouchX;
-    if (canScrollForDelta(deltaX)) return;
-
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault(); // Trap vertical page scroll while touching list
+    if (event.touches[0]) processDragMove(event.touches[0].clientX, event);
   };
 
-  const resetTouchStart = (): void => {
-    touchStartX = null;
-  };
+  const handleTouchEnd = (): void => releaseDrag();
 
   const isVisibleForFilter = (
     entry: HTMLElement,
     filters: Set<string>
   ): boolean => {
-    if (getEntryId(entry) === "0") return true;
+    const isIntro = getEntryId(entry) === "0";
     if (filters.size === 0) return true;
+    
+    // Usually, we hide the Intro when other filters are active 
+    // to show a focused list of projects.
+    if (isIntro) return false;
+
     const tags = (entry.getAttribute("data-project-tags") || "")
       .split(",")
       .map((tag) => tag.trim())
@@ -243,18 +262,34 @@ export const initProjectsEntriesController = ({
       ? visibleEntries.findIndex((entry) => getEntryId(entry) === currentActiveId)
       : -1;
 
-    selectVisibleIndex(preservedIndex >= 0 ? preservedIndex : 0, {
+    // Use preserved index if still available, otherwise:
+    // If we have active filters, skip the "Intro" (index 0) and select the first project (index 1)
+    // if it exists, to show the user the results of their filter immediately.
+    let targetIndex = preservedIndex;
+    if (targetIndex < 0) {
+      targetIndex = (selectedFilters.size > 0 && visibleEntries.length > 1) ? 1 : 0;
+    }
+
+    selectVisibleIndex(targetIndex, {
       shouldScroll: true,
       behavior: "auto",
     });
   };
 
-  container.addEventListener("scroll", handleScroll);
+  const handleMouseDown = (e: MouseEvent): void => initDrag(e.pageX);
+  const handleMouseMove = (e: MouseEvent): void => processDragMove(e.pageX, e);
+  const handleMouseEnd = (): void => releaseDrag();
+
+  container.addEventListener("mousedown", handleMouseDown);
+  container.addEventListener("mouseleave", handleMouseEnd);
+  container.addEventListener("mouseup", handleMouseEnd);
+  container.addEventListener("mousemove", handleMouseMove);
+
   container.addEventListener("wheel", handleWheel, { passive: false });
   container.addEventListener("touchstart", handleTouchStart, { passive: true });
   container.addEventListener("touchmove", handleTouchMove, { passive: false });
-  container.addEventListener("touchend", resetTouchStart);
-  container.addEventListener("touchcancel", resetTouchStart);
+  container.addEventListener("touchend", handleTouchEnd);
+  container.addEventListener("touchcancel", handleTouchEnd);
 
   entries.forEach((entry) => {
     entry.addEventListener("click", () => {

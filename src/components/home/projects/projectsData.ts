@@ -6,6 +6,7 @@ export type Project = {
   description: string;
   preview: string;
   tags: string[];
+  descriptorTags?: string[];
   previewButton: {
     text: string;
     href: string;
@@ -22,6 +23,7 @@ export const projects: Project[] = [
     description: "Intro",
     preview: "Select a project from the list to view details.",
     tags: ["all"],
+    descriptorTags: ["Portfolio"],
     previewButton: { text: "View", href: "#", ariaLabel: "Project intro" },
   },
   {
@@ -32,6 +34,7 @@ export const projects: Project[] = [
     description: "Deep Rock Galactic Visual Mod",
     preview: "A visual mod replacing default class icons with stylized vector art.",
     tags: ["Mod"],
+    descriptorTags: ["Vector Art", "UI Design"],
     previewButton: { text: "Mod Page", href: "#", ariaLabel: "Open mod page" },
   },
   {
@@ -42,6 +45,7 @@ export const projects: Project[] = [
     description: "Deckbuilding Fantasy TRPG",
     preview: "A tabletop system prototype focused on deckbuilding combat.",
     tags: ["TRPG"],
+    descriptorTags: ["System Design", "Game Balance"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
@@ -52,6 +56,7 @@ export const projects: Project[] = [
     description: "Team Fortress 2 Map",
     preview: "A TF2 map project focused on layout flow and readability.",
     tags: ["Level", "Mod"],
+    descriptorTags: ["Level Design", "Source Engine"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
@@ -62,6 +67,7 @@ export const projects: Project[] = [
     description: "Photo Series of Paint and Vinyl",
     preview: "A visual study of urban textures and graffiti in Tokyo.",
     tags: ["Misc"],
+    descriptorTags: ["Photography", "Visual Study"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
@@ -72,6 +78,7 @@ export const projects: Project[] = [
     description: "No Website Builders, just Pure Code",
     preview: "Built with custom UI and animation behavior.",
     tags: ["Misc"],
+    descriptorTags: ["Web Dev", "UX/UI"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
   {
@@ -82,6 +89,51 @@ export const projects: Project[] = [
     description: "Video Game Topics I'm Passionate About",
     preview: "Long-form writing about game design and player experience.",
     tags: ["Misc"],
+    descriptorTags: ["Writing", "Analysis"],
+    previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
+  },
+  {
+    id: "7",
+    title: "Personal Blog",
+    thumbnailSrc: "/logo/crazyblender.svg",
+    thumbnailAlt: "Personal Blog thumbnail",
+    description: "Video Game Topics I'm Passionate About",
+    preview: "Long-form writing about game design and player experience.",
+    tags: ["Misc"],
+    descriptorTags: ["Writing", "Analysis"],
+    previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
+  },
+  {
+    id: "8",
+    title: "Personal Blog",
+    thumbnailSrc: "/logo/crazyblender.svg",
+    thumbnailAlt: "Personal Blog thumbnail",
+    description: "Video Game Topics I'm Passionate About",
+    preview: "Long-form writing about game design and player experience.",
+    tags: ["Misc"],
+    descriptorTags: ["Writing", "Analysis"],
+    previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
+  },
+  {
+    id: "9",
+    title: "Personal Blog",
+    thumbnailSrc: "/logo/crazyblender.svg",
+    thumbnailAlt: "Personal Blog thumbnail",
+    description: "Video Game Topics I'm Passionate About",
+    preview: "Long-form writing about game design and player experience.",
+    tags: ["Misc"],
+    descriptorTags: ["Writing", "Analysis"],
+    previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
+  },
+  {
+    id: "10",
+    title: "Personal Blog",
+    thumbnailSrc: "/logo/crazyblender.svg",
+    thumbnailAlt: "Personal Blog thumbnail",
+    description: "Video Game Topics I'm Passionate About",
+    preview: "Long-form writing about game design and player experience.",
+    tags: ["Misc"],
+    descriptorTags: ["Writing", "Analysis"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
 ];

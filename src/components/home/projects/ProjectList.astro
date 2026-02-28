@@ -9,7 +9,7 @@ const { projects } = Astro.props;
 ---
 
 <section class="project-list flx-algncntr-rw" aria-label="Project list">
-  <div class="project-entry project-entry-dummy" aria-hidden="true"></div>
+  <div class="scroll-buffer" aria-hidden="true">&nbsp;</div>
   {projects.map((project) => (
     <button
       type="button"
@@ -28,7 +28,7 @@ const { projects } = Astro.props;
       />
     </button>
   ))}
-  <div class="project-entry project-entry-dummy" aria-hidden="true"></div>
+  <div class="scroll-buffer" aria-hidden="true">&nbsp;</div>
 </section>
 
 <style is:global>
@@ -90,8 +90,9 @@ const { projects } = Astro.props;
     touch-action: pan-x;
     
     box-sizing: border-box;
-    scroll-behavior: smooth; scroll-snap-type: x mandatory;
     -ms-overflow-style: none; scrollbar-width: none;
+    
+    cursor: grab;
 
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%);
     -webkit-mask-repeat: no-repeat; -webkit-mask-size: 100% 100%;
@@ -99,11 +100,24 @@ const { projects } = Astro.props;
     mask-repeat: no-repeat; mask-size: 100% 100%;
   }
 
+  .scroll-buffer {
+    flex: 0 0 14vw;
+    min-width: 14vw;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .project-list.is-grabbing {
+    cursor: grabbing;
+  }
+
   .project-list::-webkit-scrollbar { display: none; }
 
   .project-entry {
     @apply flx-cntr;
-    border: 2px solid color-mix(in srgb, var(--accent-reverse) 20%, transparent);
+    /* Start with a neutral, dark border */
+    border: 2px solid rgba(var(--black), 0.2);
     background: rgba(var(--black), 0.08);
     color: inherit;
     text-align: left;
@@ -111,39 +125,35 @@ const { projects } = Astro.props;
     min-width: clamp(4.9rem, 12vw, 8.5rem);
     aspect-ratio: 1 / 1;
     cursor: pointer;
-    scroll-snap-align: center;
     transform-origin: center center;
-    transition: transform 0.35s ease, opacity 0.35s ease, border-color 0.35s ease;
-    opacity: 0.55;
-    transform: scale(0.95);
-    border-radius: 1rem;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                opacity 0.3s ease, 
+                border-color 0.3s ease,
+                background-color 0.3s ease;
+    opacity: 0.45;
+    transform: scale(0.9);
+    border-radius: 1.25rem;
     overflow: hidden;
     padding: 0;
   }
 
-  .project-entry-dummy {
-    pointer-events: none;
-    user-select: none;
-    opacity: 0;
-    transform: none;
-    scroll-snap-align: none;
-    border: 0;
-    background: transparent;
-  }
-
   .project-entry.is-active {
     opacity: 1;
-    transform: scale(1.06);
-    border-color: color-mix(in srgb, var(--accent-reverse) 75%, transparent);
+    transform: scale(1.12);
+    /* Transition to the accent-reverse color */
+    border-color: var(--accent-reverse);
+    background-color: rgba(var(--black), 0.15);
+    box-shadow: 0 10px 20px -5px rgba(var(--black), 0.2);
   }
 
-  .project-entry.is-hovering {
-    opacity: 0.8;
-    transform: scale(0.99);
+  .project-entry:hover:not(.is-active) {
+    opacity: 0.75;
+    transform: scale(1.02);
+    border-color: color-mix(in srgb, var(--accent-reverse) 30%, transparent);
   }
 
   .project-entry:focus-visible {
-    outline: 2px solid rgba(var(--white), 0.8);
+    outline: 2px solid var(--accent-reverse);
     outline-offset: 2px;
   }
 

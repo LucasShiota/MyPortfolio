@@ -236,6 +236,9 @@ body {
   &:hover { color: var(--accent-reverse); } 
 }
 
+@utility btn-basic {
+  height: 2rem; 
+}
 @utility btn-accent {
   @apply flx-cntr btn;
   height: 2rem; 

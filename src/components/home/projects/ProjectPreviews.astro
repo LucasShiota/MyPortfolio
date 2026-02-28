@@ -11,7 +11,7 @@ const { projects } = Astro.props;
 <div class="projects-preview-parent flx-cntr-clmn">
   {projects.map((project) => (
     <div class="preview-entry flx-algncntr-clmn" data-project-id={project.id}>
-      <h2 class="preview-header">
+      <div class="preview-header">
         <h3 class="preview-title">
           {project.title.split("\n").map((line, lineIndex, lines) => (
             <>
@@ -20,8 +20,17 @@ const { projects } = Astro.props;
             </>
           ))}
         </h3>
+        
+        {project.descriptorTags && project.descriptorTags.length > 0 && (
+          <div class="descriptor-tags-container flx-algncntr-rw">
+            {project.descriptorTags.map(tag => (
+              <span class="descriptor-tag">{tag}</span>
+            ))}
+          </div>
+        )}
+
         {project.description && <p class="preview-desc">{project.description}</p>}
-      </h2>
+      </div>
       <p class="preview-body">{project.preview}</p>
       <a
         class="preview-link-btn"
@@ -38,20 +47,39 @@ const { projects } = Astro.props;
   
   .projects-preview-parent {
     position: relative; width: 95%; height: 95%;
-    overflow: visible;
+    overflow: hidden;
     background: rgba(var(--black), 0.05);
     box-shadow: 0 2px 8px rgba(var(--black), 5%);
     border-radius: 50px;
   }
 
-  .project-entry.is-filtered-out, .preview-entry.is-filtered-out { display: none; }
-
   .preview-entry {
     justify-content: flex-start;
     position: absolute;
     inset: 1rem;
+    padding: 1rem;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+    transform: translateY(10px);
+    z-index: 1;
+    
+    box-sizing: border-box;
+  }
+
+  .preview-entry.active { 
+    opacity: 1; 
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    z-index: 10; 
+  }
+
+  /* Ensure filtered out entries are completely removed from layout */
+  .project-entry.is-filtered-out, 
+  .preview-entry.is-filtered-out { 
+    display: none !important; 
   }
 
   .preview-header {
@@ -72,6 +100,24 @@ const { projects } = Astro.props;
     font-size: clamp(0.95rem, 1.4vw, 1.15rem);
     font-weight: 700;
     letter-spacing: 0.015em;
+  }
+
+  .descriptor-tags-container {
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+
+  .descriptor-tag {
+    background-color: var(--accent-reverse);
+    color: var(--bg-color); /* Highly contrasting text color */
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    user-select: none;
   }
 
   .preview-body { margin: 0; }

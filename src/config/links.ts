@@ -30,6 +30,10 @@ interface LinksConfig {
     baraliot: LinkInfo;
     tf2: LinkInfo;
   };
+  contact: {
+    email: string;
+    discord: string;
+  };
 }
 
 export const LINKS: LinksConfig = {
@@ -79,6 +83,10 @@ export const LINKS: LinksConfig = {
       label: "View TF2 Map Project",
       title: "TF2 Map"
     }
+  },
+  contact: {
+    email: "hello@lucasshiota.com",
+    discord: "ryuukazu"
   }
 };
 
