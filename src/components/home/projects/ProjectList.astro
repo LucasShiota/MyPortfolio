@@ -42,23 +42,30 @@ const { projects } = Astro.props;
     width: 100%;
     justify-content: flex-start;
     padding: 0 5%; gap: 1rem;
-    
     box-sizing: border-box;
+    display: none !important; /* Hidden on mobile */
+  }
+
+  @media (min-width: 720px) {
+    .projects-filter-parent {
+      display: flex !important;
+    }
   }
 
   .project-filters {
     flex-wrap: wrap;
-    gap: 0.5rem;
+    /* Fluid gap scaling down for laptops */
+    gap: clamp(0.3rem, 1vh, 0.5rem);
     width: 100%; z-index: 2;
-    
   }
 
   .project-filter-btn {
     border-radius: 9999px;
     border: 2px solid color-mix(in srgb, var(--accent-reverse) 80%, transparent);
     background-color: transparent;
-    padding: 0.2rem 0.7rem;
-    font-size: 1rem;
+    /* Fluid padding and font-size */
+    padding: clamp(0.1rem, 0.4vh, 0.2rem) clamp(0.4rem, 1vh, 0.7rem);
+    font-size: clamp(0.8rem, 2vh, 1rem);
     color: inherit;
     cursor: pointer; pointer-events: auto; user-select: none;
     
@@ -121,9 +128,15 @@ const { projects } = Astro.props;
     background: rgba(var(--black), 0.08);
     color: inherit;
     text-align: left;
-    width: clamp(4.9rem, 12vw, 8.5rem);
-    min-width: clamp(4.9rem, 12vw, 8.5rem);
+    
+    /* Fluid Height-Based Sizing */
+    height: 85%; /* Base height fits comfortably in parent container */
+    max-height: 125px; /* Upper cap to prevent comically large thumbs on huge screens */
+    min-height: 50px; /* Lower cap for extreme narrow screens */
+    width: auto;
     aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+
     cursor: pointer;
     transform-origin: center center;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
@@ -131,7 +144,9 @@ const { projects } = Astro.props;
                 border-color 0.3s ease,
                 background-color 0.3s ease;
     opacity: 0.45;
-    transform: scale(0.9);
+    
+    /* Inactive elements are scaled down relative to their actual layout box */
+    transform: scale(0.8);
     border-radius: 1.25rem;
     overflow: hidden;
     padding: 0;
@@ -139,8 +154,8 @@ const { projects } = Astro.props;
 
   .project-entry.is-active {
     opacity: 1;
-    transform: scale(1.12);
-    /* Transition to the accent-reverse color */
+    /* Active element expands perfectly to its layout boundaries (no overflow) */
+    transform: scale(1.0);
     border-color: var(--accent-reverse);
     background-color: rgba(var(--black), 0.15);
     box-shadow: 0 10px 20px -5px rgba(var(--black), 0.2);
@@ -148,7 +163,7 @@ const { projects } = Astro.props;
 
   .project-entry:hover:not(.is-active) {
     opacity: 0.75;
-    transform: scale(1.02);
+    transform: scale(0.88);
     border-color: color-mix(in srgb, var(--accent-reverse) 30%, transparent);
   }
 

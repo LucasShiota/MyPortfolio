@@ -216,12 +216,7 @@ export const initProjectsEntriesController = ({
     entry: HTMLElement,
     filters: Set<string>
   ): boolean => {
-    const isIntro = getEntryId(entry) === "0";
     if (filters.size === 0) return true;
-    
-    // Usually, we hide the Intro when other filters are active 
-    // to show a focused list of projects.
-    if (isIntro) return false;
 
     const tags = (entry.getAttribute("data-project-tags") || "")
       .split(",")
@@ -263,11 +258,10 @@ export const initProjectsEntriesController = ({
       : -1;
 
     // Use preserved index if still available, otherwise:
-    // If we have active filters, skip the "Intro" (index 0) and select the first project (index 1)
-    // if it exists, to show the user the results of their filter immediately.
+    // Select the first project (index 0) in the new filtered list.
     let targetIndex = preservedIndex;
     if (targetIndex < 0) {
-      targetIndex = (selectedFilters.size > 0 && visibleEntries.length > 1) ? 1 : 0;
+      targetIndex = 0;
     }
 
     selectVisibleIndex(targetIndex, {
@@ -316,10 +310,16 @@ export const initProjectsEntriesController = ({
 
   window.addEventListener("resize", () => {
     updateEdgePadding();
+    
+    // Auto-reset filters when resizing down to mobile/tablet
+    if (window.innerWidth < 720 && selectedFilters.size > 0) {
+      selectedFilters.clear();
+      applyFilters();
+    }
   });
 
   applyFilters();
-  selectVisibleIndex(Math.min(1, visibleEntries.length - 1), {
+  selectVisibleIndex(0, {
     shouldScroll: true,
     behavior: "auto",
   });
