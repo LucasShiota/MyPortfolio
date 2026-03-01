@@ -6,6 +6,8 @@
 </section>
 
 <style>
+  @reference "../../../styles/global.css";
+
 
 	.contacts-panel{
 		height: var(--panel-height);
@@ -20,7 +22,7 @@
 	}
 	.copyright {
 		position: absolute; bottom: 1%; right: -15%;
-		font-size: 1rem;
+		@apply txt-body;
 		pointer-events: none;
 		opacity: 0.8;
 	}

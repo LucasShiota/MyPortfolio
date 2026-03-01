@@ -46,15 +46,15 @@ const { title, icon, id } = Astro.props;
   }
 
   .section-title i {
-    font-size: 2rem;
+    @apply txt-h2;
     
   }
 
   .section-title h2 {
     font-family: "Notable", sans-serif;
-    font-size: 2rem;
+    @apply txt-h2;
     margin: 0;
-    text-transform: uppercase;
+    @apply uppercase;
     color: var(--accent-reverse);
   }
 
@@ -69,7 +69,7 @@ const { title, icon, id } = Astro.props;
     
     .section-title {
       flex-direction: column;
-      text-align: center;
+      @apply text-center;
       gap: 0.5rem;
     }
   }

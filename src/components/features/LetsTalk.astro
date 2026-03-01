@@ -209,7 +209,7 @@ const { isHamburger = false } = Astro.props;
   }
 
   .section-label {
-    font-size: 0.7rem; font-weight: bold; text-transform: uppercase;
+    font-size: 0.7rem; @apply font-bold; @apply uppercase;
     padding-left: 0.6rem; margin-bottom: 0.1rem; letter-spacing: 0.05em;
     color: var(--text-color); opacity: 0.5;
   }
@@ -224,8 +224,8 @@ const { isHamburger = false } = Astro.props;
     display: flex; justify-content: flex-start; align-items: center;
     border: none; border-radius: 0.8rem;
     background: transparent;
-    color: var(--text-color); font-size: 0.9rem;
-    font-weight: 500;
+    color: var(--text-color); @apply txt-body-sm;
+    @apply font-medium;
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -236,7 +236,7 @@ const { isHamburger = false } = Astro.props;
   .copy-btn {
 
     justify-content: flex-start;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    @apply font-mono;
   }
 
   /* Icon Swap Logic */

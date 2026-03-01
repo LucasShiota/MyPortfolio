@@ -37,12 +37,12 @@ import HeroBGText from "../HeroBGText.astro"
   .hero-fg-parent, .headshot-wrapper {
     height: 70%; width: 50%;
     display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center;
+    align-items: center; justify-content: center; @apply text-center;
     user-select: none;
   }
 
-  .hero-fg-hello { font-size: 8vh; align-items: flex-end; font-family: "Notable"; }
-  .hero-fgtext-tagline { font-size: 8vh; align-items: flex-start; }
+  .hero-fg-hello { @apply text-[8vh]; align-items: flex-end; font-family: "Notable"; }
+  .hero-fgtext-tagline { @apply text-[8vh]; align-items: flex-start; }
 
   /* #endregion */
 

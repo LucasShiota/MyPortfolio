@@ -23,16 +23,17 @@ const performSlowScroll = (target) => {
   const element = typeof target === 'string' ? document.querySelector(target) : target;
   
   if (element) {
-    // 1. Calculate base header height offset explicitly
-    const header = document.querySelector('header');
-    let totalOffset = header ? header.offsetHeight : 0;
-    
-    // 2. Add any CSS `scroll-margin-top` defined on the element itself
+    // 1. Prefer CSS `scroll-margin-top` defined on the element itself (usually accounts for header)
     const computedStyle = window.getComputedStyle(element);
     const scrollMarginTop = parseFloat(computedStyle.scrollMarginTop);
-    if (!isNaN(scrollMarginTop)) {
-       // Note: getComputedStyle returns exact pixels (e.g. "96px") even if the CSS uses rem or calc()
-       totalOffset += scrollMarginTop; 
+    let totalOffset = 0;
+    
+    if (!isNaN(scrollMarginTop) && scrollMarginTop > 0) {
+       totalOffset = scrollMarginTop; 
+    } else {
+       // 2. Fallback to calculating base header height offset explicitly
+       const header = document.querySelector('header');
+       totalOffset = header ? header.offsetHeight : 0;
     }
     
     // Check for Reduced Motion (Accessibility) OR Performance Mode (Site Setting)

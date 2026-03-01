@@ -17,10 +17,10 @@ const { description, id = "overview" } = Astro.props;
   @reference "../../styles/global.css";
 
   .main-description {
-    font-size: 1.25rem;
-    line-height: 1.6;
+    @apply txt-h4;
+    @apply leading-loose;
     opacity: 0.9;
-    text-align: center;
+    @apply text-center;
     max-width: 800px;
     margin: 0 auto;
   }

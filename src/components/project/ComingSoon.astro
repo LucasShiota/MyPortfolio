@@ -19,9 +19,9 @@ const { projectTitle, id = "coming-soon" } = Astro.props;
   @reference "../../styles/global.css";
   
   .coming-soon-text {
-    text-align: center;
-    font-size: 1.15rem;
-    line-height: 1.6;
+    @apply text-center;
+    @apply txt-h5;
+    @apply leading-loose;
     max-width: 800px;
     margin: 0 auto;
     opacity: 0.9;

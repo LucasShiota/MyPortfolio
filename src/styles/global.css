@@ -61,7 +61,9 @@ html {
     0 4px 12px rgba(var(--gray), 0.18);
 
   --bg-color: #ffffff;
-  --bg-color-tinted: #e7e7e7;
+  --bg-color-tinted: #f4f4f4;
+  --bg-overlay: rgba(var(--black), 0.05);
+  --bg-overlay-hover: rgba(var(--black), 0.08);
   --text-color: rgb(var(--black));
   --link-color: var(--accent);
 
@@ -91,7 +93,9 @@ html {
     0 2px 8px rgba(var(--gray), 0.12);
 
   --bg-color: #111111;
-  --bg-color-tinted: #1e1e1e;
+  --bg-color-tinted: #070707;
+  --bg-overlay: rgba(var(--black), 0.08);
+  --bg-overlay-hover: rgba(var(--black), 0.12);
   --text-color: rgb(var(--black));
   --link-color: #4dabf7;
 
@@ -206,6 +210,44 @@ body {
 /* ------------------------------------ */
 /* #region utility */
 
+@utility txt-h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.1;
+}
+@utility txt-h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+@utility txt-h3 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+@utility txt-h4 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+@utility txt-h5 {
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+@utility txt-body-lg {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+@utility txt-body {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+@utility txt-body-sm {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+@utility txt-tag {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+
 
 @utility emphasis {
   font-size: 1.1rem; line-height: 1.4;
@@ -236,10 +278,10 @@ body {
 }
 
 @utility descriptor-tag {
-  background: var(--accent-reverse);
-  color: var(--bg-color);
+  @apply shape-pill;
+  background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
+  color: var(--accent-reverse);
   padding: 0.2rem 0.6rem;
-  border-radius: 999px;
   font-family: monospace;
   font-size: 0.85rem;
   font-weight: bold;
@@ -251,14 +293,12 @@ body {
   height: 2rem; 
 }
 @utility btn-accent {
-  @apply flx-cntr btn;
+  @apply flx-cntr btn shape-pill;
   height: 2rem; 
   padding-top: 1.2rem; padding-bottom: 1.2rem;
   padding-right: clamp(0.6rem, 1vw, 2rem); padding-left: clamp(0.6rem, 1vw, 2rem);
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent-reverse) 50%, transparent);
-  color: var(--accent-reverse);
+  background: var(--accent-reverse);
+  color: var(--bg-color);
   font-size: 1rem; font-weight: 600;
   transition: all 0.3s ease;
   
@@ -268,7 +308,32 @@ body {
   }
 }
 
+@utility shape-pill {
+  border-radius: 9999px;
+}
+
 @utility crsr-none { user-select: none; pointer-events: none; }
 @utility mrgn-pddng-none { margin: 0; padding: 0; }
+
+@utility txt-brand {
+  font-family: "Notable", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+@utility txt-micro-label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+@utility surface-panel {
+  background: var(--bg-color-tinted);
+  border: var(--border); border-radius: 1rem;
+  box-shadow: var(--box-shadow);
+  
+}
 
 /* #endregion */

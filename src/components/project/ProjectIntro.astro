@@ -50,7 +50,7 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
   @media (max-width: 1024px) {
     .hero-section {
       grid-template-columns: 1fr;
-      text-align: center;
+      @apply text-center;
       gap: 2rem;
     }
   }
@@ -81,18 +81,18 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
 
   .project-title {
     font-family: "Notable", sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    line-height: 1.1;
+    @apply txt-h1;
+    @apply leading-tight;
     margin: 0;
-    text-transform: uppercase;
+    @apply uppercase;
     letter-spacing: -0.02em;
     color: var(--accent-reverse);
   }
 
   .project-subtitle {
-    font-size: 1.5rem;
+    @apply txt-h3;
     opacity: 0.8;
-    font-weight: 300;
+    @apply font-light;
     margin: 0;
   }
 

@@ -108,8 +108,8 @@ const { sections } = Astro.props;
 
     .nav-header {
       font-family: "Notable", sans-serif;
-      font-size: 0.9rem;
-      text-transform: uppercase;
+      @apply txt-body-sm;
+      @apply uppercase;
       letter-spacing: 0.05em;
       padding-bottom: 0.5rem;
       border-bottom: var(--border);
@@ -140,8 +140,8 @@ const { sections } = Astro.props;
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      font-weight: 600;
-      font-size: 1rem;
+      @apply font-semibold;
+      @apply txt-body;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       transition: transform 0.3s ease, background 0.3s ease;
@@ -201,8 +201,8 @@ const { sections } = Astro.props;
   .nav-link {
     text-decoration: none;
     color: var(--text-color);
-    font-size: 0.95rem;
-    font-weight: 500;
+    @apply txt-body-sm;
+    @apply font-medium;
     display: block;
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
@@ -222,7 +222,7 @@ const { sections } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 600;
+    @apply font-semibold;
     text-decoration: none;
     transition: transform 0.3s ease, color 0.3s ease;
   }

@@ -71,12 +71,11 @@ const { projects } = Astro.props;
   @reference "../../../styles/global.css";
   
   .projects-preview-parent {
+    @apply surface-panel;
     position: relative; 
     width: 96%; height: 96%; /* Increased real estate */
     overflow: hidden;
-    background: rgba(var(--black), 0.05);
-    box-shadow: 0 4px 20px rgba(var(--black), 8%);
-    border-radius: 40px; /* Slightly tighter radius for better content fit */
+
   }
 
   .preview-entry {
@@ -121,7 +120,7 @@ const { projects } = Astro.props;
     .preview-media, 
     .descriptor-tags-container {
       justify-content: flex-end;
-      text-align: right;
+      @apply text-right;
     }
   }
 
@@ -176,8 +175,8 @@ const { projects } = Astro.props;
   /* Typography Refinement & Scale-to-Fit Title */
   .preview-title {
     margin: 0;
-    line-height: 1.2;
-    font-weight: 900;
+    @apply leading-snug;
+    @apply font-black;
     letter-spacing: -0.02em;
     
     /* SCALE-TO-FIT LOGIC: */
@@ -210,9 +209,9 @@ const { projects } = Astro.props;
 
   .preview-body-text {
     font-size: clamp(0.9rem, 1.8vh, 1.1rem);
-    line-height: 1.5;
+    @apply leading-relaxed;
     opacity: 0.85;
-    text-align: left;
+    @apply text-left;
     overflow: hidden;
     position: relative;
     
@@ -239,8 +238,8 @@ const { projects } = Astro.props;
 
   .body-content li {
     margin-bottom: 0.3rem;
-    font-size: 1rem; 
-    line-height: 1.2;
+    @apply txt-body; 
+    @apply leading-snug;
     display: list-item;
   }
 
@@ -254,7 +253,7 @@ const { projects } = Astro.props;
   }
 
   .body-content strong, .body-content b {
-    font-weight: 700;
+    @apply font-bold;
     color: rgb(var(--text-color));
   }
 
