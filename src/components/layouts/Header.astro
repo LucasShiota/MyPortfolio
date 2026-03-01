@@ -314,7 +314,7 @@ const isHome = pathname === '/' || pathname === '';
 /* ---------------------------------------------------------------- */
 /* #region Contacts */
 
-	.contact-btn { @apply btn-accent; }
+	.contact-btn { @apply btn-type-main; }
 	.contact-icon { display: none; }
 
 /* #endregion */
@@ -544,10 +544,10 @@ const isHome = pathname === '/' || pathname === '';
 	/* #region Ham Contact + Nav */
 
 	.hmbrgr-contacts { border-right: var(--border) }
-	.hmbrgr-contact-btn { @apply btn-accent; }
+	.hmbrgr-contact-btn { @apply btn-type-main; }
 	
 	.hmbrgr-nav { 
-		@apply btn-hvracnt;
+		@apply btn-fx-txtcolor;
 		transition: color 0.3s; @apply text-xl; line-height: 0.9; @apply font-bold;
 		padding: .7rem;
 	}

@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+header{z-index: 30;}
+.sidebar{z-index: 10;}
+.marquee-content{z-index: 5;}
+#hmbrgr-menu-toggle {z-index: 50;}
+#hmbrgr-menu{z-index: 20;}
+
+
+:root{
+  --herobgtext-font-size: 24vh;
+  --font-size: 26vh;
+  --sidebar-width: 15vw;
+  --header-height: 4rem;
+  --panel-height: calc(100vh - var(--header-height));
+  --headfoot-opacity: 1;
+  --border: 2px solid rgba(var(--gray), 0.2);
+}
+html {
+  background-color: var(--bg-color);
+  transition:
+    background-color 0.6s cubic-bezier(.4,0,.2,1),
+    color 0.6s cubic-bezier(.4,0,.2,1);
+}
+
+* {
+  transition:
+    background-color 0.6s cubic-bezier(.4,0,.2,1),
+    color 0.6s cubic-bezier(.4,0,.2,1),
+    border-color 0.6s cubic-bezier(.4,0,.2,1),
+    box-shadow 0.6s cubic-bezier(.4,0,.2,1);
+}
+
+:root {
+  color-scheme: light;
+
+  --accent: #F5A300;
+  --accent-reverse: #0062F5;
+
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+
+  --box-shadow:
+    0 1px 4px rgba(var(--gray), 0.06),
+    0 2px 8px rgba(var(--gray), 0.12),
+    0 4px 16px rgba(var(--gray), 0.24);
+
+  --box-shadow-small:
+    0 1px 3px rgba(var(--gray), 0.06),
+    0 4px 12px rgba(var(--gray), 0.18);
+
+  --bg-color: #ffffff;
+  --bg-color-tinted: #f4f4f4;
+  --bg-overlay: rgba(var(--black), 0.05);
+  --bg-overlay-hover: rgba(var(--black), 0.08);
+  --text-color: rgb(var(--black));
+  --link-color: var(--accent);
+
+  /* VANTA */
+  --vanta-highlight: #ffd787;
+  --vanta-midtone: #ff9ee2;
+  --vanta-lowlight: #eebcff;
+  --vanta-base: #ffebcd;
+  --wallpaper: #ffe9cd;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --accent: #0062F5;
+  --accent-reverse: #F5A300;
+  --black: 240, 240, 245;
+  --gray: 70, 80, 100;
+
+  --box-shadow:
+    0 1px 4px rgba(var(--gray), 0.06),
+    0 2px 8px rgba(var(--gray), 0.12),
+    0 4px 16px rgba(var(--gray), 0.24);
+
+  --box-shadow-small:
+    0 1px 4px rgba(var(--gray), 0.06),
+    0 2px 8px rgba(var(--gray), 0.12);
+
+  --bg-color: #111111;
+  --bg-color-tinted: #070707;
+  --bg-overlay: rgba(var(--black), 0.08);
+  --bg-overlay-hover: rgba(var(--black), 0.12);
+  --text-color: rgb(var(--black));
+  --link-color: #4dabf7;
+
+  /* VANTA */
+  --vanta-highlight: #006476;
+  --vanta-midtone: #560296;
+  --vanta-lowlight: #000000;
+  --vanta-base: #00022f;
+  --wallpaper: #3e006e;
+}

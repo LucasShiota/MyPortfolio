@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@utility btn { user-select: none; cursor: pointer; }
+
+
+/* ----- EFFECTS -----*/
+/* #region effects */
+
+  @utility btn-fx-txtcolor { 
+    &:hover { color: var(--accent-reverse); } 
+  }
+
+  @utility btn-fx-scale {
+    &:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: var(--box-shadow);
+    }
+  }
+
+/* #endregion  */
+
+
+/* ----- TYPES -----*/
+/* #region types */
+  @utility btn-type-tag {
+    @apply shape-pill;
+    background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
+    color: var(--accent-reverse);
+    padding: 0.2rem 0.6rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @utility btn-type-main {
+    @apply flx-cntr btn shape-pill btn-fx-scale;
+    height: 2rem; 
+    padding-top: 1.2rem; padding-bottom: 1.2rem;
+    padding-right: clamp(0.6rem, 1vw, 2rem); padding-left: clamp(0.6rem, 1vw, 2rem);
+    background: var(--accent-reverse);
+    color: var(--bg-color);
+    font-size: 1rem; font-weight: 600;
+    transition: all 0.3s ease;
+  }
+/* #endregion */
+
+/* ----- COMPONENTS -----*/
+/*#region components */
+
+  @utility shape-pill {
+    border-radius: 9999px;
+  }
+
+/* #endregion */

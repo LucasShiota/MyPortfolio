@@ -17,7 +17,7 @@ const { sections } = Astro.props;
     <i class="fa-solid fa-chevron-up chevron"></i>
   </button>
 
-  <a href="/#projects" class="standalone-back-btn btn-hvracnt">
+  <a href="/#projects" class="standalone-back-btn btn-fx-txtcolor">
     <i class="fa-solid fa-arrow-left"></i> All Projects
   </a>
 
@@ -89,6 +89,7 @@ const { sections } = Astro.props;
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      
     }
 
     .jump-toggle {
@@ -96,11 +97,8 @@ const { sections } = Astro.props;
     }
 
     .jump-nav {
-      background: var(--bg-color);
-      border: 1px solid rgba(var(--gray), 0.1);
-      border-radius: 16px;
+      @apply surface-panel;
       padding: 1.5rem 1rem;
-      box-shadow: var(--box-shadow-small);
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -161,13 +159,10 @@ const { sections } = Astro.props;
     }
 
     .jump-nav {
+      @apply surface-panel;
       position: absolute;
       bottom: calc(100% + 1rem); /* Pop upwards */
-      background: var(--bg-color);
-      border: 1px solid rgba(var(--gray), 0.2);
-      border-radius: 16px;
       padding: 1rem;
-      box-shadow: var(--box-shadow);
       width: max-content;
       min-width: 200px;
       opacity: 0;

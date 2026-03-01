@@ -24,7 +24,7 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
       {tags.length > 0 && (
         <div class="tags-container">
           {tags.map(tag => (
-            <span class="tag">{tag}</span>
+            <span class="tag btn-type-tag">{tag}</span>
           ))}
         </div>
       )}
@@ -101,10 +101,6 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 0.5rem;
-  }
-
-  .tag {
-    @apply descriptor-tag;
   }
 
   .hero-image-container {

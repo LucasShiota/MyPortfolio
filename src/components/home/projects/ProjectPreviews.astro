@@ -25,7 +25,7 @@ const { projects } = Astro.props;
       {project.descriptorTags && project.descriptorTags.length > 0 && (
         <div class="descriptor-tags-container flx-algncntr-rw">
           {project.descriptorTags.map(tag => (
-            <span class="descriptor-tag">{tag}</span>
+            <span class="descriptor-tag btn-type-tag">{tag}</span>
           ))}
         </div>
       )}
@@ -202,11 +202,6 @@ const { projects } = Astro.props;
     margin-bottom: 0.5rem;
   }
 
-
-  .descriptor-tag {
-    @apply descriptor-tag;
-  }
-
   .preview-body-text {
     font-size: clamp(0.9rem, 1.8vh, 1.1rem);
     @apply leading-relaxed;
@@ -265,7 +260,7 @@ const { projects } = Astro.props;
   }
 
   .preview-link-btn {
-    @apply btn-accent;
+    @apply btn-type-main;
     min-width: 140px;
     padding-top: clamp(0.8rem, 2vh, 1.2rem); 
     padding-bottom: clamp(0.8rem, 2vh, 1.2rem);

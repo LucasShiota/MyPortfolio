@@ -29,11 +29,8 @@ const { title, icon, id } = Astro.props;
   }
 
   .panel-card {
-    background: var(--bg-color);
-    border: 1px solid rgba(var(--gray), 0.1); border-radius: 32px;
+    @apply surface-panel;
     padding: 2rem;
-    
-    box-shadow: var(--box-shadow);
     display: flex; flex-direction: column;
     gap: 1rem;
   }
