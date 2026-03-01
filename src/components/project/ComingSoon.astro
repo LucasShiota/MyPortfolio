@@ -1,0 +1,29 @@
+---
+import ProjectSection from './ProjectSection.astro';
+
+interface Props {
+  projectTitle: string;
+  id?: string;
+}
+
+const { projectTitle, id = "coming-soon" } = Astro.props;
+---
+
+<ProjectSection title="More Details Coming Soon" id={id}>
+  <p class="coming-soon-text">
+    I am currently compiling the full documentation for {projectTitle}. This section will eventually include deeper dives into the system design, mechanics, and process.
+  </p>
+</ProjectSection>
+
+<style>
+  @reference "../../styles/global.css";
+  
+  .coming-soon-text {
+    text-align: center;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+</style>

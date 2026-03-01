@@ -4,6 +4,8 @@ import PerformanceMode from '../features/PerformanceMode.astro';
 import LetsTalk from '../features/LetsTalk.astro';
 import { LINKS } from "../../config/links.ts";
 const today = new Date();
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/' || pathname === '';
 ---
 <header class="flx-cntr-rw">
 	<div class="header-brand">
@@ -161,18 +163,20 @@ const today = new Date();
 </header>
 	<div id="hmbrgr-menu">
 		<div class="hmbrgr-row">
-			<div class="hmbrgr-contacts">
+			<div class:list={["hmbrgr-contacts", { "hmbrgr-contacts-full": !isHome }]}>
 				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-file-lines"></i></i>&#8194;CV </div>
 				<a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="hmbrgr-contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn </a>
 				<LetsTalk isHamburger={true} />
 				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-user"></i>&#8194;About </div>
 			</div>
-			<div class="hmbrgr-nav-parent">
-				<div class="hmbrgr-nav" data-index="0"> Hey </div>
-				<div class="hmbrgr-nav" data-index="1"> Projects </div>
-				<div class="hmbrgr-nav" data-index="2"> About Me </div>
-				<div class="hmbrgr-nav" data-index="3"> Contacts </div>
-			</div>
+			{isHome && (
+				<div class="hmbrgr-nav-parent">
+					<div class="hmbrgr-nav" data-index="0"> Hey </div>
+					<div class="hmbrgr-nav" data-index="1"> Projects </div>
+					<div class="hmbrgr-nav" data-index="2"> About Me </div>
+					<div class="hmbrgr-nav" data-index="3"> Contacts </div>
+				</div>
+			)}
 		</div>
 		<div class="hmbrgr-toggles">
 			<button id="hmbrgr-theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
@@ -551,6 +555,7 @@ const today = new Date();
 	.hmbrgr-nav-parent, .hmbrgr-contacts { 
 		@apply flx-cntr-clmn; gap: .5rem; width: 40%;
 	}
+	.hmbrgr-contacts.hmbrgr-contacts-full { width: 100%; border-right: none; }
 
 	/* #endregion */
 

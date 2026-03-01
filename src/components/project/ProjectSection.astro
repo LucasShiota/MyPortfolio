@@ -1,0 +1,76 @@
+---
+interface Props {
+  title: string;
+  icon?: string;
+  id?: string;
+}
+
+const { title, icon, id } = Astro.props;
+---
+
+<section class="project-section" id={id}>
+  <div class="panel-card">
+    <div class="section-title">
+      {icon && <i class={icon}></i>}
+      <h2>{title}</h2>
+    </div>
+    <div class="content-wrapper">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .project-section {
+    scroll-margin-top: calc(var(--header-height) + 2rem);
+    width: 100%;
+  }
+
+  .panel-card {
+    background: var(--bg-color);
+    border: 1px solid rgba(var(--gray), 0.1); border-radius: 32px;
+    padding: 2rem;
+    
+    box-shadow: var(--box-shadow);
+    display: flex; flex-direction: column;
+    gap: 1rem;
+  }
+
+  .section-title {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%;
+    border-bottom: var(--border);
+    padding-bottom: 1rem;
+  }
+
+  .section-title i {
+    font-size: 2rem;
+    
+  }
+
+  .section-title h2 {
+    font-family: "Notable", sans-serif;
+    font-size: 2rem;
+    margin: 0;
+    text-transform: uppercase;
+    color: var(--accent-reverse);
+  }
+
+  .content-wrapper {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .panel-card {
+      padding: 1.5rem;
+    }
+    
+    .section-title {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+    }
+  }
+</style>

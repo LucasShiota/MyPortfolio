@@ -74,7 +74,7 @@ export const LINKS: LinksConfig = {
       title: "DRG Mod"
     },
     baraliot: {
-      url: "/projects/baraliot",
+      url: "/baraliot",
       label: "View Baraliot Project",
       title: "Baraliot"
     },

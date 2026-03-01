@@ -1,0 +1,39 @@
+---
+interface Props {
+  href?: string;
+  label?: string;
+}
+
+const { href = "/", label = "Back to Portfolio" } = Astro.props;
+---
+
+<nav class="back-nav">
+  <a href={href} class="back-btn btn-hvracnt">
+    <i class="fa-solid fa-arrow-left"></i> {label}
+  </a>
+</nav>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .back-nav {
+    margin-bottom: -2rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .back-btn {
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;  
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .back-btn:hover {
+    transform: translateX(-5px);
+  }
+</style>

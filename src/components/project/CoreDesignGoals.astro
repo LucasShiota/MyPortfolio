@@ -1,0 +1,63 @@
+---
+import ProjectSection from './ProjectSection.astro';
+
+interface Props {
+  goals: string[];
+  id?: string;
+}
+
+const { goals, id = "goals" } = Astro.props;
+---
+
+<ProjectSection title="Core Design Goals" icon="fa-solid fa-bullseye" id={id}>
+  <div class="goals-grid">
+    {goals.map((goal, index) => (
+      <div class="goal-card" style={`--index: ${index}`}>
+        <div class="goal-number">{index + 1}</div>
+        <p>{goal}</p>
+      </div>
+    ))}
+  </div>
+</ProjectSection>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .goals-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-content: center; /* Center rows of goals */
+    max-width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .goals-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .goal-card {
+    background: transparent ;
+    border: 2px solid var(--text-color); border-radius: 24px; 
+    padding: 1rem; gap: 1rem;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: row; align-items: center; justify-content: center;
+  }
+
+  .goal-number {
+    font-family: "Notable", sans-serif;
+    font-size: 3rem;
+    opacity: 0.5;
+    line-height: 1;
+    padding-bottom: 0.7rem;
+    color: var(--text-color);
+  }
+
+  .goal-card p {
+    font-size: 1.15rem;
+    line-height: 1.4;
+    margin: 0;
+    font-weight: 500;
+  }
+</style>

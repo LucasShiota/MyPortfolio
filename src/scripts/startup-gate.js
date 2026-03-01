@@ -21,10 +21,19 @@ function runWhenIdle(task, timeout = 800) {
  */
 const performSlowScroll = (target) => {
   const element = typeof target === 'string' ? document.querySelector(target) : target;
-  const header = document.querySelector('header');
   
   if (element) {
-    const headerHeight = header ? header.offsetHeight : 0;
+    // 1. Calculate base header height offset explicitly
+    const header = document.querySelector('header');
+    let totalOffset = header ? header.offsetHeight : 0;
+    
+    // 2. Add any CSS `scroll-margin-top` defined on the element itself
+    const computedStyle = window.getComputedStyle(element);
+    const scrollMarginTop = parseFloat(computedStyle.scrollMarginTop);
+    if (!isNaN(scrollMarginTop)) {
+       // Note: getComputedStyle returns exact pixels (e.g. "96px") even if the CSS uses rem or calc()
+       totalOffset += scrollMarginTop; 
+    }
     
     // Check for Reduced Motion (Accessibility) OR Performance Mode (Site Setting)
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -37,7 +46,7 @@ const performSlowScroll = (target) => {
       duration: skipAnimation ? 0 : 1, 
       scrollTo: {
         y: element,
-        offsetY: headerHeight,
+        offsetY: totalOffset,
         autoKill: true
       },
       ease: skipAnimation ? "none" : "power2.inOut"

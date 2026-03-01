@@ -4,7 +4,6 @@ export type Project = {
   thumbnailSrc: string;
   thumbnailAlt: string;
   body: string;
-  condensedBody: string;
   previewImage: string;
   previewVideo?: string;
   tags: string[];
@@ -23,7 +22,6 @@ export const projects: Project[] = [
     thumbnailSrc: "/svg/sidebar/projects.svg",
     thumbnailAlt: "Destructively Expressive Icons thumbnail",
     body: "A visual mod replacing default class icons with stylized vector art.",
-    condensedBody: "Custom stylized vector icons for DRG.",
     previewImage: "/images/headshot.webp",
     tags: ["Mod"],
     descriptorTags: ["Vector Art", "UI Design"],
@@ -32,14 +30,21 @@ export const projects: Project[] = [
   {
     id: "2",
     title: "Baraliot Fantasia",
-    thumbnailSrc: "/svg/sidebar/about.svg",
+    thumbnailSrc: "/images/baraliotlogo.webp",
     thumbnailAlt: "Baraliot Fantasia thumbnail",
-    body: "A tabletop system prototype focused on deckbuilding combat.",
-    condensedBody: "Deckbuilding TRPG combat prototype.",
-    previewImage: "/images/headshot.webp",
+    body: `<p>An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.</p>
+           <p>The 5 core design goals are:</p>
+           <ul>
+             <li>Use the gameplay potential of card and deckbuilding mechanics to their fullest</li>
+             <li>Evoke a sense of satisfaction in players realizing their character fantasy</li>
+             <li>Streamline rules and rulebook to lower the barrier of entry and the cost of play</li>
+             <li>Excite players with many choices and freedom without overwhelming them</li>
+             <li>A high-density, low-complexity approach to the overarching rules package</li>
+           </ul>`,
+    previewImage: "/images/baraliot.webp",
     tags: ["TRPG"],
-    descriptorTags: ["System Design", "Game Balance"],
-    previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
+    descriptorTags: ["Game System", "Typography", "Layout ", "Writing" ],
+    previewButton: { text: "Learn more in depth", href: "/baraliot", ariaLabel: "Open project details" },
   },
   {
     id: "3",
@@ -47,9 +52,8 @@ export const projects: Project[] = [
     thumbnailSrc: "/svg/sidebar/contact.svg",
     thumbnailAlt: "Koth Billabong thumbnail",
     body: "A TF2 map project focused on layout flow and readability.",
-    condensedBody: "TF2 map with optimized layout flow.",
     previewImage: "/images/headshot.webp",
-    tags: ["Level", "Mod"],
+    tags: ["Side Projects"],
     descriptorTags: ["Level Design", "Source Engine"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
@@ -59,9 +63,8 @@ export const projects: Project[] = [
     thumbnailSrc: "/images/headshot.webp",
     thumbnailAlt: "Tokyo Grunge thumbnail",
     body: "A visual study of urban textures and graffiti in Tokyo.",
-    condensedBody: "Photography of Tokyo's urban textures.",
     previewImage: "/images/headshot.webp",
-    tags: ["Misc"],
+    tags: ["Side Projects"],
     descriptorTags: ["Photography", "Visual Study"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
@@ -71,9 +74,8 @@ export const projects: Project[] = [
     thumbnailSrc: "/logo/crazyblender.webp",
     thumbnailAlt: "Portfolio Website thumbnail",
     body: "Built with custom UI and animation behavior.",
-    condensedBody: "Custom-built portfolio without frameworks.",
     previewImage: "/images/headshot.webp",
-    tags: ["Misc"],
+    tags: ["Side Projects"],
     descriptorTags: ["Web Dev", "UX/UI"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },
@@ -83,9 +85,8 @@ export const projects: Project[] = [
     thumbnailSrc: "/logo/crazyblender.svg",
     thumbnailAlt: "Personal Blog thumbnail",
     body: "Long-form writing about game design and player experience.",
-    condensedBody: "Essays on game design and player UX.",
     previewImage: "/images/headshot.webp",
-    tags: ["Misc"],
+    tags: ["Side Projects"],
     descriptorTags: ["Writing", "Analysis"],
     previewButton: { text: "Details", href: "#", ariaLabel: "Open project details" },
   },

@@ -270,6 +270,23 @@ export const initProjectsEntriesController = ({
     });
   };
 
+  const getVisibleIndexAtCenter = (): number => {
+    const containerCenterX = container.scrollLeft + container.clientWidth / 2;
+    let closestIndex = 0;
+    let minDistance = Infinity;
+
+    visibleEntries.forEach((entry, index) => {
+      const entryCenterX = getEntryCenterInContainer(entry);
+      const distance = Math.abs(entryCenterX - containerCenterX);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    return closestIndex;
+  };
+
   const handleMouseDown = (e: MouseEvent): void => initDrag(e.pageX);
   const handleMouseMove = (e: MouseEvent): void => processDragMove(e.pageX, e);
   const handleMouseEnd = (): void => releaseDrag();
@@ -308,14 +325,27 @@ export const initProjectsEntriesController = ({
     });
   });
 
+  let resizeTimeout: number | null = null;
   window.addEventListener("resize", () => {
-    updateEdgePadding();
+    // 1. Instantly sync internal values to avoid jumping on the next scroll frame
+    currentScroll = container.scrollLeft;
+    targetScroll = currentScroll;
+
+    if (resizeTimeout) window.clearTimeout(resizeTimeout);
     
-    // Auto-reset filters when resizing down to mobile/tablet
-    if (window.innerWidth < 720 && selectedFilters.size > 0) {
-      selectedFilters.clear();
-      applyFilters();
-    }
+    resizeTimeout = window.setTimeout(() => {
+      updateEdgePadding();
+      
+      // Auto-reset filters when resizing down to mobile/tablet
+      if (window.innerWidth < 720 && selectedFilters.size > 0) {
+        selectedFilters.clear();
+        applyFilters();
+      } else {
+        // Find which project is now at the center and snap to it
+        const indexAtCenter = getVisibleIndexAtCenter();
+        selectVisibleIndex(indexAtCenter, { shouldScroll: true, behavior: "auto" });
+      }
+    }, 150);
   });
 
   applyFilters();

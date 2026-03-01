@@ -228,6 +228,39 @@
 	// Removed redundant direct call since createMainTrigger handles it
 	// updateUI(mainTrigger.progress);
 
+	let isResizing = false;
+	let resizeTimeout: number | null = null;
+	let preResizeActiveIndex = 0;
+
+	window.addEventListener("resize", () => {
+		if (!isResizing) {
+			isResizing = true;
+			// Store where we were before the layout shifts
+			preResizeActiveIndex = Math.round(uiTrigger.progress / step);
+			disableSnapping();
+		}
+
+		if (resizeTimeout) window.clearTimeout(resizeTimeout);
+		
+		resizeTimeout = window.setTimeout(() => {
+			isResizing = false;
+			
+			// Refresh ScrollTrigger to get new scroll boundaries
+			ScrollTrigger.refresh();
+			
+			// Force back to the panel we were on
+			const targetProgress = preResizeActiveIndex * step;
+			const targetY = targetProgress * (document.body.scrollHeight - window.innerHeight);
+			
+			gsap.set(window, { scrollTo: { y: targetY } });
+			
+			// Re-enable snapping if appropriate
+			if (!window.__performanceModeEnabled) {
+				enableSnapping();
+			}
+		}, 150);
+	});
+
 	window.addEventListener("beforeunload", () => {
 		activeScrollTween?.kill();
 		uiTrigger.kill();

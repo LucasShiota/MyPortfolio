@@ -29,7 +29,6 @@ header{z-index: 30;}
 }
 html {
   background-color: var(--bg-color);
-  scroll-behavior: smooth;
   transition:
     background-color 0.6s cubic-bezier(.4,0,.2,1),
     color 0.6s cubic-bezier(.4,0,.2,1);
@@ -234,6 +233,18 @@ body {
 @utility btn-hvracnt { 
   @apply btn; 
   &:hover { color: var(--accent-reverse); } 
+}
+
+@utility descriptor-tag {
+  background: var(--accent-reverse);
+  color: var(--bg-color);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 @utility btn-basic {

@@ -51,8 +51,7 @@ const { projects } = Astro.props;
       </div>
 
       <div class="preview-body-text">
-        <p class="body-full">{project.body}</p>
-        <p class="body-condensed">{project.condensedBody}</p>
+        <div class="body-content" set:html={project.body} />
       </div>
       
       <footer class="preview-footer">
@@ -82,19 +81,19 @@ const { projects } = Astro.props;
 
   .preview-entry {
     display: grid;
-    /* Mobile Layout: Vertical Stack */
+    /* Mobile/Tablet Template: Cinematic Top, Story Split Below */
     grid-template-areas: 
-      "header"
-      "tags"
-      "media"
-      "body"
-      "footer";
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto minmax(140px, 30vh) 1fr auto;
-    gap: 0.6rem;
+      "header header"
+      "tags   tags"
+      "body   media"
+      "body   footer";
+    grid-template-columns: 1.3fr 1fr; /* Balanced split for smaller screens */
+    grid-template-rows: auto auto 1fr auto;
+    row-gap: 0.7rem;
+    column-gap: 1.2rem;
     
     position: absolute;
-    inset: 1.2rem; /* Halfway between original 1.5rem and tighter 0.8rem */
+    inset: 1rem;
     padding: 0rem;
     opacity: 0;
     visibility: hidden;
@@ -105,20 +104,24 @@ const { projects } = Astro.props;
     box-sizing: border-box;
   }
 
-  /* Desktop Layout: Custom Multi-Area Grid */
+  /* Desktop/Laptop Template: 'Pro' Dashboard Split */
   @media (min-width: 1024px) {
     .preview-entry {
       grid-template-areas: 
-        "header body"
-        "tags   body"
-        "media  body"
-        "footer footer";
-      grid-template-columns: 2fr 3fr; /* 2:3 Ratio */
-      grid-template-rows: auto auto 1fr auto;
-      row-gap: 0.8rem;
-      column-gap: 1.2rem;
-      inset: 1.2rem;
-      padding: 0;
+        "header tags"
+        "body   media"
+        "body   footer";
+      grid-template-columns: 1.8fr 1fr;
+      grid-template-rows: auto 1fr auto; /* Header/Tag row stays compact */
+      row-gap: 1rem;
+      column-gap: 3.5rem;
+      inset: 1.5rem;
+    }
+
+    .preview-media, 
+    .descriptor-tags-container {
+      justify-content: flex-end;
+      text-align: right;
     }
   }
 
@@ -138,27 +141,31 @@ const { projects } = Astro.props;
     min-width: 0; /* Prevents flex/grid blowout */
   }
   .descriptor-tags-container { grid-area: tags; }
-  .preview-media  { grid-area: media; }
   .preview-body-text { grid-area: body; }
   .preview-footer { grid-area: footer; }
-
-  /* Media Container */
+  /* Media Container: Now a flex wrapper to center/limit the square */
   .preview-media {
+    grid-area: media;
     width: 100%;
     height: 100%;
-    /* Let the grid control the height, don't force a min-height */
     min-height: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .media-content {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
     background: rgba(var(--black), 0.08);
     border-radius: 24px;
     overflow: hidden;
     box-shadow: var(--box-shadow-small);
-  }
-
-  .media-content {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
     transition: transform 0.6s ease;
   }
 
@@ -180,65 +187,82 @@ const { projects } = Astro.props;
     
     /* 
        Dynamic to Viewport Height.
-       Lowered the max to 2rem and ideal height to 3.5vh so it isn't massive.
+       Lowered the max to 1.8rem for mobile-friendly scaling.
     */
-    font-size: clamp(1rem, 3vh, 2.0rem); 
+    font-size: clamp(1rem, 2.5vh, 1.8rem); 
     display: block;
     width: 100%;
   }
 
   .descriptor-tags-container {
-    gap: 0.5rem;
+    grid-area: tags;
+    display: flex !important;
+    flex-wrap: wrap; /* Wrap on small screens */
+    gap: clamp(0.2rem, 0.5vh, 0.5rem);
     margin-top: 0.2rem;
     margin-bottom: 0.5rem;
-    display: none !important; /* Hidden on mobile */
-  }
-
-  @media (min-width: 720px) {
-    .descriptor-tags-container {
-      display: flex !important;
-    }
   }
 
 
   .descriptor-tag {
-    background-color: var(--accent-reverse);
-    color: var(--bg-color);
-    /* Fluid padding and font size for desktop vs laptop sizes (Relative to height) */
-    padding: clamp(0.15rem, 0.4vh, 0.25rem) clamp(0.5rem, 1vh, 0.75rem);
-    border-radius: 8px;
-    font-size: clamp(0.6rem, 1.2vh, 0.7rem);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    @apply descriptor-tag;
   }
 
   .preview-body-text {
-    font-size: clamp(1rem, 1.8vh, 1.25rem);
-    line-height: 1.6;
+    font-size: clamp(0.9rem, 1.8vh, 1.1rem);
+    line-height: 1.5;
     opacity: 0.85;
     text-align: left;
+    overflow: hidden;
+    position: relative;
+    
+    /* Premium Fade-out Mask for Overflow */
+    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
   }
 
-  .body-full { display: none; margin: 0; }
-  .body-condensed { display: block; margin: 0; }
-
-  @media (min-width: 1024px) {
-    .body-full { display: block; }
-    .body-condensed { display: none; }
+  /* Style HTML content inside the body */
+  .body-content ul, .body-content ol {
+    margin-top: 0.4rem;
+    margin-bottom: 0.6rem;
+    padding-left: 1.2rem;
+    list-style-position: outside;
   }
 
-  /* Footer & Button Positioning */
+  .body-content ul {
+    list-style-type: disc;
+  }
+
+  .body-content ol {
+    list-style-type: decimal;
+  }
+
+  .body-content li {
+    margin-bottom: 0.3rem;
+    font-size: 1rem; 
+    line-height: 1.2;
+    display: list-item;
+  }
+
+  .body-content p {
+    margin-bottom: 1.25rem; /* Increased significantly for clearer separation */
+  }
+
+  /* Reduce spacing for the very last child to avoid double-padding against footer */
+  .body-content > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .body-content strong, .body-content b {
+    font-weight: 700;
+    color: rgb(var(--text-color));
+  }
+
+  /* Footer & Button Positioning (Right Column) */
   .preview-footer {
     display: flex;
-    justify-content: flex-end; /* Mobile default */
+    justify-content: flex-end; /* Align with the right-column media/tags */
     align-items: flex-end;
-  }
-
-  @media (min-width: 1024px) {
-    .preview-footer {
-      justify-self: end; /* Desktop pin to bottom-right */
-    }
   }
 
   .preview-link-btn {

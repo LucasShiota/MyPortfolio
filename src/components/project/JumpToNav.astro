@@ -1,0 +1,239 @@
+---
+interface Props {
+  sections: {
+    id: string;
+    label: string;
+  }[];
+}
+
+const { sections } = Astro.props;
+---
+
+<div class="jump-to-container">
+  <!-- Mobile Toggle Button -->
+  <button id="jump-toggle" class="jump-toggle" aria-expanded="false" aria-label="Toggle section navigation">
+    <i class="fa-solid fa-list-ul"></i>
+    <span>Jump To</span>
+    <i class="fa-solid fa-chevron-up chevron"></i>
+  </button>
+
+  <a href="/#projects" class="standalone-back-btn btn-hvracnt">
+    <i class="fa-solid fa-arrow-left"></i> All Projects
+  </a>
+
+  <!-- Navigation Menu -->
+  <nav id="jump-nav" class="jump-nav">
+    <div class="nav-header">
+      <span>Sections</span>
+    </div>
+    <ul class="nav-list">
+      {sections.map(({ id, label }) => (
+        <li>
+          <a href={`#${id}`} class="nav-link">
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<script>
+  // Mobile functionality to toggle the menu
+  const toggleBtn = document.getElementById('jump-toggle');
+  const jumpNav = document.getElementById('jump-nav');
+
+  if (toggleBtn && jumpNav) {
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', (!isExpanded).toString());
+      jumpNav.classList.toggle('is-open');
+    });
+
+    // Close when clicking a link (especially useful on mobile)
+    const links = jumpNav.querySelectorAll('.nav-link');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 1024) {
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          jumpNav.classList.remove('is-open');
+        }
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (!toggleBtn.contains(target) && !jumpNav.contains(target)) {
+        if (window.innerWidth < 1024 && jumpNav.classList.contains('is-open')) {
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          jumpNav.classList.remove('is-open');
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  @reference "../../styles/global.css";
+
+  /* Desktop layout: Fixed on the left */
+  @media (min-width: 1024px) {
+    .jump-to-container {
+      position: fixed;
+      /* Keep it pinned to the edge of the 1400px max-width container */
+      left: max(2rem, calc(50vw - 700px + 2rem));
+      top: calc(var(--header-height) + 2rem);
+      z-index: 40;
+      width: clamp(150px, 12vw, 220px);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .jump-toggle {
+      display: none; /* Hide toggle button on desktop */
+    }
+
+    .jump-nav {
+      background: var(--bg-color);
+      border: 1px solid rgba(var(--gray), 0.1);
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      box-shadow: var(--box-shadow-small);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav-header {
+      font-family: "Notable", sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-bottom: 0.5rem;
+      border-bottom: var(--border);
+      color: var(--accent-reverse);
+    }
+  }
+
+  /* Mobile/Tablet Layout: Bottom centered pill */
+  @media (max-width: 1023px) {
+    .jump-to-container {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15; /* Render below hamburger menu (z-index: 20) */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .jump-toggle {
+      background: var(--accent-reverse);
+      color: var(--bg-color);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+      z-index: 2;
+    }
+
+    .jump-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .jump-toggle .chevron {
+      transition: transform 0.3s ease;
+    }
+
+    .jump-toggle[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .jump-nav {
+      position: absolute;
+      bottom: calc(100% + 1rem); /* Pop upwards */
+      background: var(--bg-color);
+      border: 1px solid rgba(var(--gray), 0.2);
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: var(--box-shadow);
+      width: max-content;
+      min-width: 200px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1;
+    }
+
+    .jump-nav.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav-header {
+      display: none; /* Hide header on mobile, toggle button serves this role */
+    }
+  }
+
+  /* Shared List Styles */
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+  }
+
+  .nav-link:hover {
+    background: rgba(var(--gray), 0.1);
+    color: var(--accent-reverse);
+    opacity: 1;
+    transform: translateX(5px);
+  }
+
+  .standalone-back-btn {
+    color: var(--text-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .standalone-back-btn:hover {
+    transform: translateX(-5px);
+  }
+
+  @media (max-width: 1023px) {
+    .standalone-back-btn {
+      display: none; /* Hide standard standalone back button on mobile since nav acts differently */
+    }
+  }
+</style>
