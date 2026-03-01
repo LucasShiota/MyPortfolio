@@ -30,29 +30,21 @@ const { title, icon, id } = Astro.props;
 
   .panel-card {
     @apply surface-panel;
-    padding: 2rem;
+    padding: 2rem; gap: 1rem;
     display: flex; flex-direction: column;
-    gap: 1rem;
   }
 
   .section-title {
+    @apply txt-h4;
     display: flex; justify-content: center; align-items: center;
     width: 100%;
     border-bottom: var(--border);
     padding-bottom: 1rem;
   }
 
-  .section-title i {
-    @apply txt-h2;
-    
-  }
-
   .section-title h2 {
-    font-family: "Notable", sans-serif;
-    @apply txt-h2;
+    @apply uppercase txt-color-accent font-bold; 
     margin: 0;
-    @apply uppercase;
-    color: var(--accent-reverse);
   }
 
   .content-wrapper {

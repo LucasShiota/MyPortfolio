@@ -19,8 +19,8 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
           <img src={logo} alt={`${title} Logo`} class="project-logo" />
         </div>
       )}
-      <h1 class="project-title">{title}</h1>
-      <p class="project-subtitle">{subtitle}</p>
+      <h1 class="project-title txt-h1 leading-tight">{title}</h1>
+      <p class="project-subtitle txt-h4 font-light">{subtitle}</p>
       {tags.length > 0 && (
         <div class="tags-container">
           {tags.map(tag => (
@@ -81,18 +81,12 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
 
   .project-title {
     font-family: "Notable", sans-serif;
-    @apply txt-h1;
-    @apply leading-tight;
     margin: 0;
-    @apply uppercase;
-    letter-spacing: -0.02em;
     color: var(--accent-reverse);
   }
 
   .project-subtitle {
-    @apply txt-h3;
     opacity: 0.8;
-    @apply font-light;
     margin: 0;
   }
 

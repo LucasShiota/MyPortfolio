@@ -134,6 +134,7 @@ const { projects } = Astro.props;
 
   /* Assign Areas */
   .preview-header { 
+    
     grid-area: header; 
     container-type: inline-size; /* Enable container query units for title scaling */
     width: 100%;
@@ -175,20 +176,12 @@ const { projects } = Astro.props;
   /* Typography Refinement & Scale-to-Fit Title */
   .preview-title {
     margin: 0;
-    @apply leading-snug;
-    @apply font-black;
-    letter-spacing: -0.02em;
+    @apply leading-snug; @apply font-black; @apply txt-h3;
     
     /* SCALE-TO-FIT LOGIC: */
     white-space: nowrap; /* Force one line */
     overflow: hidden;
     text-overflow: ellipsis; /* Will show "..." if it absolutely can't fit */
-    
-    /* 
-       Dynamic to Viewport Height.
-       Lowered the max to 1.8rem for mobile-friendly scaling.
-    */
-    font-size: clamp(1rem, 2.5vh, 1.8rem); 
     display: block;
     width: 100%;
   }

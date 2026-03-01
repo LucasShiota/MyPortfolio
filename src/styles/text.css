@@ -20,12 +20,14 @@
 /* --------------- SUB --------------- */
 /* ----------------------------------- */
 /* #region Misc */
-h1,h2,h3,h4,h5,h6 {margin: 0 0 0.5rem 0; color: rgb(var(--text-color)); line-height: 1.2;}
-h1 {font-size: 3.052em;}
-h2 {font-size: 2.441em;}
-h3 {font-size: 1.953em;}
-h4 {font-size: 1.563em;}
-h5 {font-size: 1.25em;} 
+@layer base {
+  h1,h2,h3,h4,h5,h6 {
+    margin: 0 0 0.5rem 0; 
+    line-height: 1.2;
+    color: inherit;
+    @apply font-bold;
+  }
+}
 strong,b {font-weight: 700;} /* bold, strong */
 
 /* links */
@@ -95,31 +97,50 @@ body {
 	color: var(--text-color);
 }
 
-/* -------------------- */
-/* ----- TEXT STYLE -----*/
-/* -------------------- */
-/* #region textstyles */
+/* -------------------------------------------------- */
+/* -------------------- TEXT STYLE ------------------ */
+/* -------------------------------------------------- */
+
+@utility txt-brand {
+  font-family: "Notable", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+@utility txt-color-accent {
+  color: var(--accent-reverse);
+}
+
+/* ---------- UTILITY LAYER BASE ---------- */
 
 @utility txt-h1 {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-size: clamp(2.5rem, 8vw, 3.815rem);
   line-height: 1.1;
 }
 @utility txt-h2 {
-  font-size: 2rem;
+  font-size: clamp(2.0rem, 4vw, 3.052rem);
   line-height: 1.2;
 }
 @utility txt-h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.75rem, 3vw, 2.441rem);
   line-height: 1.2;
 }
 @utility txt-h4 {
-  font-size: 1.25rem;
+  font-size: clamp(1.5rem, 2vw, 1.953rem);
   line-height: 1.4;
 }
 @utility txt-h5 {
-  font-size: 1.15rem;
+  font-size: 1.563rem;
   line-height: 1.6;
 }
+@utility txt-h6 {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+/* ---------- UTILITY LAYER BASE ---------- */
+
+
 @utility txt-body-lg {
   font-size: 1.1rem;
   line-height: 1.6;
@@ -135,18 +156,6 @@ body {
 @utility txt-tag {
   font-size: 0.85rem;
   letter-spacing: 0.05em;
-}
-
-@utility emphasis {
-  font-size: 1.1rem;
-  line-height: 1.4;
-  font-weight: bold;
-}
-
-@utility txt-brand {
-  font-family: "Notable", sans-serif;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
 }
 
 @utility txt-micro-label {

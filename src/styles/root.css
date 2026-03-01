@@ -5,6 +5,7 @@ header{z-index: 30;}
 .marquee-content{z-index: 5;}
 #hmbrgr-menu-toggle {z-index: 50;}
 #hmbrgr-menu{z-index: 20;}
+.jump-to-container { z-index: 25;}
 
 
 :root{

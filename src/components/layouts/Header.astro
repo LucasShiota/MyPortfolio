@@ -12,8 +12,8 @@ const isHome = pathname === '/' || pathname === '';
 		<img src="/logo/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
 		<a href={LINKS.homepage.url} aria-label={LINKS.homepage.label} title={LINKS.homepage.title} class="header-brand-link">
 			<div class="name-path flx-clmn justify-start"> 
-				<div class="name font-bold">Lucas Shiota</div>
-				<div class="path font-light">Game Designer</div>
+				<div class="name font-bold txt-h5">Lucas Shiota</div>
+				<div class="path font-light txt-h5">Game Designer</div>
 			</div>
 		</a>
 	</div>
@@ -199,7 +199,7 @@ const isHome = pathname === '/' || pathname === '';
 		</div>
 
 		<div class="source-grid">
-			<div class="site-signature emphasis"> Designed & Developed by me </div>
+			<div class="site-signature txt-h6 font-bold"> Designed & Developed by me </div>
 			
 			<div class="source-item"> <span class="label">Stack</span> <span class="value">Astro, Tailwind, GSAP</span> </div>
 			<div class="source-item"> <span class="label">Logic</span> <span class="value">Matter.js, Vanta.js</span> </div>
@@ -207,7 +207,7 @@ const isHome = pathname === '/' || pathname === '';
 			<div class="source-item"> <span class="label">Assets</span> <span class="value">Font Awesome, TextureLabs</span> </div>
 			<div class="source-item"> <span class="label">Fonts</span> <span class="value">Atkinson Hyperlegible Next, Notable</span> </div>
 
-			<div class="copyright emphasis"> &copy; {today.getFullYear()} Lucas Shiota </div>
+			<div class="copyright txt-h6"> &copy; {today.getFullYear()} Lucas Shiota </div>
 		</div>
 	</div>
 <style>
@@ -218,8 +218,8 @@ const isHome = pathname === '/' || pathname === '';
 /* ---------------------------------------------------------------- */
 /* #region Header */
 	header {
-		position: fixed; height: var(--header-height); width: 100%;
 		@apply justify-between;
+		position: fixed; height: var(--header-height); width: 100%;
 		opacity: var(--headfoot-opacity);
 		background: var(--bg-color); box-shadow: var(--box-shadow-small);
 	}
@@ -343,7 +343,7 @@ const isHome = pathname === '/' || pathname === '';
 	.theme-toggle i {
 		position: absolute;
 		color: var(--text-color);
-		@apply txt-h3;
+		@apply text-xl;
 		transition: color 0.3s, transform 0.3s, opacity 0.3s;
 	}
 
@@ -519,14 +519,14 @@ const isHome = pathname === '/' || pathname === '';
 			.qr-parent { display: none; }
 		}
 		.qr-text { 
-			@apply emphasis;
+			@apply txt-h6 font-bold;
 			color: var(--accent);
 			height: auto; width: 100px;
 			@apply text-center; gap: 0.2rem;
 			@apply txt-body-sm; /* Slightly smaller to fit with icon */
 		}
 		.qr-icon {
-			@apply txt-h3;
+			@apply txt-h5;
 			margin-bottom: 2px;
 			transition: transform 0.3s ease;
 		}

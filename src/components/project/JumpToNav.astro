@@ -84,7 +84,7 @@ const { sections } = Astro.props;
       /* Keep it pinned to the edge of the 1400px max-width container */
       left: max(2rem, calc(50vw - 700px + 2rem));
       top: calc(var(--header-height) + 2rem);
-      z-index: 40;
+
       width: clamp(150px, 12vw, 220px);
       display: flex;
       flex-direction: column;
@@ -105,17 +105,14 @@ const { sections } = Astro.props;
     }
 
     .nav-header {
-      font-family: "Notable", sans-serif;
-      @apply txt-body-sm;
-      @apply uppercase;
+      @apply uppercase txt-color-accent font-bold txt-body;
       letter-spacing: 0.05em;
       padding-bottom: 0.5rem;
       border-bottom: var(--border);
-      color: var(--accent-reverse);
     }
   }
 
-  /* Mobile/Tablet Layout: Bottom centered pill */
+  /* Mobile/Tablet Layout: Bottom centered pill */  
   @media (max-width: 1023px) {
     .jump-to-container {
       position: fixed;

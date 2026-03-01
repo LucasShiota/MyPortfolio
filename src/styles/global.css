@@ -4,11 +4,6 @@
 @import "./root.css";
 
 
-/* ------------------------------------ */
-/* --------------- UTILITY CLASSES --------------- */
-/* ------------------------------------ */
-/* #region utility */
-
 /* -------------------- */
 /* ----- FLEXBOX -----*/
 /* -------------------- */
@@ -34,7 +29,6 @@
 
 @utility wh100 { width: 100%; height: 100%; }
 
-@utility crsr-none { user-select: none; pointer-events: none; }
 @utility mrgn-pddng-none { margin: 0; padding: 0; }
 
 @utility surface-panel {
@@ -42,5 +36,3 @@
   border: var(--border); border-radius: 1rem;
   box-shadow: var(--box-shadow);
 }
-
-/* #endregion */
