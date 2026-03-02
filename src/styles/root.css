@@ -1,21 +1,29 @@
 @import "tailwindcss";
 
-header{z-index: 30;}
-.sidebar{z-index: 10;}
-.marquee-content{z-index: 5;}
-#hmbrgr-menu-toggle {z-index: 50;}
-#hmbrgr-menu{z-index: 20;}
-.jump-to-container { z-index: 25;}
+:root {
+  /* Z-INDEX REGISTRY */
+  --z-marquee: 5;
+  --z-sidebar: 100;
+  --z-header: 1000;
+  --z-menu: 900;
+  --z-menu-toggle: 1100;
+  --z-nav: 950;
+  --z-vanta: -1;
 
-
-:root{
+  /* LAYOUT TOKENS */
+  --header-height: 4.5rem;
+  --sidebar-width: clamp(180px, 15vw, 240px);
+  --panel-height: calc(100vh - var(--header-height));
+  
+  /* TYPOGRAPHY OVERRIDES */
   --herobgtext-font-size: 24vh;
   --font-size: 26vh;
-  --sidebar-width: 15vw;
-  --header-height: 4rem;
-  --panel-height: calc(100vh - var(--header-height));
-  --headfoot-opacity: 1;
+  
+  /* UI TOKENS */
   --border: 2px solid rgba(var(--gray), 0.2);
+  --border-radius: 1.25rem;
+  --transition-speed: 0.6s;
+  --transition-cubic: cubic-bezier(.4,0,.2,1);
 }
 html {
   background-color: var(--bg-color);
@@ -63,6 +71,11 @@ html {
   --vanta-lowlight: #eebcff;
   --vanta-base: #ffebcd;
   --wallpaper: #ffe9cd;
+
+  /* Semantic Tag Colors */
+  --tag-green: #2ecc71;
+  --tag-purple: #9b59b6;
+  --tag-red: #e74c3c;
 }
 
 [data-theme="dark"] {
@@ -95,4 +108,9 @@ html {
   --vanta-lowlight: #000000;
   --vanta-base: #00022f;
   --wallpaper: #3e006e;
+
+  /* Semantic Tag Colors */
+  --tag-green: #37eb87;
+  --tag-purple: #bb8fce;
+  --tag-red: #ff7675;
 }

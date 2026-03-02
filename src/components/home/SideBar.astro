@@ -43,10 +43,14 @@ import PanelScroll from "../scroll/PanelScroll.astro"
   
   .sidebar {
     position: fixed;
-    height: 93vh; width: var(--sidebar-width); right:0; top:0;
-    padding-top: var(--header-height); padding-bottom: calc(var(--footer-padding));
+    height: 93vh;
+    width: var(--sidebar-width);
+    right: 0;
+    top: 0;
+    padding-top: var(--header-height);
+    padding-bottom: calc(var(--footer-padding));
     --footer-padding: 0px;
-    transition: padding-bottom 0.35s cubic-bezier(.4,0,.2,1), transform 0.35s cubic-bezier(.4,0,.2,1);
+    transition: padding-bottom 0.35s var(--transition-cubic), transform 0.35s var(--transition-cubic);
     transform: translateY(calc(var(--footer-padding) * -0.5));
   }
 

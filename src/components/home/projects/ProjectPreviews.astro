@@ -24,9 +24,16 @@ const { projects } = Astro.props;
 
       {project.descriptorTags && project.descriptorTags.length > 0 && (
         <div class="descriptor-tags-container flx-algncntr-rw">
-          {project.descriptorTags.map(tag => (
-            <span class="descriptor-tag btn-type-tag">{tag}</span>
-          ))}
+          {project.descriptorTags.map(tag => {
+            const color = project.descriptorTagColors?.[tag] || 'blue';
+            const colorClass = {
+              green: 'btn-tag-green',
+              purple: 'btn-tag-purple',
+              red: 'btn-tag-red',
+              blue: 'btn-tag-blue'
+            }[color];
+            return <span class={`descriptor-tag btn-type-tag ${colorClass}`}>{tag}</span>
+          })}
         </div>
       )}
 

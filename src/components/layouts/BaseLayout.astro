@@ -39,8 +39,8 @@ const { title, description } = Astro.props;
     <slot />
     <VantaFogBG/>
     <script>
-      import { startStartupGate } from '../../scripts/startup-gate.js';
-      startStartupGate();
+      import { initStartupController } from '../../scripts/ui/startupController';
+      initStartupController();
     </script>
   </body>
 </html>

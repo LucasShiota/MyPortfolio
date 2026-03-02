@@ -24,13 +24,17 @@ const { sections } = Astro.props;
   <!-- Navigation Menu -->
   <nav id="jump-nav" class="jump-nav">
     <div class="nav-header">
+      <i class="fa-solid fa-list-ul"></i>
       <span>Sections</span>
     </div>
-    <ul class="nav-list">
-      {sections.map(({ id, label }) => (
+    <ul class="nav-list" id="nav-list">
+      {sections.map(({ id, label }, index) => (
         <li>
-          <a href={`#${id}`} class="nav-link">
-            {label}
+          <a href={`#${id}`} class="nav-link" data-section={id}>
+            <span class="active-arrow">→</span>
+            <span class="nav-label">
+              {index === 0 ? label : `${index}. ${label}`}
+            </span>
           </a>
         </li>
       ))}
@@ -39,39 +43,11 @@ const { sections } = Astro.props;
 </div>
 
 <script>
-  // Mobile functionality to toggle the menu
-  const toggleBtn = document.getElementById('jump-toggle');
-  const jumpNav = document.getElementById('jump-nav');
-
-  if (toggleBtn && jumpNav) {
-    toggleBtn.addEventListener('click', () => {
-      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
-      toggleBtn.setAttribute('aria-expanded', (!isExpanded).toString());
-      jumpNav.classList.toggle('is-open');
-    });
-
-    // Close when clicking a link (especially useful on mobile)
-    const links = jumpNav.querySelectorAll('.nav-link');
-    links.forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth < 1024) {
-          toggleBtn.setAttribute('aria-expanded', 'false');
-          jumpNav.classList.remove('is-open');
-        }
-      });
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (!toggleBtn.contains(target) && !jumpNav.contains(target)) {
-        if (window.innerWidth < 1024 && jumpNav.classList.contains('is-open')) {
-          toggleBtn.setAttribute('aria-expanded', 'false');
-          jumpNav.classList.remove('is-open');
-        }
-      }
-    });
-  }
+  import { initJumpToController } from "../../scripts/ui/jumpToController";
+  import { initSectionTracker } from "../../scripts/ui/sectionTracker";
+  
+  initJumpToController();
+  initSectionTracker();
 </script>
 
 <style>
@@ -109,6 +85,9 @@ const { sections } = Astro.props;
       letter-spacing: 0.05em;
       padding-bottom: 0.5rem;
       border-bottom: var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
   }
 
@@ -123,14 +102,15 @@ const { sections } = Astro.props;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
+      gap: 1.5rem;
     }
 
     .jump-toggle {
       @apply btn-type-main;
       display: flex;
       align-items: center;
-      padding-right: clamp(1rem, 1vw, 2rem); padding-left: clamp(1rem, 1vw, 2rem);
+      gap: 0.75rem;
+      padding-right: clamp(1.5rem, 2vw, 2.5rem); padding-left: clamp(1.5rem, 2vw, 2.5rem);
       @apply font-semibold;
       @apply txt-body;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -190,18 +170,49 @@ const { sections } = Astro.props;
     color: var(--text-color);
     @apply txt-body-sm;
     @apply font-medium;
-    display: block;
-    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
     border-radius: 8px;
     transition: all 0.2s ease;
-    opacity: 0.8;
+    opacity: 0.7;
+    position: relative;
+    overflow: hidden;
   }
 
-  .nav-link:hover {
+  .nav-label {
+    @apply font-mono;
+    font-size: 0.85em;
+    transition: transform 0.2s ease;
+  }
+
+  .nav-link:hover, .nav-link.active {
     background: rgba(var(--gray), 0.1);
     color: var(--accent-reverse);
     opacity: 1;
-    transform: translateX(5px);
+  }
+
+  /* Active Indicator Arrow */
+  .active-arrow {
+    display: inline-block;
+    width: 0;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: var(--accent-reverse);
+    font-weight: bold;
+  }
+
+  .nav-link.active .active-arrow {
+    width: auto;
+    margin-right: 0.25rem;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .nav-link.active .nav-label {
+    font-weight: bold;
   }
 
   .standalone-back-btn {

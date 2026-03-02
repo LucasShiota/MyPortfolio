@@ -38,8 +38,8 @@ const isHome = pathname === '/' || pathname === '';
 	header {
 		@apply justify-between;
 		position: fixed; height: var(--header-height); width: 100%;
-		opacity: var(--headfoot-opacity);
 		background: var(--bg-color); box-shadow: var(--box-shadow-small);
+		z-index: var(--z-header);
 	}
 
 	header.menu-open { box-shadow: var(--box-shadow-small); }
@@ -73,7 +73,10 @@ const isHome = pathname === '/' || pathname === '';
 /* ---------------------------------------------------------------- */
 /* #region Contacts */
 
-	.contact-btn { @apply btn-type-main-reverse; }
+	.contact-btn { 
+		@apply btn-type-main-reverse;
+		
+	}
 	.contact-icon { display: none; }
 
 /* #endregion */

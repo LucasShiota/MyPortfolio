@@ -1,4 +1,5 @@
 ---
+import { getEntry } from 'astro:content';
 import BaseLayout from '../components/layouts/BaseLayout.astro';
 import ProjectIntro from '../components/project/ProjectIntro.astro';
 import ProjectOverview from '../components/project/ProjectOverview.astro';
@@ -7,25 +8,28 @@ import ComingSoon from '../components/project/ComingSoon.astro';
 import JumpToNav from '../components/project/JumpToNav.astro';
 import { SITE_TITLE } from '../consts';
 
-// Project specific data (can be moved to a separate file later if needed)
+// Fetch the project data from Content collections
+const entry = await getEntry('projects', 'baraliot');
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { data } = entry;
+
+// Map the data to the format the page components expect
 const project = {
-  title: "Baraliot Fantasia",
-  subtitle: "A New Style Deckbuilding TRPG",
-  tags: ["Game System", "Typography", "Layout", "Writing"],
-  heroImage: "/images/baraliot.webp",
-  logo: "",
-  description: "An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.",
-  goals: [
-    "Use the gameplay potential of card and deckbuilding mechanics to their fullest",
-    "Evoke a sense of satisfaction in players realizing their character fantasy",
-    "Streamline rules and rulebook to lower the barrier of entry and the cost of play",
-    "Excite players with many choices and freedom without overwhelming them",
-    "A high-density, low-complexity approach to the overarching rules package"
-  ]
+  title: data.title,
+  subtitle: data.subtitle || "",
+  tags: data.descriptorTags || [],
+  tagColors: data.descriptorTagColors || {},
+  heroImage: data.heroImage || data.previewImage,
+  logo: data.logo || "",
+  description: data.summary,
+  goals: data.goals || []
 };
 
 const navSections = [
-  { id: "intro", label: "Intro" },
+  { id: "intro", label: "Top" },
   { id: "overview", label: "Overview" },
   { id: "goals", label: "Design Goals" },
   { id: "coming-soon", label: "More Details" },
@@ -41,16 +45,34 @@ const navSections = [
       title={project.title}
       subtitle={project.subtitle}
       tags={project.tags}
+      tagColors={project.tagColors}
       heroImage={project.heroImage}
       logo={project.logo}
     />
 
     <div class="content-wrapper">
-      <ProjectOverview id="overview" description={project.description} />
+      <ProjectOverview 
+        id="overview" 
+        description={project.description} 
+        order={1} 
+        total={navSections.length - 1} 
+      />
 
-      <CoreDesignGoals id="goals" goals={project.goals} />
+      {project.goals.length > 0 && (
+        <CoreDesignGoals 
+          id="goals" 
+          goals={project.goals} 
+          order={2} 
+          total={navSections.length - 1} 
+        />
+      )}
 
-      <ComingSoon id="coming-soon" projectTitle={project.title} />
+      <ComingSoon 
+        id="coming-soon" 
+        projectTitle={project.title} 
+        order={3} 
+        total={navSections.length - 1} 
+      />
     </div>
   </main>
 </BaseLayout>

@@ -4,12 +4,14 @@ import ProjectSection from './ProjectSection.astro';
 interface Props {
   goals: string[];
   id?: string;
+  order?: number;
+  total?: number;
 }
 
-const { goals, id = "goals" } = Astro.props;
+const { goals, id = "goals", order, total } = Astro.props;
 ---
 
-<ProjectSection title="Core Design Goals" icon="fa-solid fa-bullseye" id={id}>
+<ProjectSection title="Core Design Goals" icon="fa-solid fa-bullseye" id={id} order={order} total={total}>
   <div class="goals-grid">
     {goals.map((goal, index) => (
       <div class="goal-card" style={`--index: ${index}`}>

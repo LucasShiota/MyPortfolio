@@ -4,12 +4,14 @@ import ProjectSection from './ProjectSection.astro';
 interface Props {
   projectTitle: string;
   id?: string;
+  order?: number;
+  total?: number;
 }
 
-const { projectTitle, id = "coming-soon" } = Astro.props;
+const { projectTitle, id = "coming-soon", order, total } = Astro.props;
 ---
 
-<ProjectSection title="More Details Coming Soon" id={id}>
+<ProjectSection title="More Details Coming Soon" id={id} order={order} total={total}>
   <p class="coming-soon-text">
     I am currently compiling the full documentation for {projectTitle}. This section will eventually include deeper dives into the system design, mechanics, and process.
   </p>

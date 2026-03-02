@@ -47,64 +47,8 @@ const { isHome } = Astro.props;
 </div>
 
 <script>
-    const menuToggle = document.getElementById('hmbrgr-menu-toggle');
-    const mobileMenu = document.getElementById('hmbrgr-menu');
-    const header = document.querySelector('header');
-
-    if (menuToggle && mobileMenu && header) {
-        menuToggle.addEventListener('click', () => {
-            if (mobileMenu.classList.contains('closing')) {
-                mobileMenu.classList.remove('closing');
-                header.classList.add('menu-open');
-            } else if (mobileMenu.classList.contains('open')) {
-                mobileMenu.classList.add('closing');
-                header.classList.remove('menu-open');
-            } else {
-                mobileMenu.classList.add('open');
-                header.classList.add('menu-open');
-            }
-        });
-
-        mobileMenu.addEventListener('animationend', (e) => {
-            if (e.target === mobileMenu && mobileMenu.classList.contains('closing')) {
-                mobileMenu.classList.remove('open');
-                mobileMenu.classList.remove('closing');
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 900 && mobileMenu.classList.contains('open')) {
-                mobileMenu.classList.remove('open');
-                mobileMenu.classList.remove('closing');
-                header.classList.remove('menu-open');
-            }
-        });
-
-        // hmbrgr Nav Logic
-        const navItems = document.querySelectorAll('.hmbrgr-nav');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const index = parseInt(item.getAttribute('data-index') || '0');
-                const panels = document.querySelectorAll<HTMLElement>('.panel');
-                if (panels[index]) {
-                    if (menuToggle) menuToggle.click();
-                    const top = panels[index].offsetTop - (header as HTMLElement).offsetHeight;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                }
-            });
-        });
-
-        document.addEventListener('click', (event) => {
-            const target = event.target as HTMLElement;
-            const isMenuOpen = mobileMenu.classList.contains('open');
-            const isClickInsideMenu = mobileMenu.contains(target);
-            const isClickOnHeader = header.contains(target);
-
-            if (isMenuOpen && !isClickInsideMenu && !isClickOnHeader) {
-                menuToggle.click();
-            }
-        });
-    }
+    import { initMenuController } from "../../scripts/ui/menuController";
+    initMenuController();
 </script>
 
 <style>
@@ -141,6 +85,7 @@ const { isHome } = Astro.props;
         padding: 1rem 0; gap: 1rem;
         background: var(--bg-color-tinted); box-shadow: var(--box-shadow); opacity: 1;
         border-top: 1px solid rgba(var(--gray), 0.2);
+        z-index: var(--z-menu);
     }
     #hmbrgr-menu.open { display: flex; animation: slideDown 0.3s ease-out; }
     #hmbrgr-menu.closing { animation: slideUp 0.3s ease-in forwards; }

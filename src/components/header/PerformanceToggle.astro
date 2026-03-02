@@ -18,36 +18,7 @@ const { id = "performance-toggle", class: className = "" } = Astro.props;
   <i class="fa-solid fa-wand-magic-sparkles icon-sparkles"></i>
 </HeaderIconButton>
 
-<script>
-  document.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
 
-    const btn = target.closest('.performance-toggle');
-    if (!btn) return;
-
-    // stopPropagation to manage the toggle manually via animationend
-    event.stopPropagation();
-
-    // Reset and trigger fling
-    btn.classList.remove('fling');
-    void (btn as HTMLElement).offsetWidth; 
-    btn.classList.add('fling');
-  });
-
-  document.addEventListener('animationend', (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-
-    // Check if the animation that ended was the fling on our performance toggle
-    const btn = target.closest('.performance-toggle.fling');
-    if (btn) {
-      btn.classList.remove('fling');
-      // Now finally trigger the state switch
-      (window as any).togglePerformanceMode?.();
-    }
-  }, { capture: true });
-</script>
 
 <style>
   @reference "../../styles/global.css";

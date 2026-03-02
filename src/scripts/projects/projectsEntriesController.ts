@@ -1,4 +1,6 @@
-type InitProjectsEntriesControllerOptions = {
+import { ProjectSliderPhysics } from "./projectsPhysics";
+
+type Options = {
   panel: HTMLElement;
   onActiveIdChange: (id: string) => void;
   onVisibleIdsChange: (ids: Set<string>) => void;
@@ -8,349 +10,198 @@ export const initProjectsEntriesController = ({
   panel,
   onActiveIdChange,
   onVisibleIdsChange,
-}: InitProjectsEntriesControllerOptions): void => {
+}: Options): void => {
   const container = panel.querySelector<HTMLElement>(".project-list");
-  const entries = Array.from(
-    panel.querySelectorAll<HTMLElement>('.project-entry[data-project-selectable="true"]')
-  );
-  const filterButtons = Array.from(
-    panel.querySelectorAll<HTMLButtonElement>(".project-filter-btn")
-  );
+  const entries = Array.from(panel.querySelectorAll<HTMLElement>('.project-entry[data-project-selectable="true"]'));
+  const filterButtons = Array.from(panel.querySelectorAll<HTMLButtonElement>(".project-filter-btn"));
 
   if (!container || entries.length === 0) return;
 
-  let visibleEntries = [...entries];
-  let currentVisibleIndex = 0;
-  let isProgrammaticScroll = false;
-  let touchStartX: number | null = null;
+  // --- STATE ---
+  const physics = new ProjectSliderPhysics(container);
   const selectedFilters = new Set<string>();
-  let programmaticScrollReleaseTimer: number | null = null;
-
-  const getEntryId = (entry: HTMLElement): string =>
-    entry.getAttribute("data-project-id") || "";
-
-  const syncVisibleEntries = (): void => {
-    visibleEntries = entries.filter(
-      (entry) => !entry.classList.contains("is-filtered-out")
-    );
-  };
-
-  const updateEdgePadding = (): void => {
-    // Edge padding is no longer needed since the dummy elements were removed
-    // and we are embracing the native scroll bounds behavior.
-  };
-
-  const updateVisuals = (index: number): void => {
-    const activeEntry = visibleEntries[index];
-    const activeId = activeEntry ? getEntryId(activeEntry) : "";
-
-    entries.forEach((entry) => {
-      entry.classList.remove("is-active");
-      entry.setAttribute("aria-pressed", "false");
-    });
-
-    if (!activeEntry) {
-      onActiveIdChange("");
-      return;
-    }
-
-    visibleEntries.forEach((entry, i) => {
-      const distance = Math.abs(i - index);
-      entry.classList.toggle("is-active", distance === 0);
-      entry.setAttribute("aria-pressed", distance === 0 ? "true" : "false");
-    });
-
-    onActiveIdChange(activeId);
-  };
-
-  // --- Unified Physics Scroll System ---
-  let currentScroll = container.scrollLeft;
-  let targetScroll = container.scrollLeft;
-  let lerpRafId: number | null = null;
-  let isDragging = false;
+  let visibleEntries: HTMLElement[] = [...entries];
+  let currentVisibleIndex = 0;
   let dragStartX = 0;
   let lastDragPos = 0;
   let dragVelocity = 0;
 
-  const startLerp = (): void => {
-    if (!lerpRafId && !isDragging) {
-      lerpRafId = requestAnimationFrame(updateLerpScroll);
-    }
+  // --- HELPERS ---
+  const getEntryId = (entry: HTMLElement) => entry.getAttribute("data-project-id") || "";
+
+  const syncVisibleEntries = () => {
+    visibleEntries = entries.filter(e => !e.classList.contains("is-filtered-out"));
   };
 
-  const updateLerpScroll = (): void => {
-    if (isDragging) return;
-
-    const maxScrollLeft = container.scrollWidth - container.clientWidth;
-    // Auto-clamp target to natural bounds
-    targetScroll = Math.max(0, Math.min(targetScroll, maxScrollLeft));
-
-    // Lerp interpolation (stiffness = 0.1)
-    currentScroll += (targetScroll - currentScroll) * 0.1;
-
-    if (Math.abs(targetScroll - currentScroll) > 0.5) {
-      container.scrollLeft = currentScroll;
-      lerpRafId = requestAnimationFrame(updateLerpScroll);
-    } else {
-      currentScroll = targetScroll;
-      container.scrollLeft = currentScroll;
-      lerpRafId = null;
-    }
-  };
-
-  const getEntryCenterInContainer = (entry: HTMLElement): number => {
+  const getEntryCenterInContainer = (entry: HTMLElement) => {
     const entryRect = entry.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     return entryRect.left - containerRect.left + container.scrollLeft + entryRect.width / 2;
   };
 
-  const getDistanceToEdge = (entry: HTMLElement): { left: number; right: number } => {
-    const entryRect = entry.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    return {
-      left: entryRect.left - containerRect.left,
-      right: containerRect.right - entryRect.right,
-    };
+  const getVisibleIndexAtCenter = () => {
+    const centerX = container.scrollLeft + container.clientWidth / 2;
+    let minDistance = Infinity;
+    let closest = 0;
+
+    visibleEntries.forEach((entry, i) => {
+      const distance = Math.abs(getEntryCenterInContainer(entry) - centerX);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closest = i;
+      }
+    });
+
+    return closest;
   };
 
-  const selectVisibleIndex = (
-    index: number,
-    options: { shouldScroll?: boolean; behavior?: ScrollBehavior } = {}
-  ): void => {
+  const updateVisuals = (index: number) => {
+    const activeEntry = visibleEntries[index];
+    const activeId = activeEntry ? getEntryId(activeEntry) : "";
+
+    entries.forEach(e => {
+      e.classList.remove("is-active");
+      e.setAttribute("aria-pressed", "false");
+    });
+
+    if (activeEntry) {
+      activeEntry.classList.add("is-active");
+      activeEntry.setAttribute("aria-pressed", "true");
+    }
+
+    onActiveIdChange(activeId);
+  };
+
+  const selectVisibleIndex = (index: number, { shouldScroll = true, instant = false } = {}) => {
     if (visibleEntries.length === 0) {
       updateVisuals(-1);
       return;
     }
 
-    const { shouldScroll = true, behavior = "smooth" } = options;
     currentVisibleIndex = Math.max(0, Math.min(visibleEntries.length - 1, index));
     updateVisuals(currentVisibleIndex);
 
     const entry = visibleEntries[currentVisibleIndex];
-    if (!entry || !shouldScroll) return;
-
-    const { left, right } = getDistanceToEdge(entry);
-    const threshold = container.clientWidth * 0.3;
-
-    if (left < threshold || right < threshold || behavior === "auto") {
-      const entryCenterLeft = getEntryCenterInContainer(entry) - container.clientWidth / 2;
-      targetScroll = entryCenterLeft;
-      
-      if (behavior === "auto") {
-        currentScroll = targetScroll;
-        container.scrollLeft = currentScroll;
-      } else {
-        startLerp();
-      }
+    if (shouldScroll && entry) {
+      const position = getEntryCenterInContainer(entry) - container.clientWidth / 2;
+      physics.scrollTo(position, instant);
     }
   };
 
-  // --- Momentum Scrolling Variables ---
-  const handleWheel = (event: WheelEvent): void => {
-    // Unconditionally trap the scroll event to prevent layout cascading
-    // (e.g., accidental full-page panel snaps).
-    event.preventDefault();
-
-    const isHorizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-    const delta = isHorizontal ? event.deltaX : event.deltaY;
-
-    if (delta !== 0) {
-      // Apply delta directly to target for responsive tracking
-      targetScroll += delta * 1.5; 
-      startLerp();
-    }
+  // --- INTERACTIONS ---
+  const handleWheel = (e: WheelEvent) => {
+    e.preventDefault();
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    physics.applyDelta(delta * 1.5);
   };
 
-  const initDrag = (clientX: number): void => {
-    isDragging = true;
-    if (lerpRafId) { cancelAnimationFrame(lerpRafId); lerpRafId = null; }
+  const initDrag = (clientX: number) => {
+    physics.isDragging = true;
+    physics.stopLerp();
     container.classList.add("is-grabbing");
     
     dragStartX = clientX;
     lastDragPos = clientX;
     dragVelocity = 0;
     
-    // Sync loops to current exact position
-    currentScroll = container.scrollLeft;
-    targetScroll = currentScroll;
+    physics.currentScroll = container.scrollLeft;
+    physics.targetScroll = physics.currentScroll;
   };
 
-  const processDragMove = (clientX: number, event: Event): void => {
-    if (!isDragging) return;
-    event.preventDefault();
+  const processDragMove = (clientX: number, e: Event) => {
+    if (!physics.isDragging) return;
+    e.preventDefault();
 
     const walk = dragStartX - clientX;
     dragVelocity = lastDragPos - clientX;
     lastDragPos = clientX;
 
-    currentScroll = targetScroll + walk;
-    container.scrollLeft = currentScroll;
+    physics.currentScroll = physics.targetScroll + walk;
+    container.scrollLeft = physics.currentScroll;
     
-    // Keep target synced for release
-    targetScroll = currentScroll;
-    dragStartX = clientX; // continuous walk offset
+    physics.targetScroll = physics.currentScroll;
+    dragStartX = clientX;
   };
 
-  const releaseDrag = (): void => {
-    if (!isDragging) return;
-    isDragging = false;
+  const releaseDrag = () => {
+    if (!physics.isDragging) return;
+    physics.isDragging = false;
     container.classList.remove("is-grabbing");
     
-    // Apply inertia multiplier to ending velocity
-    targetScroll = currentScroll + (dragVelocity * 15);
-    startLerp();
+    physics.scrollTo(physics.currentScroll + (dragVelocity * 15));
   };
 
-  const handleTouchStart = (event: TouchEvent): void => {
-    if (event.touches[0]) initDrag(event.touches[0].clientX);
-  };
-
-  const handleTouchMove = (event: TouchEvent): void => {
-    event.preventDefault(); // Trap vertical page scroll while touching list
-    if (event.touches[0]) processDragMove(event.touches[0].clientX, event);
-  };
-
-  const handleTouchEnd = (): void => releaseDrag();
-
-  const isVisibleForFilter = (
-    entry: HTMLElement,
-    filters: Set<string>
-  ): boolean => {
+  // --- FILTERS ---
+  const isVisibleForFilter = (entry: HTMLElement, filters: Set<string>) => {
     if (filters.size === 0) return true;
-
-    const tags = (entry.getAttribute("data-project-tags") || "")
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
-    return tags.some((tag) => filters.has(tag));
+    const tags = (entry.getAttribute("data-project-tags") || "").split(",").map(t => t.trim()).filter(Boolean);
+    return tags.some(t => filters.has(t));
   };
 
-  const getVisibleIds = (): Set<string> =>
-    new Set(visibleEntries.map((entry) => getEntryId(entry)));
+  const applyFilters = () => {
+    const currentActiveId = visibleEntries[currentVisibleIndex] && getEntryId(visibleEntries[currentVisibleIndex]);
 
-  const applyFilters = (): void => {
-    const currentActiveId =
-      visibleEntries[currentVisibleIndex] &&
-      getEntryId(visibleEntries[currentVisibleIndex]);
-
-    filterButtons.forEach((button) => {
-      const buttonFilter = button.dataset.filter || "all";
-      const isAll = buttonFilter === "all";
-      const isActive = isAll
-        ? selectedFilters.size === 0
-        : selectedFilters.has(buttonFilter);
-
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    filterButtons.forEach(btn => {
+      const filter = btn.dataset.filter || "all";
+      const isActive = filter === "all" ? selectedFilters.size === 0 : selectedFilters.has(filter);
+      btn.classList.toggle("is-active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
     });
 
-    entries.forEach((entry) => {
-      const shouldShow = isVisibleForFilter(entry, selectedFilters);
-      entry.classList.toggle("is-filtered-out", !shouldShow);
+    entries.forEach(e => {
+      const shouldShow = isVisibleForFilter(e, selectedFilters);
+      e.classList.toggle("is-filtered-out", !shouldShow);
     });
 
     syncVisibleEntries();
-    updateEdgePadding();
-    onVisibleIdsChange(getVisibleIds());
+    onVisibleIdsChange(new Set(visibleEntries.map(e => getEntryId(e))));
 
-    const preservedIndex = currentActiveId
-      ? visibleEntries.findIndex((entry) => getEntryId(entry) === currentActiveId)
-      : -1;
-
-    // Use preserved index if still available, otherwise:
-    // Select the first project (index 0) in the new filtered list.
-    let targetIndex = preservedIndex;
-    if (targetIndex < 0) {
-      targetIndex = 0;
-    }
-
-    selectVisibleIndex(targetIndex, {
-      shouldScroll: true,
-      behavior: "auto",
-    });
+    const preservedIndex = currentActiveId ? visibleEntries.findIndex(e => getEntryId(e) === currentActiveId) : -1;
+    selectVisibleIndex(preservedIndex >= 0 ? preservedIndex : 0, { instant: true });
   };
 
-  const getVisibleIndexAtCenter = (): number => {
-    const containerCenterX = container.scrollLeft + container.clientWidth / 2;
-    let closestIndex = 0;
-    let minDistance = Infinity;
-
-    visibleEntries.forEach((entry, index) => {
-      const entryCenterX = getEntryCenterInContainer(entry);
-      const distance = Math.abs(entryCenterX - containerCenterX);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = index;
-      }
-    });
-
-    return closestIndex;
-  };
-
-  const handleMouseDown = (e: MouseEvent): void => initDrag(e.pageX);
-  const handleMouseMove = (e: MouseEvent): void => processDragMove(e.pageX, e);
-  const handleMouseEnd = (): void => releaseDrag();
-
-  container.addEventListener("mousedown", handleMouseDown);
-  container.addEventListener("mouseleave", handleMouseEnd);
-  container.addEventListener("mouseup", handleMouseEnd);
-  container.addEventListener("mousemove", handleMouseMove);
+  // --- LISTENERS ---
+  container.addEventListener("mousedown", (e) => initDrag(e.pageX));
+  window.addEventListener("mousemove", (e) => processDragMove(e.pageX, e));
+  window.addEventListener("mouseup", releaseDrag);
+  container.addEventListener("mouseleave", releaseDrag);
 
   container.addEventListener("wheel", handleWheel, { passive: false });
-  container.addEventListener("touchstart", handleTouchStart, { passive: true });
-  container.addEventListener("touchmove", handleTouchMove, { passive: false });
-  container.addEventListener("touchend", handleTouchEnd);
-  container.addEventListener("touchcancel", handleTouchEnd);
+  container.addEventListener("touchstart", (e) => e.touches[0] && initDrag(e.touches[0].clientX), { passive: true });
+  container.addEventListener("touchmove", (e) => e.touches[0] && processDragMove(e.touches[0].clientX, e), { passive: false });
+  container.addEventListener("touchend", releaseDrag);
 
-  entries.forEach((entry) => {
-    entry.addEventListener("click", () => {
-      const index = visibleEntries.findIndex((visibleEntry) => visibleEntry === entry);
-      if (index < 0) return;
-      selectVisibleIndex(index, { shouldScroll: true, behavior: "smooth" });
-    });
-  });
+  entries.forEach(e => e.addEventListener("click", () => {
+    const index = visibleEntries.indexOf(e);
+    if (index >= 0) selectVisibleIndex(index);
+  }));
 
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const filter = button.dataset.filter || "all";
-      if (filter === "all") {
-        selectedFilters.clear();
-      } else if (selectedFilters.has(filter)) {
-        selectedFilters.delete(filter);
-      } else {
-        selectedFilters.add(filter);
-      }
+  filterButtons.forEach(btn => btn.addEventListener("click", () => {
+    const filter = btn.dataset.filter || "all";
+    if (filter === "all") selectedFilters.clear();
+    else if (selectedFilters.has(filter)) selectedFilters.delete(filter);
+    else selectedFilters.add(filter);
+    applyFilters();
+  }));
 
-      applyFilters();
-    });
-  });
-
-  let resizeTimeout: number | null = null;
+  // --- RESIZE ---
+  let resizeTimeout: number;
   window.addEventListener("resize", () => {
-    // 1. Instantly sync internal values to avoid jumping on the next scroll frame
-    currentScroll = container.scrollLeft;
-    targetScroll = currentScroll;
+    physics.currentScroll = container.scrollLeft;
+    physics.targetScroll = physics.currentScroll;
 
-    if (resizeTimeout) window.clearTimeout(resizeTimeout);
-    
+    clearTimeout(resizeTimeout);
     resizeTimeout = window.setTimeout(() => {
-      updateEdgePadding();
-      
-      // Auto-reset filters when resizing down to mobile/tablet
       if (window.innerWidth < 720 && selectedFilters.size > 0) {
         selectedFilters.clear();
         applyFilters();
       } else {
-        // Find which project is now at the center and snap to it
-        const indexAtCenter = getVisibleIndexAtCenter();
-        selectVisibleIndex(indexAtCenter, { shouldScroll: true, behavior: "auto" });
+        selectVisibleIndex(getVisibleIndexAtCenter(), { instant: true });
       }
     }, 150);
   });
 
+  // --- INIT ---
   applyFilters();
-  selectVisibleIndex(0, {
-    shouldScroll: true,
-    behavior: "auto",
-  });
+  selectVisibleIndex(0, { instant: true });
 };

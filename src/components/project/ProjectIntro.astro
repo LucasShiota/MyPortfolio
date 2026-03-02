@@ -3,17 +3,25 @@ interface Props {
   title: string;
   subtitle: string;
   tags?: string[];
+  tagColors?: Record<string, 'green' | 'purple' | 'red' | 'blue'>;
   heroImage: string;
   logo?: string;
   id?: string;
+  order?: number;
+  total?: number;
 }
 
-const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.props;
+const { title, subtitle, tags = [], tagColors = {}, heroImage, logo, id = "intro", order, total } = Astro.props;
 ---
 
 <section class="hero-section" id={id}>
   <div class="hero-content">
     <header class="project-header">
+      {order && total && (
+        <div class="section-counter">
+          {order}/{total}
+        </div>
+      )}
       {logo && (
         <div class="logo-container">
           <img src={logo} alt={`${title} Logo`} class="project-logo" />
@@ -23,9 +31,16 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
       <p class="project-subtitle txt-h4 font-light">{subtitle}</p>
       {tags.length > 0 && (
         <div class="tags-container">
-          {tags.map(tag => (
-            <span class="tag btn-type-tag">{tag}</span>
-          ))}
+          {tags.map(tag => {
+            const color = tagColors[tag] || 'blue';
+            const colorClass = {
+              green: 'btn-tag-green',
+              purple: 'btn-tag-purple',
+              red: 'btn-tag-red',
+              blue: 'btn-tag-blue'
+            }[color];
+            return <span class={`tag btn-type-tag ${colorClass}`}>{tag}</span>
+          })}
         </div>
       )}
     </header>
@@ -59,6 +74,7 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    position: relative;
   }
 
   @media (max-width: 1024px) {
@@ -83,6 +99,15 @@ const { title, subtitle, tags = [], heroImage, logo, id = "intro" } = Astro.prop
     font-family: "Notable", sans-serif;
     margin: 0;
     color: var(--accent-reverse);
+  }
+
+  .section-counter {
+    @apply font-mono txt-body-sm font-bold;
+    opacity: 0.4;
+    letter-spacing: 0.15em;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .project-subtitle {

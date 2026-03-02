@@ -1,10 +1,13 @@
 ---
 import ProjectList from "./ProjectList.astro";
 import ProjectPreviews from "./ProjectPreviews.astro";
-import { projects, filterTags } from "./projectsData";
+import { getProjects, getFilterTags } from "./projectsData";
+
+const projects = await getProjects();
+const filterTags = await getFilterTags();
 ---
 <div id="projects" class="panel projects-panel flx-algncntr-clmn justify-between">
-  <div class="projects-preview-wrap flx-cntr">
+  <div class="projects-preview-wrap">
     <ProjectPreviews projects={projects} />
   </div>
   <div class="projects-filter-parent flx-algncntr-rw"> 
@@ -39,5 +42,7 @@ import { projects, filterTags } from "./projectsData";
     width: 100%;
     flex: 1;
     min-height: 0;
+    display: grid;
+    place-items: center;
   }
 </style>

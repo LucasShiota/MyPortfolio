@@ -24,14 +24,28 @@
 /* #region types */
   @utility btn-type-tag {
     @apply shape-pill;
-    background: color-mix(in srgb, var(--accent-reverse) 25%, transparent);
-    color: var(--accent-reverse);
+    --tag-color: var(--accent-reverse);
+    background: color-mix(in srgb, var(--tag-color) 20%, transparent);
+    color: var(--text-color);
     padding: 0.2rem 0.6rem;
     font-family: monospace;
     font-size: 0.85rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    border: 1px solid color-mix(in srgb, var(--tag-color) 30%, transparent);
+  }
+  @utility btn-tag-green {
+    --tag-color: var(--tag-green) !important;
+  }
+  @utility btn-tag-purple {
+    --tag-color: var(--tag-purple) !important;
+  }
+  @utility btn-tag-red {
+    --tag-color: var(--tag-red) !important;
+  }
+  @utility btn-tag-blue {
+    --tag-color: var(--accent-reverse) !important;
   }
 
   @utility btn-type-main {

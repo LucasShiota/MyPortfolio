@@ -10,36 +10,34 @@ import Projects from '../components/home/projects/Projects.astro';
 
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
-<!doctype html>
-<BaseLayout  title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <SideBar />
-  <div class="panel-parent">
-    <Hero />
-    <Projects />
-    <About />
-    <Contacts />
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <div class="master-layout">
+    <main class="main-content">
+      <Hero />
+      <Projects />
+      <About />
+      <Contacts />
+    </main>
+    <aside class="sidebar-area">
+      <SideBar />
+    </aside>
   </div>
 </BaseLayout>
+
 <style is:global>
-  
-  .panel-parent { 
-    width: auto; 
-    margin-right: var(--sidebar-width); 
-  }
-  
   .panel { 
     height: var(--panel-height); 
     width: 100%; 
-    margin-top: var(--header-height); 
+    padding-top: var(--header-height); 
     scroll-margin-top: var(--header-height);
+    display: flex; /* Ensure it stays a flex container if it isn't already */
+    flex-direction: column;
   }
 
-  /* Mobile/Tablet Overrides */
-  @media (max-width: 768px), (hover: none) and (pointer: coarse) { 
-    .panel-parent { 
-      margin-right: 0;
-      width: 100%; 
-    } 
+  @media (max-width: 768px) {
+    .panel {
+      min-height: auto;
+      padding-top: 2rem;
+    }
   }
-
 </style>

@@ -3,16 +3,25 @@ interface Props {
   title: string;
   icon?: string;
   id?: string;
+  order?: number;
+  total?: number;
 }
 
-const { title, icon, id } = Astro.props;
+const { title, icon, id, order, total } = Astro.props;
 ---
 
 <section class="project-section" id={id}>
   <div class="panel-card">
     <div class="section-title">
-      {icon && <i class={icon}></i>}
-      <h2>{title}</h2>
+      <div class="title-left">
+        {icon && <i class={`${icon} title-icon`}></i>}
+        <h2>{title}</h2>
+      </div>
+      {order && total && (
+        <div class="section-counter">
+          {order}/{total}
+        </div>
+      )}
     </div>
     <div class="content-wrapper">
       <slot />
@@ -24,7 +33,7 @@ const { title, icon, id } = Astro.props;
   @reference "../../styles/global.css";
 
   .project-section {
-    scroll-margin-top: calc(var(--header-height) + 2rem);
+    scroll-margin-top: calc(var(--header-height) + 2.5rem);
     width: 100%;
   }
 
@@ -32,19 +41,42 @@ const { title, icon, id } = Astro.props;
     @apply surface-panel;
     padding: 2rem; gap: 1rem;
     display: flex; flex-direction: column;
+    position: relative;
   }
 
   .section-title {
     @apply txt-h4;
-    display: flex; justify-content: center; align-items: center;
+    display: flex; justify-content: space-between; align-items: baseline;
     width: 100%;
     border-bottom: var(--border);
     padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .title-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .title-icon {
+    color: var(--accent-reverse);
   }
 
   .section-title h2 {
     @apply uppercase txt-color-accent font-bold; 
     margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .section-counter {
+    @apply font-mono txt-body-sm font-bold;
+    opacity: 0.4;
+    letter-spacing: 0.1em;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 
   .content-wrapper {
@@ -57,9 +89,11 @@ const { title, icon, id } = Astro.props;
     }
     
     .section-title {
-      flex-direction: column;
-      @apply text-center;
-      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .section-title h2 {
+      @apply txt-body;
     }
   }
 </style>

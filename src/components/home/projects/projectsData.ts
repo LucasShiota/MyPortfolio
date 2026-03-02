@@ -1,13 +1,16 @@
+import { getCollection, type CollectionEntry } from 'astro:content';
+
 export type Project = {
   id: string;
   title: string;
   thumbnailSrc: string;
   thumbnailAlt: string;
-  body: string;
+  body: string; // Summary HTML
   previewImage: string;
   previewVideo?: string;
-  tags: string[];
+  tags: string[]; // filterTags
   descriptorTags?: string[];
+  descriptorTagColors?: Record<string, 'green' | 'purple' | 'red' | 'blue'>;
   previewButton: {
     text: string;
     href: string;
@@ -15,28 +18,38 @@ export type Project = {
   };
 };
 
-export const projects: Project[] = [
-  {
-    id: "1",
-    title: "Baraliot Fantasia",
-    thumbnailSrc: "/images/baraliotlogo.webp",
-    thumbnailAlt: "Baraliot Fantasia thumbnail",
-    body: `<p>An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.</p>
-           <p>The 5 core design goals are:</p>
-           <ul>
-             <li>Use the gameplay potential of card and deckbuilding mechanics to their fullest</li>
-             <li>Evoke a sense of satisfaction in players realizing their character fantasy</li>
-             <li>Streamline rules and rulebook to lower the barrier of entry and the cost of play</li>
-             <li>Excite players with many choices and freedom without overwhelming them</li>
-             <li>A high-density, low-complexity approach to the overarching rules package</li>
-           </ul>`,
-    previewImage: "/images/baraliot.webp",
-    tags: ["TRPG"],
-    descriptorTags: ["Game System", "Typography", "Layout ", "Writing" ],
-    previewButton: { text: "Learn more in depth", href: "/baraliot", ariaLabel: "Open project details" },
-  }
-];
+export async function getProjects(): Promise<Project[]> {
+  const collection = await getCollection('projects');
+  
+  return collection.map((entry: CollectionEntry<'projects'>) => {
+    const data = entry.data;
+    
+    // Convert summary & goals back into the HTML body format the UI currently expects
+    const goalsHtml = data.goals 
+      ? `<ul>${data.goals.map((g: string) => `<li>${g}</li>`).join('')}</ul>` 
+      : '';
+    const bodyHtml = `<p>${data.summary}</p>${goalsHtml}`;
+    
+    return {
+      id: data.id,
+      title: data.title,
+      thumbnailSrc: data.thumbnailSrc,
+      thumbnailAlt: data.thumbnailAlt,
+      body: bodyHtml,
+      previewImage: data.previewImage,
+      previewVideo: data.previewVideo,
+      tags: data.filterTags,
+      descriptorTags: data.descriptorTags,
+      descriptorTagColors: data.descriptorTagColors,
+      previewButton: data.previewButton,
+    };
+  });
+}
 
-export const filterTags = Array.from(
-  new Set(projects.flatMap((project) => project.tags).filter((tag) => tag !== "all"))
-);
+// Keep the filterTags export, but it will need to be calculated from the fetched projects now
+export async function getFilterTags() {
+  const projects = await getProjects();
+  return Array.from(
+    new Set(projects.flatMap((project) => project.tags).filter((tag) => tag !== "all"))
+  );
+}

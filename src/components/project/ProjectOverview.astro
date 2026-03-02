@@ -4,12 +4,14 @@ import ProjectSection from './ProjectSection.astro';
 interface Props {
   description: string;
   id?: string;
+  order?: number;
+  total?: number;
 }
 
-const { description, id = "overview" } = Astro.props;
+const { description, id = "overview", order, total } = Astro.props;
 ---
 
-<ProjectSection title="Overview" id={id}>
+<ProjectSection title="Overview" id={id} order={order} total={total}>
   <p class="main-description">{description}</p>
 </ProjectSection>
 
