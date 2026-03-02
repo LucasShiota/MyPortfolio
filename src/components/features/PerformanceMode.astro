@@ -8,6 +8,7 @@
     performanceModeMarquee?: any;
     performanceModeScroll?: any;
     __performanceModeEnabled?: boolean;
+    togglePerformanceMode?: () => void;
   }
 
   const PERFORMANCE_MODE_BUTTON_SELECTOR = ".performance-toggle";
@@ -37,6 +38,12 @@
     window.performanceModeScroll?.enableSnap();
   }
 
+  window.togglePerformanceMode = () => {
+    const nextState = !window.__performanceModeEnabled;
+    setPerformanceMode(nextState);
+    localStorage.setItem(PERFORMANCE_MODE_STORAGE_KEY, nextState ? "on" : "off");
+  };
+
   window.addEventListener("DOMContentLoaded", () => {
     const initialState = localStorage.getItem(PERFORMANCE_MODE_STORAGE_KEY) === "on";
     setPerformanceMode(initialState);
@@ -47,9 +54,10 @@
       const button = event.target.closest(PERFORMANCE_MODE_BUTTON_SELECTOR);
       if (!button) return;
 
-      const nextState = !window.__performanceModeEnabled;
-      setPerformanceMode(nextState);
-      localStorage.setItem(PERFORMANCE_MODE_STORAGE_KEY, nextState ? "on" : "off");
+      // Only toggle immediately if not explicitly delayed
+      if (button.hasAttribute('data-delay-toggle')) return;
+
+      window.togglePerformanceMode?.();
     });
   });
 </script>

@@ -13,7 +13,7 @@ const { sections } = Astro.props;
   <!-- Mobile Toggle Button -->
   <button id="jump-toggle" class="jump-toggle" aria-expanded="false" aria-label="Toggle section navigation">
     <i class="fa-solid fa-list-ul"></i>
-    <span>Jump To</span>
+    <span> Sections </span>
     <i class="fa-solid fa-chevron-up chevron"></i>
   </button>
 
@@ -127,18 +127,13 @@ const { sections } = Astro.props;
     }
 
     .jump-toggle {
-      background: var(--accent-reverse);
-      color: var(--bg-color);
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 999px;
+      @apply btn-type-main;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      padding-right: clamp(1rem, 1vw, 2rem); padding-left: clamp(1rem, 1vw, 2rem);
       @apply font-semibold;
       @apply txt-body;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
       transition: transform 0.3s ease, background 0.3s ease;
       z-index: 2;
     }

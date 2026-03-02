@@ -44,6 +44,12 @@
     font-size: 1rem; font-weight: 600;
     transition: all 0.3s ease;
   }
+  @utility btn-type-main-reverse {
+    @apply btn-type-main;
+    background-color: var(--accent);
+		color: var(--text-color);
+  }
+
 /* #endregion */
 
 /* ----- COMPONENTS -----*/

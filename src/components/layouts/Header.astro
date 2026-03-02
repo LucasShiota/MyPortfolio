@@ -1,215 +1,33 @@
 ---
 import DarkMode from '../features/DarkMode.astro';
 import PerformanceMode from '../features/PerformanceMode.astro';
-import LetsTalk from '../features/LetsTalk.astro';
+import LetsTalk from '../header/LetsTalk.astro';
+import HeaderHamburger from '../header/HeaderHamburger.astro';
+import HeaderLogo from '../header/HeaderLogo.astro';
+import ThemeToggle from '../header/ThemeToggle.astro';
+import PerformanceToggle from '../header/PerformanceToggle.astro';
 import { LINKS } from "../../config/links.ts";
 const today = new Date();
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/' || pathname === '';
 ---
 <header class="flx-cntr-rw">
-	<div class="header-brand">
-		<img src="/logo/crazyblender-sm.webp" alt="CrazyBlender icon" class="header-icon" />
-		<a href={LINKS.homepage.url} aria-label={LINKS.homepage.label} title={LINKS.homepage.title} class="header-brand-link">
-			<div class="name-path flx-clmn justify-start"> 
-				<div class="name font-bold txt-h5">Lucas Shiota</div>
-				<div class="path font-light txt-h5">Game Designer</div>
-			</div>
-		</a>
-	</div>
+	<HeaderLogo />
 	<div class="header-contacts">
 		<div class="contact-btn"> <i class="contact-icon fa-solid fa-file-lines"></i></i>CV </div>
 		<a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn </a>
 		<LetsTalk />
 		<a href="/#about" class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i> About </a>
 	</div>
-	<div class="header-toggles">
-		<button id="theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-			<i class="fa-solid fa-sun icon-sun"></i>
-			<i class="fa-solid fa-moon icon-moon"></i>
-		</button>
-		<button class="performance-toggle" id="performance-toggle" title="Toggle performance mode" aria-label="Toggle performance mode">
-			<i class="fa-solid fa-wand-magic icon-magic"></i>
-			<i class="fa-solid fa-wand-magic-sparkles icon-sparkles"></i>
-		</button>
-	</div>
-	<div class="hmbrgr-menu-toggle-wrapper">
-		<button id="hmbrgr-menu-toggle" title="Open Menu" aria-label="Open Menu">
-			<i class="fa-solid fa-bars fa-xl" style="color: color-mix(in srgb, var(--accent-reverse) 100%, transparent);"></i>
-		</button>
+	<div class="header-actions">
+		<div class="header-toggles">
+			<ThemeToggle />
+			<PerformanceToggle />
+		</div>
+		<HeaderHamburger isHome={isHome} />
 	</div>
 	<DarkMode /> <PerformanceMode />
-	<script>
-		const icon = document.querySelector<HTMLElement>('.header-icon');
-
-		const animations = ['rock', 'spin', 'tilt-pop', 'flip-horizontal', 'pop-jump'];
-
-		if (icon) {
-			icon.addEventListener('mouseenter', () => {
-				if (window.matchMedia('(pointer: fine)').matches) {
-					const random = animations[Math.floor(Math.random() * animations.length)];
-					icon.style.animation = `${random} 0.6s ease`;
-				}
-			});
-
-			icon.addEventListener('animationend', () => {
-				icon.style.animation = '';
-			});
-		}
-	</script>
-	<script>
-		const menuToggle = document.getElementById('hmbrgr-menu-toggle');
-		const mobileMenu = document.getElementById('hmbrgr-menu');
-		const header = document.querySelector('header');
-
-		if (menuToggle && mobileMenu && header) {
-			menuToggle.addEventListener('click', () => {
-				if (mobileMenu.classList.contains('closing')) {
-					mobileMenu.classList.remove('closing');
-					header.classList.add('menu-open');
-					const icon = menuToggle.querySelector('i');
-					if (icon) {
-						icon.classList.remove('fa-bars');
-						icon.classList.add('fa-xmark');
-					}
-				} else if (mobileMenu.classList.contains('open')) {
-					mobileMenu.classList.add('closing');
-					header.classList.remove('menu-open');
-					const icon = menuToggle.querySelector('i');
-					if (icon) {
-						icon.classList.remove('fa-xmark');
-						icon.classList.add('fa-bars');
-					}
-				} else {
-					mobileMenu.classList.add('open');
-					header.classList.add('menu-open');
-					const icon = menuToggle.querySelector('i');
-					if (icon) {
-						icon.classList.remove('fa-bars');
-						icon.classList.add('fa-xmark');
-					}
-				}
-			});
-
-			mobileMenu.addEventListener('animationend', (e) => {
-				if (e.target === mobileMenu && mobileMenu.classList.contains('closing')) {
-					mobileMenu.classList.remove('open');
-					mobileMenu.classList.remove('closing');
-				}
-			});
-
-			window.addEventListener('resize', () => {
-				if (window.innerWidth > 900 && mobileMenu.classList.contains('open')) {
-					mobileMenu.classList.remove('open');
-					mobileMenu.classList.remove('closing');
-					header.classList.remove('menu-open');
-					const icon = menuToggle.querySelector('i');
-					if (icon) {
-						icon.classList.remove('fa-xmark');
-						icon.classList.add('fa-bars');
-					}
-				}
-			});
-
-			// Proxy clicks for mobile toggles to original desktop toggles
-			const mobileTheme = document.getElementById('hmbrgr-theme-toggle');
-			const desktopTheme = document.getElementById('theme-toggle');
-			if (mobileTheme && desktopTheme) {
-				mobileTheme.addEventListener('click', () => {
-					desktopTheme.click();
-					// Sync icon state after click
-					setTimeout(() => {
-						const dIcon = desktopTheme.querySelector('i');
-						const mIcon = mobileTheme.querySelector('i');
-						if (dIcon && mIcon) mIcon.className = dIcon.className;
-					}, 10);
-				});
-			}
-
-			// hmbrgr Nav Logic
-			const navItems = document.querySelectorAll('.hmbrgr-nav');
-			navItems.forEach(item => {
-				item.addEventListener('click', () => {
-					const index = parseInt(item.getAttribute('data-index') || '0');
-					const panels = document.querySelectorAll<HTMLElement>('.panel');
-					if (panels[index]) {
-						if (menuToggle) menuToggle.click();
-						const top = panels[index].offsetTop - header.offsetHeight;
-						window.scrollTo({ top, behavior: 'smooth' });
-					}
-				});
-			});
-
-			// Close menu when clicking outside (e.g., below the menu)
-			document.addEventListener('click', (event) => {
-				const target = event.target as HTMLElement;
-				const header = document.querySelector('header');
-				const mobileMenu = document.getElementById('hmbrgr-menu');
-				const menuToggle = document.getElementById('hmbrgr-menu-toggle');
-				
-				if (!mobileMenu || !menuToggle) return;
-
-				const isMenuOpen = mobileMenu.classList.contains('open');
-				const isClickInsideMenu = mobileMenu.contains(target);
-				const isClickOnHeader = header && header.contains(target);
-
-				if (isMenuOpen && !isClickInsideMenu && !isClickOnHeader) {
-					// Toggle it closed via the button logic
-					menuToggle.click();
-				}
-			});
-		}
-	</script>
 </header>
-	<div id="hmbrgr-menu">
-		<div class="hmbrgr-row">
-			<div class:list={["hmbrgr-contacts", { "hmbrgr-contacts-full": !isHome }]}>
-				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-file-lines"></i></i>&#8194;CV </div>
-				<a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="hmbrgr-contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn </a>
-				<LetsTalk isHamburger={true} />
-				<div class="hmbrgr-contact-btn"> <i class="fa-solid fa-user"></i>&#8194;About </div>
-			</div>
-			{isHome && (
-				<div class="hmbrgr-nav-parent">
-					<div class="hmbrgr-nav" data-index="0"> Hey </div>
-					<div class="hmbrgr-nav" data-index="1"> Projects </div>
-					<div class="hmbrgr-nav" data-index="2"> About Me </div>
-					<div class="hmbrgr-nav" data-index="3"> Contacts </div>
-				</div>
-			)}
-		</div>
-		<div class="hmbrgr-toggles">
-			<button id="hmbrgr-theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-				<i class="fa-solid fa-sun icon-sun"></i>
-				<i class="fa-solid fa-moon icon-moon"></i>
-			</button>
-			<button id="hmbrgr-performance-toggle" class="performance-toggle" title="Toggle performance mode" aria-label="Toggle performance mode">
-				<i class="fa-solid fa-wand-magic icon-magic"></i>
-				<i class="fa-solid fa-wand-magic-sparkles icon-sparkles"></i>
-			</button>
-		</div>
-		<div class="qr-parent flx-cntr-rw">
-			<div class="qr-text flx-algncntr-clmn"> 
-				<i class="fa-solid fa-mobile-screen-button qr-icon"></i>
-				<span>Continue on mobile</span>
-			</div>
-				<svg class="qr-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-				<rect width="500" height="500" fill="#fff" rx="20"/>
-				<path fill="var(--accent-reverse)" d="M18 146h16v16h-16z M18 162h16v16h-16z M18 210h16v16h-16z M18 274h16v16h-16z M18 290h16v16h-16z M18 322h16v16h-16z M18 338h16v16h-16z M34 146h16v16h-16z M34 162h16v16h-16z M34 194h16v16h-16z M34 226h16v16h-16z M34 242h16v16h-16z M34 274h16v16h-16z M34 290h16v16h-16z M34 306h16v16h-16z M34 338h16v16h-16z M50 178h16v16h-16z M50 226h16v16h-16z M50 242h16v16h-16z M50 274h16v16h-16z M66 162h16v16h-16z M66 194h16v16h-16z M66 274h16v16h-16z M66 290h16v16h-16z M66 338h16v16h-16z M82 162h16v16h-16z M82 178h16v16h-16z M82 210h16v16h-16z M82 226h16v16h-16z M82 274h16v16h-16z M82 290h16v16h-16z M82 306h16v16h-16z M82 322h16v16h-16z M82 338h16v16h-16z M98 162h16v16h-16z M98 178h16v16h-16z M98 194h16v16h-16z M98 242h16v16h-16z M98 290h16v16h-16z M98 338h16v16h-16z M114 146h16v16h-16z M114 178h16v16h-16z M114 210h16v16h-16z M114 242h16v16h-16z M114 274h16v16h-16z M114 306h16v16h-16z M114 338h16v16h-16z M130 162h16v16h-16z M130 178h16v16h-16z M130 194h16v16h-16z M130 210h16v16h-16z M130 226h16v16h-16z M130 242h16v16h-16z M130 290h16v16h-16z M130 306h16v16h-16z M130 338h16v16h-16z M146 34h16v16h-16z M146 114h16v16h-16z M146 130h16v16h-16z M146 146h16v16h-16z M146 178h16v16h-16z M146 210h16v16h-16z M146 258h16v16h-16z M146 354h16v16h-16z M146 450h16v16h-16z M146 466h16v16h-16z M162 34h16v16h-16z M162 50h16v16h-16z M162 162h16v16h-16z M162 178h16v16h-16z M162 194h16v16h-16z M162 210h16v16h-16z M162 226h16v16h-16z M162 242h16v16h-16z M162 258h16v16h-16z M162 274h16v16h-16z M162 306h16v16h-16z M162 386h16v16h-16z M162 402h16v16h-16z M162 418h16v16h-16z M162 434h16v16h-16z M162 450h16v16h-16z M178 18h16v16h-16z M178 50h16v16h-16z M178 66h16v16h-16z M178 114h16v16h-16z M178 146h16v16h-16z M178 162h16v16h-16z M178 258h16v16h-16z M178 274h16v16h-16z M178 306h16v16h-16z M178 322h16v16h-16z M178 354h16v16h-16z M178 370h16v16h-16z M178 386h16v16h-16z M194 50h16v16h-16z M194 66h16v16h-16z M194 82h16v16h-16z M194 146h16v16h-16z M194 162h16v16h-16z M194 242h16v16h-16z M194 258h16v16h-16z M194 274h16v16h-16z M194 322h16v16h-16z M194 338h16v16h-16z M194 370h16v16h-16z M194 386h16v16h-16z M194 418h16v16h-16z M210 18h16v16h-16z M210 66h16v16h-16z M210 82h16v16h-16z M210 114h16v16h-16z M210 146h16v16h-16z M210 178h16v16h-16z M210 194h16v16h-16z M210 226h16v16h-16z M210 242h16v16h-16z M210 258h16v16h-16z M210 354h16v16h-16z M210 370h16v16h-16z M210 418h16v16h-16z M210 450h16v16h-16z M226 18h16v16h-16z M226 34h16v16h-16z M226 50h16v16h-16z M226 66h16v16h-16z M226 98h16v16h-16z M226 130h16v16h-16z M226 146h16v16h-16z M226 194h16v16h-16z M226 210h16v16h-16z M226 226h16v16h-16z M226 242h16v16h-16z M226 322h16v16h-16z M226 338h16v16h-16z M226 370h16v16h-16z M226 402h16v16h-16z M226 418h16v16h-16z M226 450h16v16h-16z M226 466h16v16h-16z M242 18h16v16h-16z M242 66h16v16h-16z M242 82h16v16h-16z M242 98h16v16h-16z M242 114h16v16h-16z M242 130h16v16h-16z M242 162h16v16h-16z M242 194h16v16h-16z M242 210h16v16h-16z M242 242h16v16h-16z M242 274h16v16h-16z M242 306h16v16h-16z M242 370h16v16h-16z M242 386h16v16h-16z M258 50h16v16h-16z M258 66h16v16h-16z M258 82h16v16h-16z M258 98h16v16h-16z M258 130h16v16h-16z M258 146h16v16h-16z M258 210h16v16h-16z M258 242h16v16h-16z M258 274h16v16h-16z M258 354h16v16h-16z M258 370h16v16h-16z M258 402h16v16h-16z M258 418h16v16h-16z M258 434h16v16h-16z M258 450h16v16h-16z M274 50h16v16h-16z M274 66h16v16h-16z M274 114h16v16h-16z M274 146h16v16h-16z M274 162h16v16h-16z M274 210h16v16h-16z M274 258h16v16h-16z M274 306h16v16h-16z M274 322h16v16h-16z M274 338h16v16h-16z M274 354h16v16h-16z M274 418h16v16h-16z M274 434h16v16h-16z M274 466h16v16h-16z M290 18h16v16h-16z M290 66h16v16h-16z M290 82h16v16h-16z M290 98h16v16h-16z M290 130h16v16h-16z M290 146h16v16h-16z M290 162h16v16h-16z M290 210h16v16h-16z M290 226h16v16h-16z M290 274h16v16h-16z M290 386h16v16h-16z M290 402h16v16h-16z M290 466h16v16h-16z M306 18h16v16h-16z M306 34h16v16h-16z M306 50h16v16h-16z M306 98h16v16h-16z M306 114h16v16h-16z M306 162h16v16h-16z M306 194h16v16h-16z M306 210h16v16h-16z M306 242h16v16h-16z M306 274h16v16h-16z M306 306h16v16h-16z M306 322h16v16h-16z M306 434h16v16h-16z M306 466h16v16h-16z M322 18h16v16h-16z M322 66h16v16h-16z M322 98h16v16h-16z M322 162h16v16h-16z M322 194h16v16h-16z M322 210h16v16h-16z M322 258h16v16h-16z M322 274h16v16h-16z M322 354h16v16h-16z M322 370h16v16h-16z M322 402h16v16h-16z M322 450h16v16h-16z M322 466h16v16h-16z M338 18h16v16h-16z M338 50h16v16h-16z M338 82h16v16h-16z M338 114h16v16h-16z M338 130h16v16h-16z M338 146h16v16h-16z M338 162h16v16h-16z M338 178h16v16h-16z M338 210h16v16h-16z M338 226h16v16h-16z M338 242h16v16h-16z M338 290h16v16h-16z M338 338h16v16h-16z M338 354h16v16h-16z M338 370h16v16h-16z M338 386h16v16h-16z M338 402h16v16h-16z M338 434h16v16h-16z M354 146h16v16h-16z M354 210h16v16h-16z M354 226h16v16h-16z M354 242h16v16h-16z M354 258h16v16h-16z M354 290h16v16h-16z M354 338h16v16h-16z M354 402h16v16h-16z M354 418h16v16h-16z M354 434h16v16h-16z M370 146h16v16h-16z M370 162h16v16h-16z M370 178h16v16h-16z M370 226h16v16h-16z M370 242h16v16h-16z M370 258h16v16h-16z M370 290h16v16h-16z M370 322h16v16h-16z M370 338h16v16h-16z M370 370h16v16h-16z M370 402h16v16h-16z M386 162h16v16h-16z M386 178h16v16h-16z M386 242h16v16h-16z M386 290h16v16h-16z M386 306h16v16h-16z M386 322h16v16h-16z M386 338h16v16h-16z M386 402h16v16h-16z M386 418h16v16h-16z M386 450h16v16h-16z M402 194h16v16h-16z M402 210h16v16h-16z M402 226h16v16h-16z M402 242h16v16h-16z M402 290h16v16h-16z M402 322h16v16h-16z M402 338h16v16h-16z M402 354h16v16h-16z M402 370h16v16h-16z M402 386h16v16h-16z M402 402h16v16h-16z M402 450h16v16h-16z M418 194h16v16h-16z M418 210h16v16h-16z M418 226h16v16h-16z M418 306h16v16h-16z M418 322h16v16h-16z M418 338h16v16h-16z M418 386h16v16h-16z M418 418h16v16h-16z M418 434h16v16h-16z M418 450h16v16h-16z M434 162h16v16h-16z M434 178h16v16h-16z M434 242h16v16h-16z M434 258h16v16h-16z M434 274h16v16h-16z M434 290h16v16h-16z M434 306h16v16h-16z M434 322h16v16h-16z M434 338h16v16h-16z M434 354h16v16h-16z M434 370h16v16h-16z M434 386h16v16h-16z M434 402h16v16h-16z M434 434h16v16h-16z M434 450h16v16h-16z M450 146h16v16h-16z M450 178h16v16h-16z M450 242h16v16h-16z M450 274h16v16h-16z M450 338h16v16h-16z M450 354h16v16h-16z M450 402h16v16h-16z M450 418h16v16h-16z M450 434h16v16h-16z M450 466h16v16h-16z M466 162h16v16h-16z M466 178h16v16h-16z M466 242h16v16h-16z M466 258h16v16h-16z M466 290h16v16h-16z M466 322h16v16h-16z M466 338h16v16h-16z M466 354h16v16h-16z M466 370h16v16h-16z M466 402h16v16h-16z M466 434h16v16h-16z M 18 18v 112h 112v -112zM 34 34h 80v 80h -80z M50 50h48v48h-48z M 370 18v 112h 112v -112zM 386 34h 80v 80h -80z M402 50h48v48h-48z M 18 370v 112h 112v -112zM 34 386h 80v 80h -80z M50 402h48v48h-48z"/></svg>
-		</div>
-
-		<div class="source-grid">
-			<div class="site-signature txt-h6 font-bold"> Designed & Developed by me </div>
-			
-			<div class="source-item"> <span class="label">Stack</span> <span class="value">Astro, Tailwind, GSAP</span> </div>
-			<div class="source-item"> <span class="label">Logic</span> <span class="value">Matter.js, Vanta.js</span> </div>
-			<div class="source-item"> <span class="label">External</span> <span class="value">Cloudflare, Google Antigravity</span> </div>
-			<div class="source-item"> <span class="label">Assets</span> <span class="value">Font Awesome, TextureLabs</span> </div>
-			<div class="source-item"> <span class="label">Fonts</span> <span class="value">Atkinson Hyperlegible Next, Notable</span> </div>
-
-			<div class="copyright txt-h6"> &copy; {today.getFullYear()} Lucas Shiota </div>
-		</div>
-	</div>
 <style>
 	@reference "../../styles/global.css";
 
@@ -225,86 +43,27 @@ const isHome = pathname === '/' || pathname === '';
 	}
 
 	header.menu-open { box-shadow: var(--box-shadow-small); }
-	.header-brand, .header-toggles, .header-contacts, .hmbrgr-menu-toggle-wrapper {
+	.header-actions, .header-contacts {
 		@apply flx-algncntr-rw;
-		height: 80%; gap: 1rem;
+		height: 80%;
+		gap: 0.25rem; /* Gap between the toggle-group and the hamburger */
 	}
+
+	.header-toggles { 
+		@apply flx-algncntr-rw;
+		gap: 0.25rem; /* Gap between theme and performance specifically */
+	}
+
 	.header-contacts, .header-toggles { display: none; }
-	.header-brand { justify-content: flex-start; justify-self: flex-start; }
 	.header-contacts { 
 		justify-content: center; justify-self: center;
 		flex: 1; @apply font-bold; 
 		gap: clamp(0.5rem, 1vw, 1rem);
 	}
-	.header-toggles, .hmbrgr-menu-toggle-wrapper { justify-content: flex-end; justify-self: flex-end;}
-
-/* #endregion */
-
-/* ---------------------------------------------------------------- */
-/* ----- BRAND ----- */
-/* ---------------------------------------------------------------- */
-/* #region Brand */
-
-	.header-brand-link {
-		text-decoration: none;
-		color: var(--text-color);
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-	.header-brand-link:hover { color: var(--text-color); }
-
-	.name, .path { @apply text-xl; @apply leading-snug; }
-	.header-icon {
-		width: 50px; height: 50px;
-		object-fit: contain; display: block; margin-left: 1rem;
-		user-select: none;
-		transform-origin: center; transform-style: preserve-3d; /* Anim */
-	}
- 
-/* #endregion */
-
-/* ---------------------------------------------------------------- */
-/* -----LOGO ANIMATIONS ----- */
-/* ---------------------------------------------------------------- */
-/* #region Logo  */
-
-	/* Rock */
-	@keyframes rock {
-		0%   { transform: rotate(0deg); }
-		20%  { transform: rotate(30deg); }
-		40%  { transform: rotate(-25deg); }
-		60%  { transform: rotate(20deg); }
-		80%  { transform: rotate(-10deg); }
-		100% { transform: rotate(0deg); }
-	}
-	/* Spin */
-	@keyframes spin {
-		0%   { transform: rotate(0deg); }
-		100% { transform: rotate(360deg); }
-	}
-	/* 3D Tilt Pop */
-	@keyframes tilt-pop {
-		0%   { transform: rotate(0) scale(1); }
-		25%  { transform: rotateY(40deg) rotateX(18deg) scale(1.2); }
-		55%  { transform: rotateY(-30deg) rotateX(-12deg) scale(1.08); }
-		75%  { transform: rotateY(15deg) rotateX(6deg) scale(1.04); }
-		100% { transform: rotate(0) scale(1); }
-	}
-	/* Horizontal Flip */
-	@keyframes flip-horizontal {
-		0%   { transform: rotateY(0deg); }
-		50%  { transform: rotateY(180deg); }
-		100% { transform: rotateY(360deg); }
-	}
-
-	/* Pop Jump Scale */
-	@keyframes pop-jump {
-		0%   { transform: scale(1); }
-		30%  { transform: scale(1.25); }  /* fast punch */
-		55%  { transform: scale(0.95); }  /* gravity dip */
-		75%  { transform: scale(1.05); }  /* small rebound */
-		100% { transform: scale(1); }
+	.header-actions { 
+		justify-content: flex-end; 
+		justify-self: flex-end; 
+		margin-right: 1rem;
 	}
 
 /* #endregion */
@@ -314,276 +73,26 @@ const isHome = pathname === '/' || pathname === '';
 /* ---------------------------------------------------------------- */
 /* #region Contacts */
 
-	.contact-btn { @apply btn-type-main; }
+	.contact-btn { @apply btn-type-main-reverse; }
 	.contact-icon { display: none; }
 
 /* #endregion */
-
-/* ---------------------------------------------------------------- */
-/* ----- TOGGLES ----- */
-/* ---------------------------------------------------------------- */
-/* #region Toggles */
-	#theme-toggle, #hmbrgr-theme-toggle {
-		width: 50px; height: 50px;
-		border-radius: 50%;
-		background: transparent; border: transparent;
-
-		display: flex;
-		align-items: center; justify-content: center;
-		cursor: pointer;
-		transition: background 0.3s;
-		z-index: 30;
-		position: relative;
-	}
-	@media (hover: hover) {
-		#theme-toggle:hover, #hmbrgr-theme-toggle:hover {
-			background: rgba(var(--gray), 0.3);
-		}
-	}
-	.theme-toggle i {
-		position: absolute;
-		color: var(--text-color);
-		@apply text-xl;
-		transition: color 0.3s, transform 0.3s, opacity 0.3s;
-	}
-
-	/* Theme Toggle Logic */
-	/* Light Mode (Sun Base, Moon Hover) */
-	html:not([data-theme="dark"]) .icon-sun { opacity: 1; pointer-events: auto; }
-	html:not([data-theme="dark"]) .icon-moon { opacity: 0; pointer-events: none; }
-	@media (hover: hover) {
-		html:not([data-theme="dark"]) .theme-toggle:hover .icon-sun { opacity: 0; }
-		html:not([data-theme="dark"]) .theme-toggle:hover .icon-moon { opacity: 1; }
-	}
-
-	/* Dark Mode (Moon Base, Sun Hover) */
-	html[data-theme="dark"] .icon-sun { opacity: 0; pointer-events: none; }
-	html[data-theme="dark"] .icon-moon { opacity: 1; pointer-events: auto; }
-	@media (hover: hover) {
-		html[data-theme="dark"] .theme-toggle:hover .icon-sun { opacity: 1; }
-		html[data-theme="dark"] .theme-toggle:hover .icon-moon { opacity: 0; }
-	}
-	.performance-toggle {
-		width: 50px; height: 50px;
-		border-radius: 50%;
-		background: transparent; border: transparent;
-		margin: 0 0.75rem 0 0;
-		
-		display: flex; align-items: center; justify-content: center;
-		cursor: pointer;
-		transition: background 0.3s;
-		z-index: 30;
-		position: relative;
-	}
-	html.mobile-device .performance-toggle { display: none !important; }
-	@media (hover: hover) {
-		.performance-toggle:hover { background: rgba(var(--gray), 0.3); }
-	}
-	.performance-toggle i {
-		position: absolute;
-		color: var(--text-color);
-		@apply text-xl;
-		transition: color 0.3s, transform 0.3s, opacity 0.3s;
-	}
-
-	/* Toggle Logic */
-	/* When Performance Mode is OFF (Sparkles Base, Magic Hover) */
-	html:not(.performance-mode) .icon-sparkles { opacity: 1; pointer-events: auto; }
-	html:not(.performance-mode) .icon-magic { opacity: 0; pointer-events: none; }
-	@media (hover: hover) {
-		html:not(.performance-mode) .performance-toggle:hover .icon-sparkles { opacity: 0; }
-		html:not(.performance-mode) .performance-toggle:hover .icon-magic { opacity: 1; }
-	}
-
-	/* When Performance Mode is ON (Magic Base, Sparkles Hover) */
-	html.performance-mode .icon-sparkles { opacity: 0; pointer-events: none; }
-	html.performance-mode .icon-magic { opacity: 1; pointer-events: auto; }
-	@media (hover: hover) {
-		html.performance-mode .performance-toggle:hover .icon-sparkles { opacity: 1; }
-		html.performance-mode .performance-toggle:hover .icon-magic { opacity: 0; }
-	}
-
-/* #endregion */
-
-/* ---------------------------------------------------------------- */
-/* ----- hmbrgr MENU ----- */
-/* ---------------------------------------------------------------- */
-/* #region hmbrgr */
-
-	/* #region Ham Styles */
-		#hmbrgr-menu {
-			@apply flx-cntr-clmn;
-			display: none;
-			position: fixed; width: 100%; left: 0; top: var(--header-height);
-			padding: 1rem 0; gap: 1rem;
-			background: var(--bg-color-tinted); box-shadow: var(--box-shadow); opacity: 1;
-			border-top: 1px solid rgba(var(--gray), 0.2);
-		}
-		#hmbrgr-menu.open { display: flex; animation: slideDown 0.3s ease-out; }
-		#hmbrgr-menu.closing { animation: slideUp 0.3s ease-in forwards; }
-
-		@keyframes slideDown {
-			from { opacity: 0; transform: translateY(-10px); }
-			to { opacity: 1; transform: translateY(0); }
-		}
-		@keyframes slideUp {
-			from { opacity: 1; transform: translateY(0); }
-			to { opacity: 0; transform: translateY(-10px); }
-		}
-		#hmbrgr-menu-toggle {
-			width: 50px; height: 50px;
-			display: flex; align-items: center; justify-content: center;
-			margin-right: 1rem;
-			background: transparent; border: transparent; border-radius: 50%;
-			cursor: pointer;
-			transition: background 0.3s;
-		}
-
-		@media (hover: hover) {
-			#hmbrgr-menu-toggle:hover { background: rgba(var(--gray), 0.3); }
-		}
-		#hmbrgr-menu-toggle i { color: var(--text-color); }
-		.hmbrgr-row { display: flex; flex-direction: row; justify-content: center;
-			width: 100%; padding: 0.5rem 0; }
-
-	/* #endregion */
-
-	/* #region Credits */
-		.source-grid {
-			width: 90%; max-width: 400px;
-			@apply text-xs; @apply leading-loose;
-			display: flex; flex-direction: column; gap: 0.4rem;
-			padding: 1rem; border-top: 1px solid rgba(var(--gray), 0.1);
-		}
-		.site-signature {
-			@apply text-left;
-			color: var(--accent-reverse); 
-			margin-bottom: 0.4rem;
-			@apply uppercase; letter-spacing: 0.1em;
-		}
-		.source-item {
-			display: flex; justify-content: space-between;
-			border-bottom: 1px solid rgba(var(--gray), 0.05);
-			padding-bottom: 0.1rem;
-		}
-		.source-item .label { opacity: 0.5; @apply font-bold; @apply uppercase; font-size: 0.65rem; }
-		.source-item .value { @apply font-medium; color: var(--text-color); }
-		
-		.copyright { 
-			@apply text-center;
-			width: 100%;
-			padding-top: 1.2rem; 
-			opacity: 0.3;
-			font-size: 0.65rem;
-			letter-spacing: 0.05em;
-		}
-	/* #endregion */
-
-	/* #region Ham Toggle */
-	.hmbrgr-toggles {
-		@apply flx-jstfycntr-rw;
-		width: 70%;
-		gap: 1rem; padding: 0.5rem 0;
-		border-bottom: var(--border); border-top: var(--border);
-	}
-	#hmbrgr-theme-toggle, #hmbrgr-performance-toggle {
-		@apply flx-cntr;
-		width: 50px; height: 50px;
-		border-radius: 50%;
-		background: transparent; border: transparent;
-		cursor: pointer;
-		transition: background 0.3s;
-	}
-	@media (hover: hover) {
-		#hmbrgr-theme-toggle:hover, #hmbrgr-performance-toggle:hover { 
-			background: rgba(var(--gray), 0.3); }
-	}
-	#hmbrgr-theme-toggle i, #hmbrgr-performance-toggle i { 
-		color: var(--text-color); @apply txt-h3; }
-
-	/* #endregion */
-
-
-	/* #region QR Code */
-
-		.qr-parent { 
-			display: flex; /* Show by default on Desktop/Laptop */
-			gap: 0.5rem; padding: 0.75rem;
-			background-color: #ffffff;
-			border-radius: 1.5rem;
-			transition: transform 0.3s ease;
-		}
-
-		/* Hide specifically for Mobile/Tablet hardware (Touch users) */
-		@media (pointer: coarse) {
-			.qr-parent { display: none; }
-		}
-		.qr-text { 
-			@apply txt-h6 font-bold;
-			color: var(--accent);
-			height: auto; width: 100px;
-			@apply text-center; gap: 0.2rem;
-			@apply txt-body-sm; /* Slightly smaller to fit with icon */
-		}
-		.qr-icon {
-			@apply txt-h5;
-			margin-bottom: 2px;
-			transition: transform 0.3s ease;
-		}
-		.qr-svg {
-			/* width: clamp(100px, 15vw, 150px); */ 
-			height: auto; width: 100px;
-		}
-		.qr-parent:hover { transform: scale(1.03); }
-		.qr-parent:hover .qr-icon { transform: rotate(-10deg) scale(1.1); }
-		.qr-svg path { fill: var(--accent); transition: fill 0.6s ease; }
-		.qr-svg rect { fill: #ffffff; }
-
-	/* #endregion */
-
-	/* #region Ham Contact + Nav */
-
-	.hmbrgr-contacts { border-right: var(--border) }
-	.hmbrgr-contact-btn { @apply btn-type-main; }
-	
-	.hmbrgr-nav { 
-		@apply btn-fx-txtcolor;
-		transition: color 0.3s; @apply text-xl; line-height: 0.9; @apply font-bold;
-		padding: .7rem;
-	}
-
-	.hmbrgr-nav-parent, .hmbrgr-contacts { 
-		@apply flx-cntr-clmn; gap: .5rem; width: 40%;
-	}
-	.hmbrgr-contacts.hmbrgr-contacts-full { width: 100%; border-right: none; }
-
-	/* #endregion */
-
-/* #endregion */
-	
 
 /* ---------------------------------------------------------------- */
 /* ----- QUERY ----- */
 /* ---------------------------------------------------------------- */
 /* #region Query */
 
-	@media (min-width: 300px) { /* #1: Default Phone -  Most Elements*/ 	}
-
 	@media (min-width: 640px) { /* #2: Large Phone - Shrink, Hide, Remove Some Elements */
 		.header-contacts { display: flex; } /* Show */
-		.hmbrgr-contacts { display: none; } /* Hide */
 	}
 	@media (min-width: 768px) { /* #3: Tablet - Start Shrink, Remove Elements */
 		.contact-icon { display: flex; } /* Show */
-		.hmbrgr-nav-parent, .hmbrgr-row  { display: none; } /* Hide */
-		.hmbrgr-toggles { border-top: none; }
 	}
 	@media (min-width: 1200px) { /* #4: Laptop */
-		.hmbrgr-toggles { display: none; } /* Hide */
 		.header-toggles, .contact-icon { display: flex; } /* Show */
 	}
 
 /* #endregion */
-
 
 </style>

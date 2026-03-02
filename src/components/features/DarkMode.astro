@@ -116,17 +116,18 @@
     /* Toggle Handler                */
     /* ----------------------------- */
 
-    toggleBtn.addEventListener('click', () => {
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      const toggleBtn = target.closest('.theme-toggle');
+      if (!toggleBtn) return;
+
       const isDark = root.getAttribute('data-theme') === 'dark';
       const nextTheme = isDark ? 'light' : 'dark';
       const isSimpleMode = root.classList.contains('performance-mode');
 
       if (isSimpleMode) {
-        // Simple Mode: Consistent 0.6s Fade via CSS
         setTheme(nextTheme);
       } else {
-        // Fancy Mode: Snappy Instant Switch
-        // Vanta handles its own transition visually
         applyThemeInstantly(nextTheme);
       }
     });
@@ -135,8 +136,7 @@
 </script>
 
 <style is:global>
-  .theme-switch-instant,
-  .theme-switch-instant *,
+  .theme-switch-instant *:not(.theme-toggle *),
   .theme-switch-instant *::before,
   .theme-switch-instant *::after {
     transition: none !important;

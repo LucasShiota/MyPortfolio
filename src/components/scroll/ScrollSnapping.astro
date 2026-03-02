@@ -1,0 +1,70 @@
+<script>
+	interface Window {
+		performanceModeScroll?: any;
+		__performanceModeEnabled?: boolean;
+	}
+
+	import { gsap } from "gsap";
+	import { ScrollTrigger } from "gsap/ScrollTrigger";
+	gsap.registerPlugin(ScrollTrigger);
+
+	const panels = gsap.utils.toArray<HTMLElement>(".panel");
+	const totalSteps = panels.length - 1;
+	const step = totalSteps > 0 ? 1 / totalSteps : 1;
+
+	let snapTrigger: any = null;
+
+	const enableSnapping = () => {
+		if (snapTrigger || totalSteps <= 0) return;
+		snapTrigger = ScrollTrigger.create({
+			id: "snapping",
+			trigger: document.body,
+			start: "top top",
+			end: "bottom bottom",
+			snap: {
+				directional: false,
+				snapTo: (progress) => {
+					const closestIndex = Math.round(progress / step);
+					const delta = (progress - closestIndex * step) / step;
+					const threshold = 0.1;
+
+					const targetIndex =
+						Math.abs(delta) > threshold
+							? closestIndex + (delta > 0 ? 1 : -1)
+							: closestIndex;
+
+					return gsap.utils.clamp(0, 1, targetIndex * step);
+				},
+				duration: { min: 0.2, max: 0.4 },
+				delay: 0.03,
+				ease: "power1.inOut"
+			}
+		});
+	};
+
+	const disableSnapping = () => {
+		if (snapTrigger) {
+			snapTrigger.kill();
+			snapTrigger = null;
+		}
+	};
+
+	// Performance Toggle API bridge
+	window.performanceModeScroll = {
+		...window.performanceModeScroll, // merge in case others set this too
+		enableSnap: enableSnapping,
+		disableSnap: disableSnapping,
+		refresh: () => {
+			if (snapTrigger) snapTrigger.refresh();
+		}
+	};
+
+	// Initialization logic
+	if (!window.__performanceModeEnabled) {
+		enableSnapping();
+	}
+
+    window.addEventListener("startup:vanta", () => {
+        if (snapTrigger) snapTrigger.refresh();
+    });
+</script>

@@ -1,0 +1,72 @@
+---
+interface Props {
+  id?: string;
+  class?: string;
+  title?: string;
+  ariaLabel?: string;
+  [key: string]: any;
+}
+
+const { 
+  id, 
+  class: className = "", 
+  title, 
+  ariaLabel,
+  ...restProps
+} = Astro.props;
+---
+
+<button 
+  id={id} 
+  class:list={["header-icon-btn", className]} 
+  title={title} 
+  aria-label={ariaLabel || title}
+  {...restProps}
+>
+  <slot />
+</button>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .header-icon-btn {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: transparent; border: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s;
+    z-index: 30;
+    position: relative;
+    color: var(--text-color);
+  }
+
+  @media (hover: hover) {
+    .header-icon-btn:hover {
+      background: rgba(var(--gray), 0.3);
+    }
+  }
+
+  :global(.header-icon-btn i) {
+    position: absolute;
+    @apply text-2xl;
+    /* Clean, premium transition for all properties */
+    transition: 
+      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.3s ease;
+    
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  /* 
+     Base 'hidden' state for any icon. 
+     This provides the smooth "scale-down/rotate" fade-out by default.
+  */
+  :global(.header-icon-btn i.hidden-icon) {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.6) rotate(-45deg);
+  }
+</style>

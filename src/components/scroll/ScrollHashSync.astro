@@ -1,0 +1,22 @@
+<script>
+	import { gsap } from "gsap";
+	import { ScrollTrigger } from "gsap/ScrollTrigger";
+	gsap.registerPlugin(ScrollTrigger);
+
+	ScrollTrigger.create({
+		trigger: ".panel-parent",
+		start: "top top",
+		end: "bottom bottom",
+		onUpdate: (self) => {
+			const panels = ["hello", "projects", "about", "contacts"];
+			const index = Math.round(self.progress * (panels.length - 1));
+			
+			const currentHash = self.progress < 0.05 ? "" : `#${panels[index]}`;
+			const newURL = currentHash === "" ? window.location.pathname : currentHash;
+			
+			if (window.location.hash !== currentHash) {
+				history.replaceState(null, '', newURL);
+			}
+		}
+	});
+</script>

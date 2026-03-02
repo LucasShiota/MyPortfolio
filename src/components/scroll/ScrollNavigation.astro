@@ -1,0 +1,47 @@
+<script>
+	import { gsap } from "gsap";
+	import { ScrollTrigger } from "gsap/ScrollTrigger";
+	import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+	gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+	const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
+	const panels = gsap.utils.toArray<HTMLElement>(".panel");
+	const totalSteps = panels.length - 1;
+	const step = totalSteps > 0 ? 1 / totalSteps : 1;
+	const SECTION_INDEX_STEP = 2; // For the sidebar dots/sections indexing
+
+	let activeScrollTween: gsap.core.Tween | null = null;
+
+	function scrollToIndex(index: number) {
+		if (totalSteps <= 0) return;
+		const header = document.querySelector('header');
+		const clamped = gsap.utils.clamp(0, totalSteps, index);
+		const targetProgress = clamped * step;
+
+		activeScrollTween?.kill();
+		activeScrollTween = gsap.to(window, {
+			duration: 0.8,
+			scrollTo: {
+				y:
+					targetProgress *
+					(document.body.scrollHeight - window.innerHeight)
+			},
+			ease: "power2.inOut"
+		});
+	}
+
+	navSections.forEach((section) => {
+		section.style.cursor = "pointer";
+		section.addEventListener("click", () => {
+			const navDataIndex = Number(section.dataset.index);
+			if (Number.isNaN(navDataIndex)) return;
+			const panelIndex = navDataIndex / SECTION_INDEX_STEP;
+			scrollToIndex(panelIndex);
+		});
+	});
+
+    // Clean up
+    window.addEventListener("beforeunload", () => {
+		activeScrollTween?.kill();
+	}, { once: true });
+</script>
