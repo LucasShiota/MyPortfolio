@@ -31,7 +31,7 @@ const { sections } = Astro.props;
       {sections.map(({ id, label }, index) => (
         <li>
           <a href={`#${id}`} class="nav-link" data-section={id}>
-            <span class="active-arrow">→</span>
+            <i class="fa-solid fa-location-arrow fa-rotate-by active-arrow" style="--fa-rotate-angle: 45deg;"></i>
             <span class="nav-label">
               {index === 0 ? label : `${index}. ${label}`}
             </span>
@@ -81,7 +81,7 @@ const { sections } = Astro.props;
     }
 
     .nav-header {
-      @apply uppercase txt-color-accent font-bold txt-body;
+      @apply txt-color-accent font-bold txt-body;
       letter-spacing: 0.05em;
       padding-bottom: 0.5rem;
       border-bottom: var(--border);
@@ -182,7 +182,7 @@ const { sections } = Astro.props;
   }
 
   .nav-label {
-    @apply font-mono;
+
     font-size: 0.85em;
     transition: transform 0.2s ease;
   }
@@ -197,18 +197,19 @@ const { sections } = Astro.props;
   .active-arrow {
     display: inline-block;
     width: 0;
+    overflow: hidden;
+    white-space: nowrap;
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateX(-10px) rotate(45deg) scale(0.3); 
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     color: var(--accent-reverse);
-    font-weight: bold;
   }
 
   .nav-link.active .active-arrow {
-    width: auto;
-    margin-right: 0.25rem;
+    width: 0.8rem;
+    margin-right: 0.4rem;
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) rotate(45deg) scale(0.7); /* Smaller scale when active */
   }
 
   .nav-link.active .nav-label {

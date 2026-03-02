@@ -18,7 +18,7 @@ function runWhenIdle(task: () => void, timeout = 800) {
 /**
  * Perform a slow, cinematic scroll to a target element or hash
  */
-const performSlowScroll = (target: string | HTMLElement) => {
+const performSlowScroll = (target: string | HTMLElement, autoKill = true, onComplete?: () => void) => {
   const element = typeof target === 'string' ? document.querySelector(target) : target;
   
   if (element instanceof HTMLElement) {
@@ -26,9 +26,23 @@ const performSlowScroll = (target: string | HTMLElement) => {
     const scrollMarginTop = parseFloat(computedStyle.scrollMarginTop);
     let totalOffset = 0;
     
-    if (!isNaN(scrollMarginTop) && scrollMarginTop > 0) {
+    const isPanel = element.classList.contains('panel');
+    let snapY: number | null = null;
+
+    if (isPanel) {
+      const panels = Array.from(document.querySelectorAll('.panel'));
+      const index = panels.indexOf(element as HTMLElement);
+      if (index !== -1) {
+        const totalSteps = panels.length - 1;
+        const step = totalSteps > 0 ? 1 / totalSteps : 1;
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        snapY = index * step * maxScroll;
+      }
+    }
+
+    if (!isPanel && !isNaN(scrollMarginTop) && scrollMarginTop > 0) {
        totalOffset = scrollMarginTop; 
-    } else {
+    } else if (!isPanel) {
        const header = document.querySelector('header');
        totalOffset = header ? (header as HTMLElement).offsetHeight : 0;
     }
@@ -37,14 +51,31 @@ const performSlowScroll = (target: string | HTMLElement) => {
     const isPerformanceMode = document.documentElement.classList.contains('performance-mode');
     const skipAnimation = prefersReducedMotion || isPerformanceMode;
 
+    // Temporarily disable snapping to prevent the jump artifact
+    const snapBridge = (window as any).performanceModeScroll;
+    snapBridge?.disableSnap?.();
+
     gsap.to(window, {
-      duration: skipAnimation ? 0 : 1, 
+      duration: skipAnimation ? 0 : 0.75, 
       scrollTo: {
-        y: element,
-        offsetY: totalOffset,
-        autoKill: true
+        y: snapY !== null ? snapY : element,
+        offsetY: snapY !== null ? 0 : totalOffset,
+        autoKill: autoKill
       },
-      ease: skipAnimation ? "none" : "power2.inOut"
+      ease: skipAnimation ? "none" : "power2.inOut",
+      onComplete: () => {
+        // Re-enable snapping if we're not in performance mode
+        if (!isPerformanceMode) {
+          snapBridge?.enableSnap?.();
+        }
+        onComplete?.();
+      },
+      onInterrupt: () => {
+        // Also re-enable on interruption (e.g. user manual scroll with autoKill: true)
+        if (!isPerformanceMode) {
+          snapBridge?.enableSnap?.();
+        }
+      }
     });
   }
 };
@@ -53,12 +84,22 @@ export function initStartupController() {
   const gate = document.getElementById("startup-gate");
 
   const handleInitialHash = () => {
-    if (window.location.hash) {
+    const hash = sessionStorage.getItem('pendingHash');
+    if (hash) {
+      // Clear it from storage so it doesn't run again on normal navigations
+      sessionStorage.removeItem('pendingHash');
+      
       window.scrollTo(0, 0);
+      
+      // Higher delay to ensure we are past the 300ms aggressive lock in BaseLayout.astro
+      // and allow layout stabilizing (Vanta, Marquees, etc)
       setTimeout(() => {
         window.scrollTo(0, 0); 
-        performSlowScroll(window.location.hash);
-      }, 150);
+        performSlowScroll(hash, false, () => {
+          // Put the hash back silently once the animation is complete
+          history.replaceState(null, '', hash);
+        });
+      }, 500);
     }
   };
 

@@ -11,7 +11,46 @@ const { title, description } = Astro.props;
 ---
 <html lang="en" >
   <head>
-    <script is:inline> if ("scrollRestoration" in history) { history.scrollRestoration = "manual"; } window.scrollTo(0, 0); </script>
+    <script is:inline> 
+      if ("scrollRestoration" in history) { 
+        history.scrollRestoration = "manual"; 
+      }
+      
+      // Extremely aggressive scroll lock for initial load with hash
+      const initialHash = window.location.hash;
+      if (initialHash && initialHash.length > 1) {
+        sessionStorage.setItem('pendingHash', initialHash);
+        
+        // 1. Instantly nuke the hash from the URL
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+        
+        // 2. Fallback: override hash routing mechanisms
+        window.location.hash = '';
+
+        // 3. Brute-force scroll to top during the critical rendering path
+        window.scrollTo(0, 0);
+        
+        const forceTop = () => window.scrollTo(0, 0);
+        
+        // Lock scroll via events
+        window.addEventListener('scroll', forceTop, { passive: false });
+        
+        // Tick lock every 10ms for the first 300ms to fight Chrome's native engine
+        let ticks = 0;
+        const tickInterval = setInterval(() => {
+          forceTop();
+          ticks++;
+          if (ticks > 30) clearInterval(tickInterval);
+        }, 10);
+        
+        // Release event lock on DOMContentLoaded
+        window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => window.removeEventListener('scroll', forceTop), 50);
+        });
+      } else {
+        window.scrollTo(0, 0); 
+      }
+    </script>
     <script src="https://kit.fontawesome.com/575b9c1578.js" crossorigin="anonymous"></script>
     <BaseHead title={title} description={description} />
     <script is:inline>

@@ -11,7 +11,7 @@ interface Props {
 const { description, id = "overview", order, total } = Astro.props;
 ---
 
-<ProjectSection title="Overview" id={id} order={order} total={total}>
+<ProjectSection title="Overview" icon="fa-solid fa-circle-info" id={id} order={order} total={total}>
   <p class="main-description">{description}</p>
 </ProjectSection>
 
