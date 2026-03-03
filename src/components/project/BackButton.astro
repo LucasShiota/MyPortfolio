@@ -4,36 +4,60 @@ interface Props {
   label?: string;
 }
 
-const { href = "/", label = "Back to Portfolio" } = Astro.props;
+const { href = "/#projects", label = "All Projects" } = Astro.props;
 ---
 
-<nav class="back-nav">
-  <a href={href} class="back-btn btn-fx-txtcolor">
-    <i class="fa-solid fa-arrow-left"></i> {label}
+<div class="back-btn-container">
+  <a href={href} class="back-btn">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span class="back-btn-label">{label}</span>
   </a>
-</nav>
+</div>
 
 <style>
   @reference "../../styles/global.css";
 
-  .back-nav {
-    margin-bottom: -2rem;
-    position: relative;
-    z-index: 10;
+  .back-btn-container {
+    @apply surface-panel;
+    padding: 0.75rem 1rem;
+    background: var(--bg-color); /* Lighter in light theme */
+    display: flex;
+    transition: background-color 0.6s var(--transition-cubic);
+  }
+
+  :global([data-theme="dark"]) .back-btn-container {
+    background: color-mix(in srgb, var(--bg-color-tinted), black 40%); /* Darker in dark theme */
   }
 
   .back-btn {
-    
-    display: inline-flex;
+    text-decoration: none;
+    color: var(--text-color);
+    @apply txt-body-sm;
+    @apply font-medium;
+    display: flex;
     align-items: center;
     gap: 0.5rem;
-    text-decoration: none;  
-    @apply font-semibold;
-    @apply txt-body-lg;
-    transition: transform 0.3s ease, color 0.3s ease;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    width: 100%;
+  }
+
+  .back-btn-label {
+    font-size: 0.85em;
   }
 
   .back-btn:hover {
+    background: rgba(var(--gray), 0.1);
+    color: var(--accent-reverse);
+    opacity: 1;
     transform: translateX(-5px);
+  }
+
+  @media (max-width: 1023px) {
+    .back-btn-container {
+      /* Shared visibility logic will be handled by parent or context */
+    }
   }
 </style>

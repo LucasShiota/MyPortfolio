@@ -29,7 +29,21 @@ const projectsCollection = defineCollection({
     
     summary: z.string(),
     
-    // Full Page Specifics
+    // Page Structure - The "Master System"
+    sections: z.array(z.lazy(() => z.object({
+      id: z.string(),
+      label: z.string(),
+      component: z.string(), 
+      props: z.record(z.any()).optional(), // Any additional data for that component
+      subsections: z.array(z.lazy(() => z.object({
+        id: z.string(),
+        label: z.string(),
+        component: z.string(),
+        props: z.record(z.any()).optional()
+      }))).optional()
+    }))).optional(),
+
+    // Full Page Specifics (Keep legacy fields for now to avoid breaking changes)
     goals: z.array(z.string()).optional(),
   }),
 });

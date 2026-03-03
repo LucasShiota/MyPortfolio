@@ -5,13 +5,27 @@ interface Props {
   goals: string[];
   id?: string;
   order?: number;
-  total?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
 }
 
-const { goals, id = "goals", order, total } = Astro.props;
+const { 
+  goals, 
+  id = "goals", 
+  order, 
+  isSubsection = false,
+  parentOrder
+} = Astro.props;
 ---
 
-<ProjectSection title="Core Design Goals" icon="fa-solid fa-bullseye" id={id} order={order} total={total}>
+<ProjectSection 
+  title="Core Design Goals" 
+  icon="fa-solid fa-bullseye" 
+  id={id} 
+  order={order} 
+  isSubsection={isSubsection}
+  parentOrder={parentOrder}
+>
   <div class="goals-grid">
     {goals.map((goal, index) => (
       <div class="goal-card" style={`--index: ${index}`}>
@@ -41,7 +55,7 @@ const { goals, id = "goals", order, total } = Astro.props;
 
   .goal-card {
     background: transparent ;
-    border: 2px solid var(--text-color); border-radius: 24px; 
+    border: 2px solid rgba(var(--gray)); border-radius: 24px; 
     padding: 1rem; gap: 1rem;
     position: relative; overflow: hidden;
     display: flex; flex-direction: row; align-items: center; justify-content: center;
@@ -50,13 +64,13 @@ const { goals, id = "goals", order, total } = Astro.props;
   .goal-number {
     font-family: "Notable", sans-serif;
     @apply text-5xl leading-none;
-    opacity: 0.5;
     padding-bottom: 0.7rem;
-    color: var(--text-color);
+    color: rgba(var(--gray));
   }
 
   .goal-card p {
     @apply leading-normal font-medium;
+    color: rgba(var(--gray));
     margin: 0;
   }
 </style>

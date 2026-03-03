@@ -4,22 +4,30 @@ interface Props {
   icon?: string;
   id?: string;
   order?: number;
-  total?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
 }
 
-const { title, icon, id, order, total } = Astro.props;
+const { 
+  title, 
+  icon, 
+  id, 
+  order, 
+  isSubsection = false, 
+  parentOrder 
+} = Astro.props;
 ---
 
-<section class="project-section" id={id}>
+<section class={`project-section ${isSubsection ? 'subsection' : ''}`} id={id}>
   <div class="panel-card">
     <div class="section-title">
       <div class="title-left">
-        {icon && <i class={`${icon} title-icon`}></i>}
+        {icon && <i class={`${icon} title-icon ${isSubsection ? 'sub-icon' : ''}`}></i>}
         <h2>{title}</h2>
       </div>
-      {order && total && (
+      {order && (
         <div class="section-counter">
-          {order}/{total}
+          {isSubsection ? `${parentOrder}.${order}` : `${order}`}
         </div>
       )}
     </div>
@@ -35,6 +43,43 @@ const { title, icon, id, order, total } = Astro.props;
   .project-section {
     scroll-margin-top: calc(var(--header-height) + 2.5rem);
     width: 100%;
+  }
+
+  .project-section.subsection {
+    padding-left: 2rem;
+  }
+
+  .project-section.subsection .panel-card {
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  /* Hierarchical Left Bar as a pseudo-element for height control */
+  .project-section.subsection .panel-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 5%; /* Start at 5% */
+    height: 90%; /* End at 95% (total 90% height) */
+    width: 4px;
+    background: color-mix(in srgb, var(--accent-reverse) 40%, transparent); /* Lighter accent */
+    border-radius: 99px;
+  }
+
+  .subsection .section-title {
+    border-bottom: 1px solid rgba(var(--gray), 0.1);
+    margin-bottom: 0.75rem;
+  }
+
+  .subsection .section-title h2 {
+    @apply txt-body font-bold;
+    opacity: 1; /* Reset to full opacity */
+  }
+
+  .sub-icon {
+    font-size: 0.9em;
+    opacity: 1; /* Reset to full opacity */
+    color: var(--accent-reverse);
   }
 
   .panel-card {

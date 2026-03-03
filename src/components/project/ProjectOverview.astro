@@ -5,13 +5,27 @@ interface Props {
   description: string;
   id?: string;
   order?: number;
-  total?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
 }
 
-const { description, id = "overview", order, total } = Astro.props;
+const { 
+  description, 
+  id = "overview", 
+  order, 
+  isSubsection = false,
+  parentOrder
+} = Astro.props;
 ---
 
-<ProjectSection title="Overview" icon="fa-solid fa-circle-info" id={id} order={order} total={total}>
+<ProjectSection 
+  title="Overview" 
+  icon="fa-solid fa-circle-info" 
+  id={id} 
+  order={order} 
+  isSubsection={isSubsection}
+  parentOrder={parentOrder}
+>
   <p class="main-description">{description}</p>
 </ProjectSection>
 

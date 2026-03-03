@@ -5,6 +5,7 @@ import ProjectIntro from '../components/project/ProjectIntro.astro';
 import ProjectOverview from '../components/project/ProjectOverview.astro';
 import CoreDesignGoals from '../components/project/CoreDesignGoals.astro';
 import ComingSoon from '../components/project/ComingSoon.astro';
+import TextSection from '../components/project/TextSection.astro';
 import JumpToNav from '../components/project/JumpToNav.astro';
 import { SITE_TITLE } from '../consts';
 
@@ -16,7 +17,14 @@ if (!entry) {
 
 const { data } = entry;
 
-// Map the data to the format the page components expect
+// Components Map
+const COMPONENT_MAP: Record<string, any> = {
+  Overview: ProjectOverview,
+  Goals: CoreDesignGoals,
+  ComingSoon: ComingSoon,
+  Text: TextSection,
+};
+
 const project = {
   title: data.title,
   subtitle: data.subtitle || "",
@@ -25,20 +33,15 @@ const project = {
   heroImage: data.heroImage || data.previewImage,
   logo: data.logo || "",
   description: data.summary,
-  goals: data.goals || []
 };
 
-const navSections = [
-  { id: "intro", label: "Top" },
-  { id: "overview", label: "Overview" },
-  { id: "goals", label: "Design Goals" },
-  { id: "coming-soon", label: "More Details" },
-];
+// Use the structure defined in Markdown
+const sections = data.sections || [];
 ---
 
 <BaseLayout title={`${project.title} | ${SITE_TITLE}`} description={project.description}>
   <main class="project-page">
-    <JumpToNav sections={navSections} />
+    <JumpToNav sections={sections} />
 
     <ProjectIntro 
       id="intro"
@@ -51,28 +54,37 @@ const navSections = [
     />
 
     <div class="content-wrapper">
-      <ProjectOverview 
-        id="overview" 
-        description={project.description} 
-        order={1} 
-        total={navSections.length - 1} 
-      />
+      {sections.map((section, index) => (
+        <div class="section-group">
+          {(() => {
+            const Component = COMPONENT_MAP[section.component];
+            if (!Component) return null;
 
-      {project.goals.length > 0 && (
-        <CoreDesignGoals 
-          id="goals" 
-          goals={project.goals} 
-          order={2} 
-          total={navSections.length - 1} 
-        />
-      )}
-
-      <ComingSoon 
-        id="coming-soon" 
-        projectTitle={project.title} 
-        order={3} 
-        total={navSections.length - 1} 
-      />
+            return (
+              <Component 
+                id={section.id} 
+                {...section.props} 
+                order={index + 1} 
+              />
+            );
+          })()}
+          
+          {section.subsections && section.subsections.map((sub, subIndex) => {
+            const SubComponent = COMPONENT_MAP[sub.component];
+            if (!SubComponent) return null;
+            
+            return (
+              <SubComponent 
+                id={sub.id} 
+                {...sub.props}
+                isSubsection={true}
+                parentOrder={index + 1}
+                order={subIndex + 1}
+              />
+            );
+          })}
+        </div>
+      ))}
     </div>
   </main>
 </BaseLayout>
@@ -96,10 +108,41 @@ const navSections = [
   .content-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 4rem;
     max-width: 1000px;
     margin: 0 auto;
     width: 100%;
+  }
+
+  .section-group {
+    @apply surface-panel;
+    background: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Ensure shared radius clips children */
+  }
+
+  /* Remove individual panel styles when inside a group to make them feel joined */
+  .section-group :global(.panel-card) {
+    background: transparent !important;
+    border-color: transparent !important; /* Only hide the standard border */
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Specifically preserve the pseudo-element hierarchy bar defined in the component */
+  .section-group :global(.project-section.subsection .panel-card::before) {
+    display: block !important;
+  }
+
+  /* Add back horizontal separators between sections in the group */
+  .section-group > :global(.project-section:not(:last-child)) {
+    border-bottom: var(--border);
+  }
+
+  /* Subtly differentiate subsections with the tinted background */
+  .section-group :global(.project-section.subsection) {
+    background: var(--bg-color-tinted);
   }
 
   /* Mobile Overrides */

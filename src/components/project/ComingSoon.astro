@@ -5,13 +5,27 @@ interface Props {
   projectTitle: string;
   id?: string;
   order?: number;
-  total?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
 }
 
-const { projectTitle, id = "coming-soon", order, total } = Astro.props;
+const { 
+  projectTitle, 
+  id = "coming-soon", 
+  order, 
+  isSubsection = false,
+  parentOrder 
+} = Astro.props;
 ---
 
-<ProjectSection title="More Details Coming Soon" icon="fa-solid fa-helmet-safety" id={id} order={order} total={total}>
+<ProjectSection 
+  title="More Details Coming Soon" 
+  icon="fa-solid fa-helmet-safety" 
+  id={id} 
+  order={order} 
+  isSubsection={isSubsection}
+  parentOrder={parentOrder}
+>
   <p class="coming-soon-text">
     I am currently compiling the full documentation for {projectTitle}. This section will eventually include deeper dives into the system design, mechanics, and process.
 

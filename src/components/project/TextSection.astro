@@ -1,0 +1,55 @@
+---
+import ProjectSection from './ProjectSection.astro';
+
+interface Props {
+  title: string;
+  content: string;
+  icon?: string;
+  id?: string;
+  order?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
+}
+
+const { 
+  title, 
+  content, 
+  icon = "fa-solid fa-file-lines", 
+  id, 
+  order, 
+  isSubsection = false,
+  parentOrder 
+} = Astro.props;
+---
+
+<ProjectSection 
+  title={title} 
+  icon={icon} 
+  id={id} 
+  order={order} 
+  isSubsection={isSubsection}
+  parentOrder={parentOrder}
+>
+  <div class="text-content">
+    {content.split('\n').map(line => (
+      <p>{line}</p>
+    ))}
+  </div>
+</ProjectSection>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    line-height: 1.8;
+    color: var(--text-color);
+  }
+
+  .text-content p {
+    margin: 0;
+    opacity: 0.9;
+  }
+</style>
