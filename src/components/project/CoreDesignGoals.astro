@@ -19,7 +19,7 @@ const {
 ---
 
 <ProjectSection 
-  title="Core Design Goals" 
+  title="Design Goals" 
   icon="fa-solid fa-bullseye" 
   id={id} 
   order={order} 
@@ -45,6 +45,7 @@ const {
     gap: 1rem;
     justify-content: center; /* Center rows of goals */
     max-width: 100%;
+    opacity: 70%;
   }
 
   @media (max-width: 768px) {
@@ -55,22 +56,22 @@ const {
 
   .goal-card {
     background: transparent ;
-    border: 2px solid rgba(var(--gray)); border-radius: 24px; 
-    padding: 1rem; gap: 1rem;
+    gap: 1rem;
     position: relative; overflow: hidden;
     display: flex; flex-direction: row; align-items: center; justify-content: center;
+    margin-bottom: 0.5rem;
   }
 
   .goal-number {
     font-family: "Notable", sans-serif;
-    @apply text-5xl leading-none;
+    @apply text-4xl leading-none;
     padding-bottom: 0.7rem;
-    color: rgba(var(--gray));
+    color: var(--text-color);
   }
 
   .goal-card p {
     @apply leading-normal font-medium;
-    color: rgba(var(--gray));
+    color: var(--text-color);
     margin: 0;
   }
 </style>

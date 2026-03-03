@@ -140,6 +140,11 @@ const sections = data.sections || [];
     border-bottom: var(--border);
   }
 
+  /* But if a subsection is followed by another subsection, remove the border to join them */
+  .section-group > :global(.project-section.subsection:has(+ .project-section.subsection)) {
+    border-bottom: none;
+  }
+
   /* Subtly differentiate subsections with the tinted background */
   .section-group :global(.project-section.subsection) {
     background: var(--bg-color-tinted);

@@ -23,19 +23,29 @@ summary: |
 sections:
   - id: "overview"
     label: "Overview"
-    component: "Overview"
-    props: 
-      description: "An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in."
+    component: "Text"
+    props:
+      title: "Overview"
+      icon: "fa-solid fa-circle-info"
+      content: 
+        " "
     subsections:
       - id: "problem"
-        label: "Problem Statement"
+        label: "Problem"
         component: "Text"
         props:
-          title: "Problem Statement"
-          icon: "fa-solid fa-clipboard-question"
+          title: "Problem"
+          icon: "fa-solid fa-circle-question"
           content: |
-            The world of Baraliot is a high-variety fantasy setting built for improvisational play. It focuses on the intersection of deckbuilding logic and character identity.
-            The lore is intentionally modular, allowing GMs and players to weave their own synergies into the existing framework of the game's mechanics.
+            Players seeking strong fantasy fullfillment are often forced to compromise on their wants: narrative systems that lack the mechanical foundation to build their character on, or crunchy games with linear progression that offer too few and complex tools to build with.
+      - id: "vision"
+        label: "Vision"
+        component: "Text"
+        props:
+          title: "Vision"
+          icon: "fa-solid fa-compass"
+          content: |
+            An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.
       - id: "goals"
         label: "Design Goals"
         component: "Goals"
