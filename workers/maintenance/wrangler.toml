@@ -8,11 +8,11 @@ compatibility_date = "2024-03-05"
 # To DISABLE, do the opposite.
 
 # LIVE ROUTES
-# [[routes]]
-# pattern = "lucasshiota.com/*"
-# [[routes]]
-# pattern = "*.lucasshiota.com/*"
+[[routes]]
+pattern = "lucasshiota.com/*"
+[[routes]]
+pattern = "*.lucasshiota.com/*"
 
 # DEV/PARKING ROUTE
 [[routes]]
-pattern = "dev.lucasshiota.com/*"
+# pattern = "dev.lucasshiota.com/*"
