@@ -7,6 +7,11 @@ interface Props {
   order?: number;
   isSubsection?: boolean;
   parentOrder?: number;
+  options?: {
+    excludeFromOrder?: boolean;
+    barColor?: string;
+    compact?: boolean;
+  };
 }
 
 const { 
@@ -14,7 +19,8 @@ const {
   id = "overview", 
   order, 
   isSubsection = false,
-  parentOrder
+  parentOrder,
+  options
 } = Astro.props;
 ---
 
@@ -25,6 +31,7 @@ const {
   order={order} 
   isSubsection={isSubsection}
   parentOrder={parentOrder}
+  options={options}
 >
   <p class="main-description">{description}</p>
 </ProjectSection>

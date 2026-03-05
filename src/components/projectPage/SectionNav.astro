@@ -3,14 +3,14 @@ import BackButton from "./SectionBackButton.astro";
 
 interface Props {
   sections: {
-    id: string;
-    label: string;
+    id?: string;
+    label?: string;
     options?: {
       excludeFromOrder?: boolean;
     };
     subsections?: {
-      id: string;
-      label: string;
+      id?: string;
+      label?: string;
       options?: {
         excludeFromOrder?: boolean;
       };
@@ -53,7 +53,7 @@ const { sections } = Astro.props;
         {(() => {
           let visibleIndex = 0;
           return sections.map((section) => {
-            const isExcluded = section.options?.excludeFromOrder;
+            const isExcluded = section.options?.excludeFromOrder || !section.label;
             if (isExcluded) return null;
             
             visibleIndex++;
@@ -68,19 +68,19 @@ const { sections } = Astro.props;
                       {section.label}
                     </span>
                   </a>
-                  {section.subsections && section.subsections.length > 0 && (
+                  {section.subsections && section.subsections.some(sub => !sub.options?.excludeFromOrder && sub.label) && (
                     <button class="sub-toggle" aria-expanded="true" aria-label="Toggle subsections">
                       <i class="fa-solid fa-chevron-down chevron-icon"></i>
                     </button>
                   )}
                 </div>
                 
-                {section.subsections && section.subsections.length > 0 && (
+                {section.subsections && section.subsections.some(sub => !sub.options?.excludeFromOrder && sub.label) && (
                   <ul class="sub-nav-list">
                     {(() => {
                       let visibleSubIndex = 0;
                       return section.subsections.map((sub) => {
-                        const isSubExcluded = sub.options?.excludeFromOrder;
+                        const isSubExcluded = sub.options?.excludeFromOrder || !sub.label;
                         if (isSubExcluded) return null;
                         
                         visibleSubIndex++;

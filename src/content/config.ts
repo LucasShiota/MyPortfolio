@@ -31,19 +31,23 @@ const projectsCollection = defineCollection({
     
     // Page Structure - The "Master System"
     sections: z.array(z.lazy(() => z.object({
-      id: z.string(),
-      label: z.string(),
+      id: z.string().optional(),
+      label: z.string().optional(),
       component: z.string(), 
       options: z.object({
         excludeFromOrder: z.boolean().optional(),
+        barColor: z.string().optional(),
+        compact: z.boolean().optional(),
       }).optional(),
       props: z.record(z.any()).optional(), // Any additional data for that component
       subsections: z.array(z.lazy(() => z.object({
-        id: z.string(),
-        label: z.string(),
+        id: z.string().optional(),
+        label: z.string().optional(),
         component: z.string(),
         options: z.object({
           excludeFromOrder: z.boolean().optional(),
+          barColor: z.string().optional(),
+          compact: z.boolean().optional(),
         }).optional(),
         props: z.record(z.any()).optional()
       }))).optional()

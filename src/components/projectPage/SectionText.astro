@@ -2,7 +2,7 @@
 import ProjectSection from './SectionBase.astro';
 
 interface Props {
-  title: string;
+  title?: string;
   content: string;
   icon?: string;
   id?: string;
@@ -11,13 +11,15 @@ interface Props {
   parentOrder?: number;
   options?: {
     excludeFromOrder?: boolean;
+    barColor?: string;
+    compact?: boolean;
   };
 }
 
 const { 
   title, 
   content, 
-  icon = "fa-solid fa-file-lines", 
+  icon, 
   id, 
   order, 
   isSubsection = false,

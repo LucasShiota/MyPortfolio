@@ -1,0 +1,61 @@
+@reference "../../styles/global.css";
+
+:root {
+  /* THE ULTIMATE TRUTH */
+  --section-spacing-base: 1rem;
+
+  /* MODIFIER RATIOS (Vertical Spacing) */
+  --sub-mod: 0.8;
+  --compact-mod: 0.6;
+  --sub-compact-mod: 0.4;
+
+  /* INDENT RATIO (Left Spacing) */
+  --indent-mod: 2;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-spacing-base: 0.75rem;
+    --indent-mod: 1.5; /* Slightly less indent on mobile */
+  }
+}
+
+.project-section {
+  /* Default Spacing Logic (Normal Section) */
+  --section-pad-x: var(--section-spacing-base);
+  --section-pad-y: var(--section-spacing-base);
+  
+  /* Layout */
+  --section-indent: calc(var(--section-spacing-base) * var(--indent-mod));
+}
+
+/* Modifier Logic */
+.project-section.subsection {
+  padding-left: var(--section-indent);
+  --section-pad-y: calc(var(--section-spacing-base) * var(--sub-mod));
+}
+
+.project-section.compact {
+  --section-pad-y: calc(var(--section-spacing-base) * var(--compact-mod));
+}
+
+.project-section.compact.subsection {
+  --section-pad-x: 0rem;
+  --section-pad-y: calc(var(--section-spacing-base) * var(--sub-compact-mod));
+}
+
+/* Core Component Styles */
+.panel-card {
+  @apply surface-panel;
+  padding: var(--section-pad-y) var(--section-pad-x);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: padding 0.3s ease;
+}
+
+/* Technical bridge for Tag sections (overriding their local !important) */
+.project-section.tag-section .panel-card {
+  padding-top: var(--section-pad-y) !important;
+  padding-bottom: var(--section-pad-y) !important;
+}

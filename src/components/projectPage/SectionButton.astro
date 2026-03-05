@@ -3,8 +3,12 @@ import ProjectSection from './SectionBase.astro';
 
 interface Props {
   title?: string;
-  tags: string[];
-  color?: 'green' | 'purple' | 'red';
+  buttons: {
+    text: string;
+    href: string;
+    icon?: string;
+    target?: string;
+  }[];
   icon?: string;
   id?: string;
   order?: number;
@@ -19,21 +23,14 @@ interface Props {
 
 const { 
   title, 
-  tags = [], 
-  color = 'green',
-  icon = "fa-solid fa-tags", 
+  buttons = [], 
+  icon, 
   id, 
   order, 
   isSubsection = false,
   parentOrder,
   options
 } = Astro.props;
-
-const colorClass = {
-  green: 'btn-tag-green',
-  purple: 'btn-tag-purple',
-  red: 'btn-tag-red'
-}[color];
 ---
 
 <ProjectSection 
@@ -41,14 +38,22 @@ const colorClass = {
   icon={icon} 
   id={id} 
   order={order} 
-  isSubsection={isSubsection} 
+  isSubsection={isSubsection}
   parentOrder={parentOrder}
-  class="tag-section"
   options={options}
+  class="button-section"
 >
-  <div class="tags-container">
-    {tags.map(tag => (
-      <span class={`tag btn-type-tag ${colorClass}`}>{tag}</span>
+  <div class="buttons-container">
+    {buttons.map(btn => (
+      <a 
+        href={btn.href} 
+        class="button" 
+        target={btn.target || "_blank"}
+        rel={btn.target === "_blank" ? "noopener noreferrer" : ""}
+      >
+        {btn.icon && <i class={btn.icon}></i>}
+        <span>{btn.text}</span>
+      </a>
     ))}
   </div>
 </ProjectSection>
@@ -56,8 +61,13 @@ const colorClass = {
 <style>
   @reference "../../styles/global.css";
 
+  .button {
+    @apply btn-type-main;
+    gap: 0.75rem;
+  }
+
   /* The :global wrapper ensures these styles punch through component boundaries */
-  :global(.tag-section) :global(.panel-card) {
+  :global(.button-section) :global(.panel-card) {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
@@ -67,20 +77,20 @@ const colorClass = {
     padding-bottom: var(--section-pad-bottom, var(--section-pad-y)) !important;
   }
 
-  :global(.tag-section) :global(.section-title) {
+  :global(.button-section) :global(.section-title) {
     margin-bottom: 0 !important;
     width: auto !important;
     flex-shrink: 0;
   }
 
-  :global(.tag-section) :global(.content-wrapper) {
+  :global(.button-section) :global(.content-wrapper) {
     width: auto !important;
     flex-grow: 1;
     display: flex;
     align-items: center;
   }
 
-  .tags-container {
+  .buttons-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -88,14 +98,14 @@ const colorClass = {
 
   /* Desktop/Tablet */
   @media (max-width: 1024px) {
-    :global(.tag-section) :global(.panel-card) {
+    :global(.button-section) :global(.panel-card) {
       gap: 1.5rem !important;
     }
   }
 
   /* Mobile - vertical stack */
   @media (max-width: 768px) {
-    :global(.tag-section) :global(.panel-card) {
+    :global(.button-section) :global(.panel-card) {
       flex-direction: column !important;
       align-items: flex-start !important;
       gap: 0.75rem !important;
@@ -103,17 +113,24 @@ const colorClass = {
       padding-bottom: var(--section-pad-bottom, var(--section-pad-y)) !important;
     }
 
-    :global(.tag-section) :global(.section-title) {
+    :global(.button-section) :global(.section-title) {
       width: 100% !important;
     }
 
-    :global(.tag-section) :global(.section-counter) {
+    :global(.button-section) :global(.section-counter) {
       top: 0;
       right: 0;
     }
 
-    :global(.tag-section) :global(.content-wrapper) {
+    :global(.button-section) :global(.content-wrapper) {
       width: 100% !important;
+    }
+
+    .buttons-container {
+      width: 100% !important;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
     }
   }
 </style>

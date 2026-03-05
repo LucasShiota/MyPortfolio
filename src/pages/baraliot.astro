@@ -7,6 +7,8 @@ import CoreDesignGoals from '../components/projectPage/SectionGoals.astro';
 import ComingSoon from '../components/projectPage/SectionComingSoon.astro';
 import TextSection from '../components/projectPage/SectionText.astro';
 import TagSection from '../components/projectPage/SectionTags.astro';
+import SectionTitle from '../components/projectPage/SectionTitle.astro';
+import SectionButton from '../components/projectPage/SectionButton.astro';
 import JumpToNav from '../components/projectPage/SectionNav.astro';
 import { SITE_TITLE } from '../consts';
 
@@ -25,6 +27,8 @@ const COMPONENT_MAP: Record<string, any> = {
   ComingSoon: ComingSoon,
   Text: TextSection,
   Tags: TagSection,
+  Title: SectionTitle,
+  Button: SectionButton,
 };
 
 const project = {
@@ -49,8 +53,6 @@ const sections = data.sections || [];
       id="intro"
       title={project.title}
       subtitle={project.subtitle}
-      tags={project.tags}
-      tagColors={project.tagColors}
       heroImage={project.heroImage}
       logo={project.logo}
     />
@@ -59,9 +61,10 @@ const sections = data.sections || [];
       {(() => {
         let sectionCounter = 0;
         return sections.map((section) => {
-          const isExcluded = section.options?.excludeFromOrder;
+          // Smart Exclusion: If no label is provided, it's treated as excluded from order automatically
+          const isExcluded = section.options?.excludeFromOrder || !section.label;
           if (!isExcluded) sectionCounter++;
-          const currentSectionOrder = sectionCounter;
+          const currentSectionOrder = isExcluded ? 0 : sectionCounter;
 
           return (
             <div class="section-group">
@@ -71,7 +74,7 @@ const sections = data.sections || [];
 
                 return (
                   <Component 
-                    id={section.id} 
+                    id={section.id || `${section.component}-${sectionCounter}`} 
                     {...section.props} 
                     order={currentSectionOrder} 
                     options={section.options}
@@ -79,27 +82,33 @@ const sections = data.sections || [];
                 );
               })()}
               
-              {(() => {
-                let subCounter = 0;
-                return section.subsections && section.subsections.map((sub) => {
-                  const SubComponent = COMPONENT_MAP[sub.component];
-                  if (!SubComponent) return null;
-                  
-                  const isSubExcluded = sub.options?.excludeFromOrder;
-                  if (!isSubExcluded) subCounter++;
+              {section.subsections && section.subsections.length > 0 && (
+                <div class="subsections-group">
+                  {(() => {
+                    let subCounter = 0;
+                    return section.subsections.map((sub) => {
+                      const SubComponent = COMPONENT_MAP[sub.component];
+                      if (!SubComponent) return null;
+                      
+                      // Smart Exclusion for subsections
+                      const isSubExcluded = sub.options?.excludeFromOrder || !sub.label;
+                      if (!isSubExcluded) subCounter++;
+                      const currentSubOrder = isSubExcluded ? 0 : subCounter;
 
-                  return (
-                    <SubComponent 
-                      id={sub.id} 
-                      {...sub.props}
-                      isSubsection={true}
-                      parentOrder={currentSectionOrder}
-                      order={subCounter}
-                      options={sub.options}
-                    />
-                  );
-                });
-              })()}
+                      return (
+                        <SubComponent 
+                          id={sub.id || `${sub.component}-${subCounter}`} 
+                          {...sub.props}
+                          isSubsection={true}
+                          parentOrder={currentSectionOrder}
+                          order={currentSubOrder}
+                          options={{...sub.options, excludeFromOrder: isSubExcluded }}
+                        />
+                      );
+                    });
+                  })()}
+                </div>
+              )}
             </div>
           );
         });
@@ -120,14 +129,14 @@ const sections = data.sections || [];
     min-height: calc(100vh - var(--header-height));
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 2rem;
     color: var(--text-color);
   }
 
   .content-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 2rem;
     max-width: 1000px;
     margin: 0 auto;
     width: 100%;
@@ -154,19 +163,22 @@ const sections = data.sections || [];
     display: block !important;
   }
 
+  /* Differentiate subsections group with a tinted background */
+  .subsections-group {
+    background: var(--bg-color-tinted);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+
   /* Add back horizontal separators between sections in the group */
   .section-group > :global(.project-section:not(:last-child)) {
     border-bottom: var(--border);
   }
 
-  /* But if a subsection is followed by another subsection, remove the border to join them */
-  .section-group > :global(.project-section.subsection:has(+ .project-section.subsection)) {
-    border-bottom: none;
-  }
-
-  /* Subtly differentiate subsections with the tinted background */
-  .section-group :global(.project-section.subsection) {
-    background: var(--bg-color-tinted);
+  /* Specific: If there are subsections, make sure the main section above it has a border */
+  .section-group > :global(.project-section):has(+ .subsections-group) {
+    border-bottom: var(--border);
   }
 
   /* Mobile Overrides */

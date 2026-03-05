@@ -1,0 +1,32 @@
+---
+import SectionBase from './SectionBase.astro';
+
+interface Props {
+  title: string;
+  icon?: string;
+  id?: string;
+  order?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
+  options?: {
+    excludeFromOrder?: boolean;
+    barColor?: string;
+    compact?: boolean;
+  };
+}
+
+const props = Astro.props;
+---
+
+<SectionBase {...props} class="section-title-only" />
+
+<style>
+  /* Use :global to override SectionBase styles when this class is present */
+  :global(.section-title-only) :global(.section-title) {
+    margin-bottom: 0 !important;
+  }
+
+  :global(.section-title-only) :global(.content-wrapper) {
+    display: none;
+  }
+</style>

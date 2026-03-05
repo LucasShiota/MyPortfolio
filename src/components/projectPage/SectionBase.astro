@@ -1,6 +1,8 @@
 ---
+import './SectionSpacing.css';
+
 interface Props {
-  title: string;
+  title?: string;
   icon?: string;
   id?: string;
   order?: number;
@@ -9,6 +11,8 @@ interface Props {
   class?: string;
   options?: {
     excludeFromOrder?: boolean;
+    barColor?: string;
+    compact?: boolean;
   };
 }
 
@@ -23,22 +27,40 @@ const {
   options = {}
 } = Astro.props;
 
-const shouldShowCounter = order && !options.excludeFromOrder;
+const shouldShowCounter = !!(order && !options.excludeFromOrder);
+
+// Inline style for custom variables
+const sectionStyles = {
+  ...(options.barColor && { '--section-bar-color': options.barColor })
+};
 ---
 
-<section class={`project-section ${isSubsection ? 'subsection' : ''} ${className || ''}`} id={id}>
+<section 
+  class:list={[
+    'project-section',
+    { subsection: isSubsection },
+    { excluded: options.excludeFromOrder },
+    { compact: options.compact },
+    className
+  ]}
+  id={id}
+  style={sectionStyles}
+  data-debug-compact={options.compact}
+>
   <div class="panel-card">
-    <div class="section-title">
-      <div class="title-left">
-        {icon && <i class={`${icon} title-icon ${isSubsection ? 'sub-icon' : ''}`}></i>}
-        <h2>{title}</h2>
-        {shouldShowCounter && (
-          <div class="section-counter">
-            {isSubsection ? `${parentOrder}.${order}` : `${order}`}
-          </div>
-        )}
+    {(title || icon || shouldShowCounter) && (
+      <div class="section-title">
+        <div class="title-left">
+          {icon && <i class={`${icon} title-icon ${isSubsection ? 'sub-icon' : ''}`}></i>}
+          {title && <h2>{title}</h2>}
+          {shouldShowCounter && (
+            <div class="section-counter">
+              {isSubsection ? `${parentOrder}.${order}` : `${order}`}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    )}
     <div class="content-wrapper">
       <slot />
     </div>
@@ -47,19 +69,12 @@ const shouldShowCounter = order && !options.excludeFromOrder;
 
 <style>
   @reference "../../styles/global.css";
-
   .project-section {
     scroll-margin-top: calc(var(--header-height) + 2.5rem);
     width: 100%;
   }
 
-  .project-section.subsection {
-    padding-left: 2rem;
-  }
-
   .project-section.subsection .panel-card {
-    padding: 1.5rem;
-    padding-bottom: 0.5rem;
     position: relative;
   }
 
@@ -71,7 +86,7 @@ const shouldShowCounter = order && !options.excludeFromOrder;
     top: 5%; /* Start at 5% */
     height: 90%; /* End at 95% (total 90% height) */
     width: 4px;
-    background: color-mix(in srgb, var(--accent-reverse) 40%, transparent); /* Lighter accent */
+    background: var(--section-bar-color, color-mix(in srgb, var(--accent-reverse) 40%, transparent)); /* Lighter accent */
     border-radius: 99px;
   }
 
@@ -91,9 +106,6 @@ const shouldShowCounter = order && !options.excludeFromOrder;
   }
 
   .panel-card {
-    @apply surface-panel;
-    padding: 2rem; 
-    display: flex; flex-direction: column;
     position: relative;
   }
 
@@ -135,10 +147,6 @@ const shouldShowCounter = order && !options.excludeFromOrder;
   }
 
   @media (max-width: 768px) {
-    .panel-card {
-      padding: 1.5rem;
-    }
-    
     .section-title {
       align-items: center;
     }
