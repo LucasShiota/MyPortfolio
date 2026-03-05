@@ -129,10 +129,10 @@ const HTML_CONTENT = `
 
         // --- 2. THE PHYSICS ENGINE ---
         loadMatter(() => {
-            const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
+            console.log("Initializing Physics Engine...");
+            const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
 
             const engine = Engine.create();
-            const world = engine.world;
             const canvas = document.getElementById('physics-canvas');
 
             const render = Render.create({
@@ -151,30 +151,34 @@ const HTML_CONTENT = `
             Runner.run(Runner.create(), engine);
 
             // Boundaries
-            const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, { isStatic: true, render: { visible: false } });
-            const ceiling = Bodies.rectangle(window.innerWidth / 2, -50, window.innerWidth, 100, { isStatic: true, render: { visible: false } });
-            const leftWall = Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, { isStatic: true, render: { visible: false } });
-            const rightWall = Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, { isStatic: true, render: { visible: false } });
-            Composite.add(world, [ground, ceiling, leftWall, rightWall]);
+            const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, { isStatic: true });
+            const leftWall = Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, { isStatic: true });
+            const rightWall = Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, { isStatic: true });
+            Composite.add(engine.world, [ground, leftWall, rightWall]);
 
             // Shapes
-            const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF', '#333333'];
-            const createShape = () => {
+            const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF'];
+            
+            const dropShape = (i) => {
                 const x = Math.random() * window.innerWidth;
-                const size = Math.random() * 30 + 15;
-                const type = Math.floor(Math.random() * 4);
-                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 40 + 20; // Bigger shapes
+                const sides = Math.floor(Math.random() * 5) + 3;
                 
-                let body;
-                const opt = { render: { fillStyle: color, opacity: 0.6 } };
-                if(type === 0) body = Bodies.circle(x, -100, size/2, opt);
-                else if(type === 1) body = Bodies.rectangle(x, -100, size, size, opt);
-                else body = Bodies.polygon(x, -100, type + 2, size, opt);
-                return body;
+                const shape = Bodies.polygon(x, -100, sides, size, { 
+                    restitution: 0.6,
+                    friction: 0.1,
+                    render: { 
+                        fillStyle: colors[Math.floor(Math.random() * colors.length)],
+                        opacity: 1.0 // SOLID COLORS - Much easier to see
+                    }
+                });
+
+                Composite.add(engine.world, shape);
+                console.log("Dropped shape #" + (i+1));
             };
 
             for(let i=0; i<40; i++) {
-                setTimeout(() => Composite.add(world, createShape()), i * 150);
+                setTimeout(() => dropShape(i), i * 150);
             }
 
             // Mouse
@@ -183,7 +187,7 @@ const HTML_CONTENT = `
                 mouse: mouse,
                 constraint: { stiffness: 0.2, render: { visible: false } }
             });
-            Composite.add(world, mouseConstraint);
+            Composite.add(engine.world, mouseConstraint);
 
             window.addEventListener('resize', () => {
                 render.canvas.width = window.innerWidth;
