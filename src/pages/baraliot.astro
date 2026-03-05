@@ -3,7 +3,7 @@ import { getEntry } from 'astro:content';
 import BaseLayout from '../components/layouts/BaseLayout.astro';
 import ProjectIntro from '../components/projectPage/SectionIntro.astro';
 import ProjectOverview from '../components/projectPage/SectionOverview.astro';
-import CoreDesignGoals from '../components/projectPage/SectionGoals.astro';
+import SectionCardList from '../components/projectPage/SectionCardList.astro';
 import ComingSoon from '../components/projectPage/SectionComingSoon.astro';
 import TextSection from '../components/projectPage/SectionText.astro';
 import TagSection from '../components/projectPage/SectionTags.astro';
@@ -23,7 +23,7 @@ const { data } = entry;
 // Components Map
 const COMPONENT_MAP: Record<string, any> = {
   Overview: ProjectOverview,
-  Goals: CoreDesignGoals,
+  CardList: SectionCardList,
   ComingSoon: ComingSoon,
   Text: TextSection,
   Tags: TagSection,

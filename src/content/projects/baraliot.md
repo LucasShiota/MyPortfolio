@@ -36,15 +36,15 @@ sections:
           title: "Links"
           icon: "fa-solid fa-link"
           buttons: [
-            { text: "Product Page", href: "https://example.com", icon: "fa-solid fa-arrow-up-right-from-square" },
-            { text: "GDD PDF", href: "https://example.com", icon: "fa-solid fa-arrow-up-right-from-square" }
+            { text: "Product Page", href: "projects.baraliot.productPage.url", icon: "fa-solid fa-arrow-up-right-from-square" },
+            { text: "GDD PDF", href: "projects.baraliot.gdd.url", icon: "fa-solid fa-arrow-up-right-from-square" }
           ]
 
   - id: "core"
-    label: "Core"
+    label: "Core Design"
     component: "Title"
     props:
-      title: "Core"
+      title: "Core Design"
       icon: "fa-solid fa-star"
     subsections:
       - component: "Text"
@@ -59,23 +59,26 @@ sections:
           icon: "fa-solid fa-compass"
           content: |
             An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.
-      - component: "Goals"
+      - component: "CardList"
         props: 
-          goals:
+          title: "Goals"
+          icon: "fa-solid fa-bullseye"
+          items:
             - "Use the gameplay potential of card and deckbuilding mechanics to their fullest"
             - "Evoke a sense of satisfaction in players realizing their character fantasy"
             - "Streamline rules and rulebook to lower the barrier of entry and the cost of play"
             - "Excite players with many choices and freedom without overwhelming them"
             - "A high-density, low-complexity approach to the overarching rules package"
 
-  - id: "coming-soon"
-    label: "W.I.P."
+  - id: "work-in-progress"
+    label: "Work In Progress"
     component: "Title"
     props:
       title: "Work in Progress"
       icon: "fa-solid fa-helmet-safety"
     subsections:
       - component: "Text"
+        options: { barColor: "transparent"}
         props:
           content: |
             An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.

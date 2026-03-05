@@ -16,6 +16,7 @@ export interface LinkInfo {
   url: string;
   label: string;
   title: string;
+  [key: string]: any; // Allow nested properties for specific project links
 }
 
 interface LinksConfig {
@@ -76,7 +77,17 @@ export const LINKS: LinksConfig = {
     baraliot: {
       url: "/baraliot",
       label: "View Baraliot Project",
-      title: "Baraliot"
+      title: "Baraliot",
+      productPage: {
+        url: "https://baraliot.com/demo",
+        label: "View Product Page",
+        title: "Product Page"
+      },
+      gdd: {
+        url: "https://docs.google.com/baraliot-gdd",
+        label: "Read GDD PDF",
+        title: "GDD PDF"
+      }
     },
     tf2: {
       url: "/projects/tf2map",

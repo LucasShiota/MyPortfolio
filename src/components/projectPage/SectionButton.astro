@@ -31,6 +31,29 @@ const {
   parentOrder,
   options
 } = Astro.props;
+
+import { LINKS } from '../../config/links';
+
+/**
+ * Resolves a link string. 
+ * If it contains dots (e.g., 'projects.baraliot.url'), it attempts to resolve it from LINKS.
+ * Otherwise, it returns the string as-is.
+ */
+function resolveLink(href: string): string {
+  if (!href.includes('.')) return href;
+  
+  try {
+    const parts = href.split('.');
+    let current: any = LINKS;
+    for (const part of parts) {
+      if (current[part] === undefined) return href;
+      current = current[part];
+    }
+    return typeof current === 'string' ? current : href;
+  } catch (e) {
+    return href;
+  }
+}
 ---
 
 <ProjectSection 
@@ -46,7 +69,7 @@ const {
   <div class="buttons-container">
     {buttons.map(btn => (
       <a 
-        href={btn.href} 
+        href={resolveLink(btn.href)} 
         class="button" 
         target={btn.target || "_blank"}
         rel={btn.target === "_blank" ? "noopener noreferrer" : ""}

@@ -2,7 +2,9 @@
 import ProjectSection from './SectionBase.astro';
 
 interface Props {
-  goals: string[];
+  items: string[];
+  title?: string;
+  icon?: string;
   id?: string;
   order?: number;
   isSubsection?: boolean;
@@ -15,8 +17,10 @@ interface Props {
 }
 
 const { 
-  goals, 
-  id = "goals", 
+  items = [], 
+  title,
+  icon,
+  id, 
   order, 
   isSubsection = false,
   parentOrder,
@@ -25,19 +29,19 @@ const {
 ---
 
 <ProjectSection 
-  title="Design Goals" 
-  icon="fa-solid fa-bullseye" 
+  title={title} 
+  icon={icon} 
   id={id} 
   order={order} 
   isSubsection={isSubsection}
   parentOrder={parentOrder}
   options={options}
 >
-  <div class="goals-grid">
-    {goals.map((goal, index) => (
-      <div class="goal-card" style={`--index: ${index}`}>
-        <div class="goal-number">{index + 1}</div>
-        <p>{goal}</p>
+  <div class="card-list-grid">
+    {items.map((item, index) => (
+      <div class="list-card" style={`--index: ${index}`}>
+        <div class="card-number">{index + 1}</div>
+        <p>{item}</p>
       </div>
     ))}
   </div>
@@ -46,37 +50,44 @@ const {
 <style>
   @reference "../../styles/global.css";
 
-  .goals-grid {
+  .card-list-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem; margin-bottom: 1rem;
-    justify-content: center; /* Center rows of goals */
+    gap: 0.75rem; 
+    margin-bottom: 1rem;
+    justify-content: center;
     max-width: 100%;
     opacity: 70%;
   }
 
   @media (max-width: 768px) {
-    .goals-grid {
+    .card-list-grid {
       grid-template-columns: 1fr;
     }
   }
 
-  .goal-card {
-    background: transparent ;
-    border: 2px solid var(--text-color); border-radius: 25px;
-    gap: 1rem; padding: 0.75rem;
-    position: relative; overflow: hidden;
-    display: flex; flex-direction: row; align-items: center; justify-content: center;
+  .list-card {
+    background: transparent;
+    border: 2px solid var(--text-color); 
+    border-radius: 25px;
+    gap: 1rem; 
+    padding: 0.75rem;
+    position: relative; 
+    overflow: hidden;
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: center;
   }
 
-  .goal-number {
+  .card-number {
     font-family: "Notable", sans-serif;
     @apply text-4xl leading-none;
     padding-bottom: 0.7rem;
     color: var(--text-color);
   }
 
-  .goal-card p {
+  .list-card p {
     @apply leading-normal font-medium;
     color: var(--text-color);
     margin: 0;

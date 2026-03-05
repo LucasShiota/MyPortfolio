@@ -58,9 +58,9 @@ Displays a set of chips/pills.
 A metadata block for project info.
 *   **Props**: `title`, `icon`.
 
-### 5. `Goals`
-A grid of high-level project objectives.
-*   **Props**: `title`, `icon`, `items: ["Goal 1", "Goal 2"]`.
+### 5. `CardList`
+A grid of numbered cards, often used for objectives or lists.
+*   **Props**: `title` (optional), `icon` (optional), `items: ["First item", "Second item"]`.
 
 ### 6. `Button`
 Displays one or more CTA buttons.
