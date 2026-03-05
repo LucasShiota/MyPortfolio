@@ -12,7 +12,7 @@ compatibility_date = "2024-03-05"
 # To DISABLE maintenance mode: Comment the first "routes" and uncomment the second.
 
 # -- ON (Maintenance mode) --
-routes = ["lucasshiota.com/*", "*.lucasshiota.com/*"]
+# routes = ["lucasshiota.com/*", "*.lucasshiota.com/*"]
 
 # -- OFF (Live site) --
-# routes = ["dev.lucasshiota.com/*"]
+routes = ["dev.lucasshiota.com/*"]
