@@ -7,13 +7,12 @@ compatibility_date = "2024-03-05"
 # To ENABLE maintenance mode, uncomment the live routes and comment the dev route.
 # To DISABLE, do the opposite.
 
-# LIVE ROUTES
-[[routes]]
-pattern = "lucasshiota.com/*"
+# 🚦 TOGGLE SWITCH
+# To ENABLE maintenance mode: Uncomment the first "routes" and comment the second.
+# To DISABLE maintenance mode: Comment the first "routes" and uncomment the second.
 
-[[routes]]
-pattern = "*.lucasshiota.com/*"
+# -- ON (Maintenance mode) --
+routes = ["lucasshiota.com/*", "*.lucasshiota.com/*"]
 
-# DEV/PARKING ROUTE (Uncomment below and comment above to disable maintenance)
-# [[routes]]
-# pattern = "dev.lucasshiota.com/*"
+# -- OFF (Live site) --
+# routes = ["dev.lucasshiota.com/*"]
