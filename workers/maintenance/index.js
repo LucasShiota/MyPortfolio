@@ -20,14 +20,13 @@ const HTML_CONTENT = `
     <title>${MAINTENANCE_CONFIG.title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
     <style>
         :root {
             --accent: ${MAINTENANCE_CONFIG.accentColor};
             --blue: ${MAINTENANCE_CONFIG.secondaryColor};
             --bg: #070707;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
         }
 
         body {
@@ -36,132 +35,178 @@ const HTML_CONTENT = `
             background-color: var(--bg);
             color: white;
             font-family: 'Inter', sans-serif;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
         }
 
-        .ambient-bg {
+        #physics-canvas {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(245, 163, 0, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(0, 98, 245, 0.1) 0%, transparent 40%);
-            filter: blur(80px);
-            animation: pulse 10s ease-in-out infinite alternate;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
         }
 
-        @keyframes pulse {
-            from { opacity: 0.5; transform: scale(1); }
-            to { opacity: 0.8; transform: scale(1.1); }
-        }
-
-        .container {
-            max-width: 500px;
-            padding: 3rem;
-            text-align: center;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        .minimal-ui {
             position: relative;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none; /* Let clicks pass through to physics if needed, or keep for clarity */
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 400px;
         }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(245, 163, 0, 0.1);
-            border: 1px solid rgba(245, 163, 0, 0.2);
-            border-radius: 99px;
-            color: var(--accent);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 2rem;
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent);
-            animation: blink 1.5s infinite;
-        }
-
-        @keyframes blink { 50% { opacity: 0.3; } }
 
         h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: 2.5rem;
-            margin: 0 0 1rem 0;
-            background: linear-gradient(135deg, #fff 0%, #888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.02em;
         }
 
         p {
-            color: #999;
-            line-height: 1.6;
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
+            color: #777;
+            font-size: 0.95rem;
+            margin: 0 0 1.5rem 0;
+            line-height: 1.5;
         }
 
-        .progress-container {
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .progress-bar {
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(to right, var(--blue), var(--accent));
-            border-radius: 2px;
-            animation: slide 2s ease-in-out infinite;
-        }
-
-        @keyframes slide {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(250%); }
-        }
-
-        .footer-link {
-            color: #555;
-            text-decoration: none;
+        .contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
             font-size: 0.8rem;
-            transition: color 0.3s;
+            color: #555;
+            pointer-events: auto;
         }
-        
-        .footer-link:hover { color: var(--accent); }
+
+        .contacts a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contacts a:hover { color: var(--accent); }
+
+        .discord-tag {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
     </style>
 </head>
 <body>
-    <div class="ambient-bg"></div>
-    <div class="container">
-        <div class="status-badge">
-            <div class="dot"></div>
-            System Update
-        </div>
-        <h1>${MAINTENANCE_CONFIG.heading}</h1>
-        <p>${MAINTENANCE_CONFIG.message}</p>
-        
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
+    <canvas id="physics-canvas"></canvas>
 
-        <a href="mailto:hi@lucasshiota.com" class="footer-link">Need to reach me? hi@lucasshiota.com</a>
+    <div class="minimal-ui">
+        <h1>Updating...</h1>
+        <p>Currently refining projects and polishing the code. Back shortly.</p>
+        <div class="contacts">
+            <a href="mailto:hi@lucasshiota.com">hi@lucasshiota.com</a>
+            <span class="discord-tag">Discord: @lucas_shiota</span>
+        </div>
     </div>
+
+    <script>
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events, Common } = Matter;
+
+        const engine = Engine.create();
+        const world = engine.world;
+        const canvas = document.getElementById('physics-canvas');
+
+        const render = Render.create({
+            canvas: canvas,
+            engine: engine,
+            options: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                wireframes: false,
+                background: 'transparent',
+                pixelRatio: window.devicePixelRatio
+            }
+        });
+
+        Render.run(render);
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        // Ground, Walls and Ceiling
+        const wallOptions = { isStatic: true, render: { visible: false } };
+        const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, wallOptions);
+        const ceiling = Bodies.rectangle(window.innerWidth / 2, -50, window.innerWidth, 100, wallOptions);
+        const leftWall = Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, wallOptions);
+        const rightWall = Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, wallOptions);
+        
+        Composite.add(world, [ground, ceiling, leftWall, rightWall]);
+
+        // Helper to get random palette color
+        const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF', '#333333'];
+        
+        const createShape = () => {
+            const x = Math.random() * window.innerWidth;
+            const y = -100;
+            const size = Math.random() * 30 + 15;
+            const shapeType = Math.floor(Math.random() * 4);
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            let body;
+            const renderOptions = {
+                fillStyle: color,
+                strokeStyle: 'rgba(255,255,255,0.1)',
+                lineWidth: 1,
+                opacity: 0.6
+            };
+
+            switch(shapeType) {
+                case 0: body = Bodies.circle(x, y, size/2, { render: renderOptions, friction: 0.1, restitution: 0.6 }); break;
+                case 1: body = Bodies.rectangle(x, y, size, size, { render: renderOptions, chamfer: { radius: 5 } }); break;
+                case 2: body = Bodies.polygon(x, y, 3, size/1.5, { render: renderOptions }); break;
+                case 3: body = Bodies.polygon(x, y, 6, size/1.5, { render: renderOptions }); break;
+            }
+            
+            return body;
+        };
+
+        // Initial drop
+        for(let i=0; i<30; i++) {
+            setTimeout(() => Composite.add(world, createShape()), i * 150);
+        }
+
+        // Mouse interactions
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: { visible: false }
+            }
+        });
+
+        Composite.add(world, mouseConstraint);
+        render.mouse = mouse;
+
+        // "Vortex" effect on drag - unique physics behavior
+        Events.on(mouseConstraint, 'mousemove', function(event) {
+            const mousePosition = event.mouse.position;
+            if (mouseConstraint.body) {
+                // When dragging, give the body a little "vibe" or spin
+                Matter.Body.setAngularVelocity(mouseConstraint.body, (Math.random() - 0.5) * 0.2);
+            }
+        });
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            render.canvas.width = window.innerWidth;
+            render.canvas.height = window.innerHeight;
+            Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight + 50 });
+            Matter.Body.setPosition(rightWall, { x: window.innerWidth + 50, y: window.innerHeight / 2 });
+        });
+    </script>
 </body>
 </html>
 `;

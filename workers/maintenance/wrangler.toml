@@ -10,7 +10,7 @@ compatibility_date = "2024-03-05"
 # 🚦 ONE-CLICK SWITCH
 # Set to "true" to lock the site. Set to "false" to be LIVE.
 [vars]
-MAINTENANCE_MODE = "false"
+MAINTENANCE_MODE = "true"
 
 # Always keep these the same. No more manual deleting!
 routes = [
