@@ -5,8 +5,8 @@ compatibility_date = "2024-03-05"
 # To toggle maintenance mode via code:
 # Switch the patterns below to fake subdomains (e.g., dev.lucasshiota.com) to DISABLE.
 # Use the patterns below to ENABLE globally.
+#   "*.lucasshiota.com/*"
 
 routes = [
-  "fakelucasshiota.com/*",
-  "*fake.lucasshiota.com/*"
+  "dev.lucasshiota.com/*",
 ]
