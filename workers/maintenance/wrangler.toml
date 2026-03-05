@@ -6,8 +6,7 @@ compatibility_date = "2024-03-05"
 # Switch the patterns below to fake subdomains (e.g., dev.lucasshiota.com) to DISABLE.
 # Use the patterns below to ENABLE globally.
 
-[[routes]]
-pattern = "lucasshiota.com/*"
-
-[[routes]]
-pattern = "*.lucasshiota.com/*"
+routes = [
+  "lucasshiota.com/*",
+  "*.lucasshiota.com/*"
+]
