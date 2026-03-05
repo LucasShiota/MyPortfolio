@@ -7,6 +7,6 @@ compatibility_date = "2024-03-05"
 # Use the patterns below to ENABLE globally.
 
 routes = [
-  "dev.lucasshiota.com/*",
-  "*.lucasshiota.com/*"
+  "fakelucasshiota.com/*",
+  "*fake.lucasshiota.com/*"
 ]
