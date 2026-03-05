@@ -1,12 +1,13 @@
 ---
 import { getEntry } from 'astro:content';
 import BaseLayout from '../components/layouts/BaseLayout.astro';
-import ProjectIntro from '../components/project/ProjectIntro.astro';
-import ProjectOverview from '../components/project/ProjectOverview.astro';
-import CoreDesignGoals from '../components/project/CoreDesignGoals.astro';
-import ComingSoon from '../components/project/ComingSoon.astro';
-import TextSection from '../components/project/TextSection.astro';
-import JumpToNav from '../components/project/JumpToNav.astro';
+import ProjectIntro from '../components/projectPage/SectionIntro.astro';
+import ProjectOverview from '../components/projectPage/SectionOverview.astro';
+import CoreDesignGoals from '../components/projectPage/SectionGoals.astro';
+import ComingSoon from '../components/projectPage/SectionComingSoon.astro';
+import TextSection from '../components/projectPage/SectionText.astro';
+import TagSection from '../components/projectPage/SectionTags.astro';
+import JumpToNav from '../components/projectPage/SectionNav.astro';
 import { SITE_TITLE } from '../consts';
 
 // Fetch the project data from Content collections
@@ -23,6 +24,7 @@ const COMPONENT_MAP: Record<string, any> = {
   Goals: CoreDesignGoals,
   ComingSoon: ComingSoon,
   Text: TextSection,
+  Tags: TagSection,
 };
 
 const project = {
@@ -54,37 +56,54 @@ const sections = data.sections || [];
     />
 
     <div class="content-wrapper">
-      {sections.map((section, index) => (
-        <div class="section-group">
-          {(() => {
-            const Component = COMPONENT_MAP[section.component];
-            if (!Component) return null;
+      {(() => {
+        let sectionCounter = 0;
+        return sections.map((section) => {
+          const isExcluded = section.options?.excludeFromOrder;
+          if (!isExcluded) sectionCounter++;
+          const currentSectionOrder = sectionCounter;
 
-            return (
-              <Component 
-                id={section.id} 
-                {...section.props} 
-                order={index + 1} 
-              />
-            );
-          })()}
-          
-          {section.subsections && section.subsections.map((sub, subIndex) => {
-            const SubComponent = COMPONENT_MAP[sub.component];
-            if (!SubComponent) return null;
-            
-            return (
-              <SubComponent 
-                id={sub.id} 
-                {...sub.props}
-                isSubsection={true}
-                parentOrder={index + 1}
-                order={subIndex + 1}
-              />
-            );
-          })}
-        </div>
-      ))}
+          return (
+            <div class="section-group">
+              {(() => {
+                const Component = COMPONENT_MAP[section.component];
+                if (!Component) return null;
+
+                return (
+                  <Component 
+                    id={section.id} 
+                    {...section.props} 
+                    order={currentSectionOrder} 
+                    options={section.options}
+                  />
+                );
+              })()}
+              
+              {(() => {
+                let subCounter = 0;
+                return section.subsections && section.subsections.map((sub) => {
+                  const SubComponent = COMPONENT_MAP[sub.component];
+                  if (!SubComponent) return null;
+                  
+                  const isSubExcluded = sub.options?.excludeFromOrder;
+                  if (!isSubExcluded) subCounter++;
+
+                  return (
+                    <SubComponent 
+                      id={sub.id} 
+                      {...sub.props}
+                      isSubsection={true}
+                      parentOrder={currentSectionOrder}
+                      order={subCounter}
+                      options={sub.options}
+                    />
+                  );
+                });
+              })()}
+            </div>
+          );
+        });
+      })()}
     </div>
   </main>
 </BaseLayout>

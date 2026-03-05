@@ -1,5 +1,5 @@
 ---
-import ProjectSection from './ProjectSection.astro';
+import ProjectSection from './SectionBase.astro';
 
 interface Props {
   title: string;
@@ -9,6 +9,9 @@ interface Props {
   order?: number;
   isSubsection?: boolean;
   parentOrder?: number;
+  options?: {
+    excludeFromOrder?: boolean;
+  };
 }
 
 const { 
@@ -18,7 +21,8 @@ const {
   id, 
   order, 
   isSubsection = false,
-  parentOrder 
+  parentOrder,
+  options
 } = Astro.props;
 ---
 
@@ -29,6 +33,7 @@ const {
   order={order} 
   isSubsection={isSubsection}
   parentOrder={parentOrder}
+  options={options}
 >
   <div class="text-content">
     {content.split('\n').map(line => (

@@ -6,6 +6,10 @@ interface Props {
   order?: number;
   isSubsection?: boolean;
   parentOrder?: number;
+  class?: string;
+  options?: {
+    excludeFromOrder?: boolean;
+  };
 }
 
 const { 
@@ -14,22 +18,26 @@ const {
   id, 
   order, 
   isSubsection = false, 
-  parentOrder 
+  parentOrder,
+  class: className,
+  options = {}
 } = Astro.props;
+
+const shouldShowCounter = order && !options.excludeFromOrder;
 ---
 
-<section class={`project-section ${isSubsection ? 'subsection' : ''}`} id={id}>
+<section class={`project-section ${isSubsection ? 'subsection' : ''} ${className || ''}`} id={id}>
   <div class="panel-card">
     <div class="section-title">
       <div class="title-left">
         {icon && <i class={`${icon} title-icon ${isSubsection ? 'sub-icon' : ''}`}></i>}
         <h2>{title}</h2>
+        {shouldShowCounter && (
+          <div class="section-counter">
+            {isSubsection ? `${parentOrder}.${order}` : `${order}`}
+          </div>
+        )}
       </div>
-      {order && (
-        <div class="section-counter">
-          {isSubsection ? `${parentOrder}.${order}` : `${order}`}
-        </div>
-      )}
     </div>
     <div class="content-wrapper">
       <slot />
@@ -117,9 +125,9 @@ const {
     @apply font-mono txt-body-sm font-bold;
     opacity: 0.4;
     letter-spacing: 0.1em;
-    position: absolute;
-    top: 0;
-    right: 0;
+    margin-left: 0.25rem;
+    display: flex;
+    align-items: center;
   }
 
   .content-wrapper {

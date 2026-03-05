@@ -1,0 +1,118 @@
+---
+import ProjectSection from './SectionBase.astro';
+
+interface Props {
+  title: string;
+  tags: string[];
+  color?: 'green' | 'purple' | 'red';
+  icon?: string;
+  id?: string;
+  order?: number;
+  isSubsection?: boolean;
+  parentOrder?: number;
+  options?: {
+    excludeFromOrder?: boolean;
+  };
+}
+
+const { 
+  title, 
+  tags = [], 
+  color = 'green',
+  icon = "fa-solid fa-tags", 
+  id, 
+  order, 
+  isSubsection = false,
+  parentOrder,
+  options
+} = Astro.props;
+
+const colorClass = {
+  green: 'btn-tag-green',
+  purple: 'btn-tag-purple',
+  red: 'btn-tag-red'
+}[color];
+---
+
+<ProjectSection 
+  title={title} 
+  icon={icon} 
+  id={id} 
+  order={order} 
+  isSubsection={isSubsection} 
+  parentOrder={parentOrder}
+  class="tag-section"
+  options={options}
+>
+  <div class="tags-container">
+    {tags.map(tag => (
+      <span class={`tag btn-type-tag ${colorClass}`}>{tag}</span>
+    ))}
+  </div>
+</ProjectSection>
+
+<style>
+  @reference "../../styles/global.css";
+
+  /* The :global wrapper ensures these styles punch through component boundaries */
+  :global(.tag-section) :global(.panel-card) {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 3rem !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+    min-height: 4.5rem;
+  }
+
+  :global(.tag-section) :global(.section-title) {
+    margin-bottom: 0 !important;
+    width: auto !important;
+    flex-shrink: 0;
+  }
+
+  :global(.tag-section) :global(.content-wrapper) {
+    width: auto !important;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Desktop/Tablet */
+  @media (max-width: 1024px) {
+    :global(.tag-section) :global(.panel-card) {
+      gap: 1.5rem !important;
+    }
+  }
+
+  /* Mobile - vertical stack */
+  @media (max-width: 768px) {
+    :global(.tag-section) :global(.panel-card) {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.75rem !important;
+      padding-top: 1.5rem !important;
+      padding-bottom: 1.5rem !important;
+    }
+
+    :global(.tag-section) :global(.section-title) {
+      width: 100% !important;
+    }
+
+    :global(.tag-section) :global(.section-counter) {
+      top: 0;
+      right: 0;
+    }
+
+    :global(.tag-section) :global(.content-wrapper) {
+      width: 100% !important;
+    }
+  }
+</style>

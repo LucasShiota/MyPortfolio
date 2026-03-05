@@ -1,13 +1,19 @@
 ---
-import BackButton from "./BackButton.astro";
+import BackButton from "./SectionBackButton.astro";
 
 interface Props {
   sections: {
     id: string;
     label: string;
+    options?: {
+      excludeFromOrder?: boolean;
+    };
     subsections?: {
       id: string;
       label: string;
+      options?: {
+        excludeFromOrder?: boolean;
+      };
     }[];
   }[];
 }
@@ -16,12 +22,23 @@ const { sections } = Astro.props;
 ---
 
 <div class="jump-to-container">
-  <!-- Mobile Toggle Button -->
-  <button id="jump-toggle" class="jump-toggle" aria-expanded="false" aria-label="Toggle section navigation">
-    <i class="fa-solid fa-list-ul"></i>
-    <span> Sections </span>
-    <i class="fa-solid fa-chevron-up chevron"></i>
-  </button>
+  <!-- Mobile Bottom Bar -->
+  <div class="bottom-bar">
+    <button id="snap-next" class="snap-btn" aria-label="Next main section">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+
+    <!-- Mobile Toggle Button -->
+    <button id="jump-toggle" class="jump-toggle" aria-expanded="false" aria-label="Toggle section navigation">
+      <i class="fa-solid fa-list-ul"></i>
+      <span> Sections </span>
+      <i class="fa-solid fa-chevron-up toggle-chevron"></i>
+    </button>
+
+    <button id="snap-prev" class="snap-btn" aria-label="Previous main section">
+      <i class="fa-solid fa-chevron-up"></i>
+    </button>
+  </div>
 
   <!-- Navigation Menu -->
   <nav id="jump-nav" class="jump-nav">
@@ -33,38 +50,60 @@ const { sections } = Astro.props;
         <span>Sections</span>
       </div>
       <ul class="nav-list" id="nav-list">
-        {sections.map((section, index) => (
-          <li class="nav-item-group">
-            <div class="nav-link-wrapper">
-              <a href={`#${section.id}`} class="nav-link" data-section={section.id}>
-                <i class="fa-solid fa-location-arrow active-arrow"></i>
-                <span class="nav-label">
-                  {`${index + 1}. ${section.label}`}
-                </span>
-              </a>
-              {section.subsections && section.subsections.length > 0 && (
-                <button class="sub-toggle" aria-expanded="true" aria-label="Toggle subsections">
-                  <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                </button>
-              )}
-            </div>
+        {(() => {
+          let visibleIndex = 0;
+          return sections.map((section) => {
+            const isExcluded = section.options?.excludeFromOrder;
+            if (isExcluded) return null;
             
-            {section.subsections && section.subsections.length > 0 && (
-              <ul class="sub-nav-list">
-                {section.subsections.map((sub, subIndex) => (
-                  <li>
-                    <a href={`#${sub.id}`} class="nav-link sub-link" data-section={sub.id}>
-                       <i class="fa-solid fa-location-arrow active-arrow"></i>
-                       <span class="nav-label">
-                        {`${index + 1}.${subIndex + 1} ${sub.label}`}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+            visibleIndex++;
+            
+            return (
+              <li class="nav-item-group">
+                <div class="nav-link-wrapper">
+                  <a href={`#${section.id}`} class="nav-link" data-section={section.id}>
+                    <i class="fa-solid fa-location-arrow active-arrow"></i>
+                    <span class="nav-label">
+                      <span class="nav-counter">{visibleIndex}. </span>
+                      {section.label}
+                    </span>
+                  </a>
+                  {section.subsections && section.subsections.length > 0 && (
+                    <button class="sub-toggle" aria-expanded="true" aria-label="Toggle subsections">
+                      <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                    </button>
+                  )}
+                </div>
+                
+                {section.subsections && section.subsections.length > 0 && (
+                  <ul class="sub-nav-list">
+                    {(() => {
+                      let visibleSubIndex = 0;
+                      return section.subsections.map((sub) => {
+                        const isSubExcluded = sub.options?.excludeFromOrder;
+                        if (isSubExcluded) return null;
+                        
+                        visibleSubIndex++;
+
+                        return (
+                          <li>
+                            <a href={`#${sub.id}`} class="nav-link sub-link" data-section={sub.id}>
+                              <i class="fa-solid fa-location-arrow active-arrow"></i>
+                              <span class="nav-label">
+                                <span class="nav-counter">{visibleIndex}.{visibleSubIndex} </span>
+                                {sub.label}
+                              </span>
+                            </a>
+                          </li>
+                        );
+                      });
+                    })()}
+                  </ul>
+                )}
+              </li>
+            );
+          });
+        })()}
       </ul>
     </div>
   </nav>
@@ -76,6 +115,62 @@ const { sections } = Astro.props;
   
   initJumpToController();
   initSectionTracker();
+
+  // Snapping Logic
+  const initSnapControls = () => {
+    const prevBtn = document.getElementById('snap-prev');
+    const nextBtn = document.getElementById('snap-next');
+    
+    if (!prevBtn || !nextBtn) return;
+
+    const getMainSections = () => {
+      // Find all top-level section links to identify main sections
+      const links = document.querySelectorAll('.nav-link:not(.sub-link)');
+      const ids = ['intro']; // Always start with intro
+      links.forEach(link => {
+        const id = link.getAttribute('data-section');
+        if (id) ids.push(id);
+      });
+      return ids;
+    };
+
+    const snap = (direction: 'prev' | 'next') => {
+      const sectionIds = getMainSections();
+      const activeLink = document.querySelector('.nav-link.active');
+      
+      let currentId = 'intro';
+      if (activeLink) {
+        // If we are in a sub-section, find the parent main section ID
+        if (activeLink.classList.contains('sub-link')) {
+          const mainLink = activeLink.closest('.nav-item-group')?.querySelector('.nav-link:not(.sub-link)');
+          currentId = mainLink?.getAttribute('data-section') || 'intro';
+        } else {
+          currentId = activeLink.getAttribute('data-section') || 'intro';
+        }
+      }
+
+      const currentIndex = sectionIds.indexOf(currentId);
+      let targetIndex = currentIndex;
+
+      if (direction === 'next') {
+        targetIndex = Math.min(currentIndex + 1, sectionIds.length - 1);
+      } else {
+        targetIndex = Math.max(currentIndex - 1, 0);
+      }
+
+      if (targetIndex !== currentIndex) {
+        const targetEl = document.getElementById(sectionIds[targetIndex]);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'auto' });
+        }
+      }
+    };
+
+    prevBtn.addEventListener('click', () => snap('prev'));
+    nextBtn.addEventListener('click', () => snap('next'));
+  };
+
+  initSnapControls();
 
   // Handle Subsection Toggles
   const subToggles = document.querySelectorAll('.sub-toggle');
@@ -169,6 +264,10 @@ const { sections } = Astro.props;
       gap: 0.5rem;
     }
 
+    .bottom-bar {
+      display: none;
+    }
+
     .jump-toggle {
       display: none; /* Hide toggle button on desktop */
     }
@@ -200,18 +299,57 @@ const { sections } = Astro.props;
     }
   }
 
-  /* Mobile/Tablet Layout: Bottom centered pill */  
+  /* Mobile/Tablet Layout: Bottom centered bar */  
   @media (max-width: 1023px) {
     .jump-to-container {
       position: fixed;
-      bottom: 2rem;
+      bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 15; /* Render below hamburger menu (z-index: 20) */
+      z-index: 15;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
+      width: 100%;
+      padding: 0 1.5rem;
+      pointer-events: none; /* Allow clicks through container but not buttons */
+    }
+
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: color-mix(in srgb, var(--bg-color) 80%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--gray), 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      pointer-events: auto;
+    }
+
+    .snap-btn {
+      @apply flx-cntr;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: none;
+      background: rgba(var(--gray), 0.1);
+      color: var(--text-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .snap-btn:hover {
+      opacity: 1;
+      background: rgba(var(--gray), 0.2);
+      color: var(--accent-reverse);
+    }
+
+    .snap-btn:active {
+      transform: scale(0.9);
     }
 
     .jump-toggle {
@@ -219,29 +357,30 @@ const { sections } = Astro.props;
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding-right: clamp(1.5rem, 2vw, 2.5rem); padding-left: clamp(1.5rem, 2vw, 2.5rem);
+      padding-right: 1.5rem;
+      padding-left: 1.5rem;
       @apply font-semibold;
-      @apply txt-body;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      @apply txt-body-sm;
+      box-shadow: none;
       transition: transform 0.3s ease, background 0.3s ease;
-      z-index: 2;
     }
 
     .jump-toggle:active {
       transform: scale(0.95);
     }
 
-    .jump-toggle .chevron {
+    .toggle-chevron {
       transition: transform 0.3s ease;
+      font-size: 0.8em;
     }
 
-    .jump-toggle[aria-expanded="true"] .chevron {
+    .jump-toggle[aria-expanded="true"] .toggle-chevron {
       transform: rotate(180deg);
     }
 
     .jump-nav {
       position: absolute;
-      bottom: calc(100% + 1rem); /* Pop upwards */
+      bottom: calc(100% + 1rem);
       width: max-content;
       max-width: 90vw;
       opacity: 0;
@@ -252,6 +391,7 @@ const { sections } = Astro.props;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      pointer-events: auto;
     }
 
     .nav-sections {

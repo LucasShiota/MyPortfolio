@@ -21,11 +21,11 @@ previewButton:
 summary: |
   An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.
 sections:
-  - id: "overview"
-    label: "Overview"
+  - id: "core"
+    label: "Core"
     component: "Text"
     props:
-      title: "Overview"
+      title: "Core"
       icon: "fa-solid fa-circle-info"
       content: 
         " "
@@ -56,6 +56,16 @@ sections:
             - "Streamline rules and rulebook to lower the barrier of entry and the cost of play"
             - "Excite players with many choices and freedom without overwhelming them"
             - "A high-density, low-complexity approach to the overarching rules package"
+      - id: "tags"
+        label: "tags"
+        component: Tags
+        options: 
+          excludeFromOrder: true
+        props:
+          title: "Technologies"
+          icon: "fa-solid fa-code" # Optional
+          color: "purple" # green, purple, or red
+          tags: ["React", "Astro", "TypeScript", "Tailwind CSS"]
   - id: "coming-soon"
     label: "More Details"
     component: "ComingSoon"

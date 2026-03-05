@@ -34,11 +34,17 @@ const projectsCollection = defineCollection({
       id: z.string(),
       label: z.string(),
       component: z.string(), 
+      options: z.object({
+        excludeFromOrder: z.boolean().optional(),
+      }).optional(),
       props: z.record(z.any()).optional(), // Any additional data for that component
       subsections: z.array(z.lazy(() => z.object({
         id: z.string(),
         label: z.string(),
         component: z.string(),
+        options: z.object({
+          excludeFromOrder: z.boolean().optional(),
+        }).optional(),
         props: z.record(z.any()).optional()
       }))).optional()
     }))).optional(),
