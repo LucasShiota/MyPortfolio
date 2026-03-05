@@ -10,9 +10,10 @@ compatibility_date = "2024-03-05"
 # LIVE ROUTES
 [[routes]]
 pattern = "lucasshiota.com/*"
+
 [[routes]]
 pattern = "*.lucasshiota.com/*"
 
-# DEV/PARKING ROUTE
-[[routes]]
+# DEV/PARKING ROUTE (Uncomment below and comment above to disable maintenance)
+# [[routes]]
 # pattern = "dev.lucasshiota.com/*"
