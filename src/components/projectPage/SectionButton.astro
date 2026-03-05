@@ -93,7 +93,7 @@ function resolveLink(href: string): string {
   :global(.button-section) :global(.panel-card) {
     display: flex !important;
     flex-direction: row !important;
-    align-items: center !important;
+    align-items: flex-start !important;
     justify-content: flex-start !important;
     gap: 3rem !important;
     padding-top: var(--section-pad-y) !important;
@@ -102,8 +102,10 @@ function resolveLink(href: string): string {
 
   :global(.button-section) :global(.section-title) {
     margin-bottom: 0 !important;
-    width: auto !important;
+    width: var(--section-label-width) !important;
     flex-shrink: 0;
+    align-self: flex-start;
+    padding-top: 0.25rem;
   }
 
   :global(.button-section) :global(.content-wrapper) {
@@ -138,11 +140,6 @@ function resolveLink(href: string): string {
 
     :global(.button-section) :global(.section-title) {
       width: 100% !important;
-    }
-
-    :global(.button-section) :global(.section-counter) {
-      top: 0;
-      right: 0;
     }
 
     :global(.button-section) :global(.content-wrapper) {

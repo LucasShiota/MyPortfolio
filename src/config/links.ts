@@ -29,6 +29,7 @@ interface LinksConfig {
   projects: {
     drgmod: LinkInfo;
     baraliot: LinkInfo;
+    immunedefense: LinkInfo;
     tf2: LinkInfo;
   };
   contact: {
@@ -88,6 +89,11 @@ export const LINKS: LinksConfig = {
         label: "Read GDD PDF",
         title: "GDD PDF"
       }
+    },
+    immunedefense: {
+      url: "/immune-defense",
+      label: "View Immune Defense Project",
+      title: "Immune Defense"
     },
     tf2: {
       url: "/projects/tf2map",

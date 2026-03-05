@@ -19,7 +19,6 @@ const { title, description } = Astro.props;
       // Extremely aggressive scroll lock for initial load with hash
       const initialHash = window.location.hash;
       if (initialHash && initialHash.length > 1) {
-        sessionStorage.setItem('pendingHash', initialHash);
         
         // 1. Instantly nuke the hash from the URL
         history.replaceState(null, '', window.location.pathname + window.location.search);

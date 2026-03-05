@@ -53,12 +53,12 @@ const sectionStyles = {
         <div class="title-left">
           {icon && <i class={`${icon} title-icon ${isSubsection ? 'sub-icon' : ''}`}></i>}
           {title && <h2>{title}</h2>}
-          {shouldShowCounter && (
-            <div class="section-counter">
-              {isSubsection ? `${parentOrder}.${order}` : `${order}`}
-            </div>
-          )}
         </div>
+        {shouldShowCounter && (
+          <div class="section-counter">
+            {isSubsection ? `${parentOrder}.${order}` : `${order}`}
+          </div>
+        )}
       </div>
     )}
     <div class="content-wrapper">
@@ -88,21 +88,6 @@ const sectionStyles = {
     width: 4px;
     background: var(--section-bar-color, color-mix(in srgb, var(--accent-reverse) 40%, transparent)); /* Lighter accent */
     border-radius: 99px;
-  }
-
-  .subsection .section-title {
-    margin-bottom: 0.75rem;
-  }
-
-  .subsection .section-title h2 {
-    @apply txt-body font-bold;
-    opacity: 1; /* Reset to full opacity */
-  }
-
-  .sub-icon {
-    font-size: 0.9em;
-    opacity: 1; /* Reset to full opacity */
-    color: var(--accent-reverse);
   }
 
   .panel-card {
@@ -135,9 +120,11 @@ const sectionStyles = {
 
   .section-counter {
     @apply font-mono txt-body-sm font-bold;
+    position: absolute;
+    top: var(--section-pad-y);
+    right: var(--section-pad-x);
     opacity: 0.4;
     letter-spacing: 0.1em;
-    margin-left: 0.25rem;
     display: flex;
     align-items: center;
   }
@@ -154,5 +141,26 @@ const sectionStyles = {
     .section-title h2 {
       @apply txt-body;
     }
+  }
+  /* --- Subsection Overrides --- */
+  .project-section.subsection .section-title {
+    margin-bottom: 0.75rem;
+  }
+
+  .project-section.subsection .section-title h2 {
+    @apply txt-body font-bold;
+    color: var(--text-color) !important;
+    opacity: 1;
+  }
+
+  .project-section.subsection .title-icon.sub-icon {
+    color: var(--text-color) !important;
+    font-size: 0.9em;
+    opacity: 1;
+  }
+
+  .project-section.subsection .section-counter {
+    color: var(--text-color) !important;
+    opacity: 0.4;
   }
 </style>

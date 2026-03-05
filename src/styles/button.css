@@ -23,7 +23,7 @@
 /* ----- TYPES -----*/
 /* #region types */
   @utility btn-type-tag {
-    @apply shape-pill;
+    @apply shape-roundrect;
     --tag-color: var(--accent-reverse);
     background: color-mix(in srgb, var(--tag-color) 33%, transparent);
     color: var(--text-color);
@@ -72,7 +72,10 @@
   @utility shape-pill {
     border-radius: 9999px;
   }
-
+  
+  @utility shape-roundrect{
+    border-radius: 10px;
+  }
   @utility crsr-none { user-select: none; pointer-events: none; }
 
 /* #endregion */

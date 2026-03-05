@@ -27,6 +27,7 @@
   
   /* Layout */
   --section-indent: calc(var(--section-spacing-base) * var(--indent-mod));
+  --section-label-width: 80px;
 }
 
 /* Modifier Logic */

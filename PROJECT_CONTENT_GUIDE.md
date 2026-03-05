@@ -64,9 +64,11 @@ A grid of numbered cards, often used for objectives or lists.
 
 ### 6. `Button`
 Displays one or more CTA buttons.
-*   **Props**: 
-    -   `buttons`: List of objects with `text`, `href`, and optional `icon` (e.g., `fa-solid fa-download`).
-    -   `title` (optional), `icon` (optional)
+*   **Props**: `title` (optional), `icon` (optional), `buttons: [{text, href, icon}]`.
+
+### 7. `TextCompact`
+A row-based text block, ideal for short descriptions or status messages.
+*   **Props**: `title` (optional), `icon` (optional), `content: "Text string"`.
 
 ---
 

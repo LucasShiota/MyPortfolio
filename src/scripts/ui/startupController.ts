@@ -18,7 +18,7 @@ function runWhenIdle(task: () => void, timeout = 800) {
 /**
  * Perform a slow, cinematic scroll to a target element or hash
  */
-const performSlowScroll = (target: string | HTMLElement, autoKill = true, onComplete?: () => void) => {
+export const performSlowScroll = (target: string | HTMLElement, autoKill = true, onComplete?: () => void) => {
   const element = typeof target === 'string' ? document.querySelector(target) : target;
   
   if (element instanceof HTMLElement) {
@@ -83,26 +83,6 @@ const performSlowScroll = (target: string | HTMLElement, autoKill = true, onComp
 export function initStartupController() {
   const gate = document.getElementById("startup-gate");
 
-  const handleInitialHash = () => {
-    const hash = sessionStorage.getItem('pendingHash');
-    if (hash) {
-      // Clear it from storage so it doesn't run again on normal navigations
-      sessionStorage.removeItem('pendingHash');
-      
-      window.scrollTo(0, 0);
-      
-      // Higher delay to ensure we are past the 300ms aggressive lock in BaseLayout.astro
-      // and allow layout stabilizing (Vanta, Marquees, etc)
-      setTimeout(() => {
-        window.scrollTo(0, 0); 
-        performSlowScroll(hash, false, () => {
-          // Put the hash back silently once the animation is complete
-          history.replaceState(null, '', hash);
-        });
-      }, 500);
-    }
-  };
-
   const setupGlobalLinkInterception = () => {
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
@@ -129,7 +109,6 @@ export function initStartupController() {
     if (!gate) return;
     
     gate.setAttribute("aria-hidden", "true");
-    handleInitialHash();
     setTimeout(() => gate.remove(), 420);
   };
 

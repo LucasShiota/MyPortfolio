@@ -3,8 +3,7 @@ import ProjectSection from './SectionBase.astro';
 
 interface Props {
   title?: string;
-  tags: string[];
-  color?: 'green' | 'purple' | 'red';
+  content: string;
   icon?: string;
   id?: string;
   order?: number;
@@ -19,21 +18,14 @@ interface Props {
 
 const { 
   title, 
-  tags = [], 
-  color = 'green',
-  icon = "fa-solid fa-tags", 
+  content, 
+  icon, 
   id, 
   order, 
   isSubsection = false,
   parentOrder,
   options
 } = Astro.props;
-
-const colorClass = {
-  green: 'btn-tag-green',
-  purple: 'btn-tag-purple',
-  red: 'btn-tag-red'
-}[color];
 ---
 
 <ProjectSection 
@@ -41,14 +33,14 @@ const colorClass = {
   icon={icon} 
   id={id} 
   order={order} 
-  isSubsection={isSubsection} 
+  isSubsection={isSubsection}
   parentOrder={parentOrder}
-  class="tag-section"
   options={options}
+  class="text-compact-section"
 >
-  <div class="tags-container">
-    {tags.map(tag => (
-      <span class={`tag btn-type-tag ${colorClass}`}>{tag}</span>
+  <div class="text-content">
+    {content.split('\n').map(line => (
+      <p>{line}</p>
     ))}
   </div>
 </ProjectSection>
@@ -57,7 +49,7 @@ const colorClass = {
   @reference "../../styles/global.css";
 
   /* The :global wrapper ensures these styles punch through component boundaries */
-  :global(.tag-section) :global(.panel-card) {
+  :global(.text-compact-section) :global(.panel-card) {
     display: flex !important;
     flex-direction: row !important;
     align-items: flex-start !important;
@@ -67,37 +59,44 @@ const colorClass = {
     padding-bottom: var(--section-pad-bottom, var(--section-pad-y)) !important;
   }
 
-  :global(.tag-section) :global(.section-title) {
+  :global(.text-compact-section) :global(.section-title) {
     margin-bottom: 0 !important;
     width: var(--section-label-width) !important;
     flex-shrink: 0;
     align-self: flex-start;
-    padding-top: 0.25rem; /* Optical alignment with text */
+    padding-top: 0.25rem;
   }
 
-  :global(.tag-section) :global(.content-wrapper) {
+  :global(.text-compact-section) :global(.content-wrapper) {
     width: auto !important;
     flex-grow: 1;
     display: flex;
     align-items: center;
   }
 
-  .tags-container {
+  .text-content {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 0.5rem;
+    line-height: 1.6;
+    color: var(--text-color);
+  }
+
+  .text-content p {
+    margin: 0;
+    opacity: 0.9;
   }
 
   /* Desktop/Tablet */
   @media (max-width: 1024px) {
-    :global(.tag-section) :global(.panel-card) {
+    :global(.text-compact-section) :global(.panel-card) {
       gap: 1.5rem !important;
     }
   }
 
   /* Mobile - vertical stack */
   @media (max-width: 768px) {
-    :global(.tag-section) :global(.panel-card) {
+    :global(.text-compact-section) :global(.panel-card) {
       flex-direction: column !important;
       align-items: flex-start !important;
       gap: 0.75rem !important;
@@ -105,11 +104,17 @@ const colorClass = {
       padding-bottom: var(--section-pad-bottom, var(--section-pad-y)) !important;
     }
 
-    :global(.tag-section) :global(.section-title) {
+    :global(.text-compact-section) :global(.section-title) {
       width: 100% !important;
     }
 
-    :global(.tag-section) :global(.content-wrapper) {
+
+
+    :global(.text-compact-section) :global(.section-title) h2 {
+      @apply txt-body;
+    }
+
+    :global(.text-compact-section) :global(.content-wrapper) {
       width: 100% !important;
     }
   }

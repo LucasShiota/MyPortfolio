@@ -3,7 +3,7 @@ import { getEntry } from 'astro:content';
 import ProjectPageLayout from '../components/layouts/ProjectPageLayout.astro';
 
 // Fetch the project data from Content collections
-const entry = await getEntry('projects', 'baraliot');
+const entry = await getEntry('projects', 'immune-defense');
 if (!entry) {
   return Astro.redirect('/404');
 }
