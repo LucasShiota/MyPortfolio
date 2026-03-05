@@ -167,7 +167,13 @@ const HTML_CONTENT = `
 `;
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
+    // If maintenance mode is OFF, just let the request through to your real site
+    if (env.MAINTENANCE_MODE !== "true") {
+      return fetch(request);
+    }
+
+    // Otherwise, return the maintenance page
     return new Response(HTML_CONTENT, {
       status: 503,
       headers: {

@@ -7,12 +7,13 @@ compatibility_date = "2024-03-05"
 # To ENABLE maintenance mode, uncomment the live routes and comment the dev route.
 # To DISABLE, do the opposite.
 
-# 🚦 TOGGLE SWITCH
-# To ENABLE maintenance mode: Uncomment the first "routes" and comment the second.
-# To DISABLE maintenance mode: Comment the first "routes" and uncomment the second.
+# 🚦 ONE-CLICK SWITCH
+# Set to "true" to lock the site. Set to "false" to be LIVE.
+[vars]
+MAINTENANCE_MODE = "true"
 
-# -- ON (Maintenance mode) --
-# routes = ["lucasshiota.com/*", "*.lucasshiota.com/*"]
-
-# -- OFF (Live site) --
-routes = ["dev.lucasshiota.com/*"]
+# Always keep these the same. No more manual deleting!
+routes = [
+  "lucasshiota.com/*",
+  "*.lucasshiota.com/*"
+]
