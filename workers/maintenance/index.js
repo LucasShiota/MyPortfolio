@@ -52,7 +52,7 @@ const HTML_CONTENT = `
             position: relative;
             z-index: 10;
             text-align: center;
-            pointer-events: none; /* Let clicks pass through to physics if needed, or keep for clarity */
+            pointer-events: none;
             background: rgba(0, 0, 0, 0.4);
             padding: 2.5rem;
             border-radius: 1.5rem;
@@ -113,7 +113,7 @@ const HTML_CONTENT = `
     </div>
 
     <script>
-        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events, Common } = Matter;
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
 
         const engine = Engine.create();
         const world = engine.world;
@@ -144,7 +144,7 @@ const HTML_CONTENT = `
         
         Composite.add(world, [ground, ceiling, leftWall, rightWall]);
 
-        // Helper to get random palette color
+        // Colors
         const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF', '#333333'];
         
         const createShape = () => {
@@ -173,7 +173,7 @@ const HTML_CONTENT = `
         };
 
         // Initial drop
-        for(let i=0; i<30; i++) {
+        for(let i=0; i<40; i++) {
             setTimeout(() => Composite.add(world, createShape()), i * 150);
         }
 
@@ -181,26 +181,22 @@ const HTML_CONTENT = `
         const mouse = Mouse.create(render.canvas);
         const mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: { visible: false }
-            }
+            constraint: { stiffness: 0.2, render: { visible: false } }
         });
 
         Composite.add(world, mouseConstraint);
         render.mouse = mouse;
 
-        // "Vortex" effect on drag - unique physics behavior
         Events.on(mouseConstraint, 'mousemove', function(event) {
-            const mousePosition = event.mouse.position;
             if (mouseConstraint.body) {
-                // When dragging, give the body a little "vibe" or spin
                 Matter.Body.setAngularVelocity(mouseConstraint.body, (Math.random() - 0.5) * 0.2);
             }
         });
 
         // Resize handler
         window.addEventListener('resize', () => {
+            render.options.width = window.innerWidth;
+            render.options.height = window.innerHeight;
             render.canvas.width = window.innerWidth;
             render.canvas.height = window.innerHeight;
             Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight + 50 });
@@ -213,12 +209,10 @@ const HTML_CONTENT = `
 
 export default {
   async fetch(request, env) {
-    // If maintenance mode is OFF, just let the request through to your real site
     if (env.MAINTENANCE_MODE !== "true") {
       return fetch(request);
     }
 
-    // Otherwise, return the maintenance page
     return new Response(HTML_CONTENT, {
       status: 503,
       headers: {
