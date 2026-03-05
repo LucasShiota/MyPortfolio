@@ -45,7 +45,7 @@ const HTML_CONTENT = `
         #physics-canvas {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 0;
+            z-index: 5; /* Sit between background and UI */
         }
 
         .minimal-ui {
@@ -53,11 +53,11 @@ const HTML_CONTENT = `
             z-index: 10;
             text-align: center;
             pointer-events: none;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 3rem;
+            border-radius: 2rem;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 400px;
         }
 
@@ -188,6 +188,7 @@ const HTML_CONTENT = `
                 constraint: { stiffness: 0.2, render: { visible: false } }
             });
             Composite.add(engine.world, mouseConstraint);
+            render.mouse = mouse; // ⚠️ CRITICAL: Bind mouse to render!
 
             window.addEventListener('resize', () => {
                 render.canvas.width = window.innerWidth;
