@@ -129,7 +129,6 @@ const HTML_CONTENT = `
 
         // --- 2. THE PHYSICS ENGINE ---
         loadMatter(() => {
-            console.log("Initializing Physics Engine...");
             const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
 
             const engine = Engine.create();
@@ -143,7 +142,7 @@ const HTML_CONTENT = `
                     height: window.innerHeight,
                     wireframes: false,
                     background: 'transparent',
-                    pixelRatio: window.devicePixelRatio
+                    pixelRatio: window.devicePixelRatio || 1
                 }
             });
 
@@ -158,37 +157,37 @@ const HTML_CONTENT = `
 
             // Shapes
             const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF'];
-            
             const dropShape = (i) => {
                 const x = Math.random() * window.innerWidth;
-                const size = Math.random() * 40 + 20; // Bigger shapes
+                const size = Math.random() * 40 + 20;
                 const sides = Math.floor(Math.random() * 5) + 3;
                 
                 const shape = Bodies.polygon(x, -100, sides, size, { 
                     restitution: 0.6,
                     friction: 0.1,
-                    render: { 
-                        fillStyle: colors[Math.floor(Math.random() * colors.length)],
-                        opacity: 1.0 // SOLID COLORS - Much easier to see
-                    }
+                    render: { fillStyle: colors[Math.floor(Math.random() * colors.length)], opacity: 1.0 }
                 });
-
                 Composite.add(engine.world, shape);
-                console.log("Dropped shape #" + (i+1));
             };
 
             for(let i=0; i<40; i++) {
                 setTimeout(() => dropShape(i), i * 150);
             }
 
-            // Mouse
-            const mouse = Mouse.create(render.canvas);
+            // --- THE INTERACTION FIX ---
+            const mouse = Mouse.create(document.body); // Track EVERYWHERE
+            mouse.pixelRatio = window.devicePixelRatio || 1; // Sync resolution
+            
             const mouseConstraint = MouseConstraint.create(engine, {
                 mouse: mouse,
-                constraint: { stiffness: 0.2, render: { visible: false } }
+                constraint: { 
+                    stiffness: 0.2, 
+                    render: { visible: false } 
+                }
             });
+
             Composite.add(engine.world, mouseConstraint);
-            render.mouse = mouse; // ⚠️ CRITICAL: Bind mouse to render!
+            render.mouse = mouse; // Sync renderer with interaction
 
             window.addEventListener('resize', () => {
                 render.canvas.width = window.innerWidth;
