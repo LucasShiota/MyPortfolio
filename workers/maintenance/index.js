@@ -44,16 +44,18 @@ const HTML_CONTENT = `
 
         #physics-canvas {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 5; /* Sit between background and UI */
+            top: 0; left: 0; 
+            width: 100vw; height: 100vh;
+            z-index: 10; /* Put the physics LAYER above the background */
+            pointer-events: auto;
         }
 
         .minimal-ui {
             position: relative;
-            z-index: 10;
+            z-index: 100; /* UI card sits on TOP of everything */
             text-align: center;
-            pointer-events: none;
-            background: rgba(0, 0, 0, 0.6);
+            pointer-events: none; /* Let clicks pass through to the shapes! */
+            background: rgba(0, 0, 0, 0.7);
             padding: 3rem;
             border-radius: 2rem;
             backdrop-filter: blur(12px);
@@ -174,20 +176,15 @@ const HTML_CONTENT = `
                 setTimeout(() => dropShape(i), i * 150);
             }
 
-            // --- THE INTERACTION FIX ---
-            const mouse = Mouse.create(document.body); // Track EVERYWHERE
-            mouse.pixelRatio = window.devicePixelRatio || 1; // Sync resolution
-            
+            // --- THE INTERACTION LOGIC ---
+            const mouse = Mouse.create(render.canvas);
             const mouseConstraint = MouseConstraint.create(engine, {
                 mouse: mouse,
-                constraint: { 
-                    stiffness: 0.2, 
-                    render: { visible: false } 
-                }
+                constraint: { stiffness: 0.1, render: { visible: false } }
             });
 
             Composite.add(engine.world, mouseConstraint);
-            render.mouse = mouse; // Sync renderer with interaction
+            render.mouse = mouse;
 
             window.addEventListener('resize', () => {
                 render.canvas.width = window.innerWidth;
