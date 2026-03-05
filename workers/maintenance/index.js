@@ -113,94 +113,83 @@ const HTML_CONTENT = `
     </div>
 
     <script>
-        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
-
-        const engine = Engine.create();
-        const world = engine.world;
-        const canvas = document.getElementById('physics-canvas');
-
-        const render = Render.create({
-            canvas: canvas,
-            engine: engine,
-            options: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                wireframes: false,
-                background: 'transparent',
-                pixelRatio: window.devicePixelRatio
-            }
-        });
-
-        Render.run(render);
-        const runner = Runner.create();
-        Runner.run(runner, engine);
-
-        // Ground, Walls and Ceiling
-        const wallOptions = { isStatic: true, render: { visible: false } };
-        const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, wallOptions);
-        const ceiling = Bodies.rectangle(window.innerWidth / 2, -50, window.innerWidth, 100, wallOptions);
-        const leftWall = Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, wallOptions);
-        const rightWall = Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, wallOptions);
-        
-        Composite.add(world, [ground, ceiling, leftWall, rightWall]);
-
-        // Colors
-        const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF', '#333333'];
-        
-        const createShape = () => {
-            const x = Math.random() * window.innerWidth;
-            const y = -100;
-            const size = Math.random() * 30 + 15;
-            const shapeType = Math.floor(Math.random() * 4);
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            let body;
-            const renderOptions = {
-                fillStyle: color,
-                strokeStyle: 'rgba(255,255,255,0.1)',
-                lineWidth: 1,
-                opacity: 0.6
+        // --- 1. THE BULLETPROOF LOADER ---
+        function loadMatter(callback) {
+            const script = document.createElement('script');
+            script.src = "https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js";
+            script.onload = () => {
+                console.log("Matter.js loaded successfully!");
+                callback();
             };
-
-            switch(shapeType) {
-                case 0: body = Bodies.circle(x, y, size/2, { render: renderOptions, friction: 0.1, restitution: 0.6 }); break;
-                case 1: body = Bodies.rectangle(x, y, size, size, { render: renderOptions, chamfer: { radius: 5 } }); break;
-                case 2: body = Bodies.polygon(x, y, 3, size/1.5, { render: renderOptions }); break;
-                case 3: body = Bodies.polygon(x, y, 6, size/1.5, { render: renderOptions }); break;
-            }
-            
-            return body;
-        };
-
-        // Initial drop
-        for(let i=0; i<40; i++) {
-            setTimeout(() => Composite.add(world, createShape()), i * 150);
+            script.onerror = () => {
+                console.error("Critical Error: Matter.js CDN is blocked or unavailable.");
+            };
+            document.head.appendChild(script);
         }
 
-        // Mouse interactions
-        const mouse = Mouse.create(render.canvas);
-        const mouseConstraint = MouseConstraint.create(engine, {
-            mouse: mouse,
-            constraint: { stiffness: 0.2, render: { visible: false } }
-        });
+        // --- 2. THE PHYSICS ENGINE ---
+        loadMatter(() => {
+            const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
 
-        Composite.add(world, mouseConstraint);
-        render.mouse = mouse;
+            const engine = Engine.create();
+            const world = engine.world;
+            const canvas = document.getElementById('physics-canvas');
 
-        Events.on(mouseConstraint, 'mousemove', function(event) {
-            if (mouseConstraint.body) {
-                Matter.Body.setAngularVelocity(mouseConstraint.body, (Math.random() - 0.5) * 0.2);
+            const render = Render.create({
+                canvas: canvas,
+                engine: engine,
+                options: {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    wireframes: false,
+                    background: 'transparent',
+                    pixelRatio: window.devicePixelRatio
+                }
+            });
+
+            Render.run(render);
+            Runner.run(Runner.create(), engine);
+
+            // Boundaries
+            const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 50, window.innerWidth, 100, { isStatic: true, render: { visible: false } });
+            const ceiling = Bodies.rectangle(window.innerWidth / 2, -50, window.innerWidth, 100, { isStatic: true, render: { visible: false } });
+            const leftWall = Bodies.rectangle(-50, window.innerHeight / 2, 100, window.innerHeight, { isStatic: true, render: { visible: false } });
+            const rightWall = Bodies.rectangle(window.innerWidth + 50, window.innerHeight / 2, 100, window.innerHeight, { isStatic: true, render: { visible: false } });
+            Composite.add(world, [ground, ceiling, leftWall, rightWall]);
+
+            // Shapes
+            const colors = ['${MAINTENANCE_CONFIG.accentColor}', '${MAINTENANCE_CONFIG.secondaryColor}', '#FFFFFF', '#333333'];
+            const createShape = () => {
+                const x = Math.random() * window.innerWidth;
+                const size = Math.random() * 30 + 15;
+                const type = Math.floor(Math.random() * 4);
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                let body;
+                const opt = { render: { fillStyle: color, opacity: 0.6 } };
+                if(type === 0) body = Bodies.circle(x, -100, size/2, opt);
+                else if(type === 1) body = Bodies.rectangle(x, -100, size, size, opt);
+                else body = Bodies.polygon(x, -100, type + 2, size, opt);
+                return body;
+            };
+
+            for(let i=0; i<40; i++) {
+                setTimeout(() => Composite.add(world, createShape()), i * 150);
             }
-        });
 
-        // Resize handler
-        window.addEventListener('resize', () => {
-            render.options.width = window.innerWidth;
-            render.options.height = window.innerHeight;
-            render.canvas.width = window.innerWidth;
-            render.canvas.height = window.innerHeight;
-            Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight + 50 });
-            Matter.Body.setPosition(rightWall, { x: window.innerWidth + 50, y: window.innerHeight / 2 });
+            // Mouse
+            const mouse = Mouse.create(render.canvas);
+            const mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: { stiffness: 0.2, render: { visible: false } }
+            });
+            Composite.add(world, mouseConstraint);
+
+            window.addEventListener('resize', () => {
+                render.canvas.width = window.innerWidth;
+                render.canvas.height = window.innerHeight;
+                Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight + 50 });
+            });
         });
     </script>
 </body>
