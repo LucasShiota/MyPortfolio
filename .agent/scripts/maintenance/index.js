@@ -6,7 +6,8 @@
 const MAINTENANCE_CONFIG = {
   title: "Under Maintenance | Lucas Shiota",
   heading: "Polishing Reality",
-  message: "I'm currently updating my portfolio with new projects and refinements. I'll be back online shortly.",
+  message:
+    "I'm currently updating my portfolio with new projects and refinements. I'll be back online shortly.",
   accentColor: "#F5A300", // Portfolio gold
   secondaryColor: "#0062F5", // Portfolio blue
 };

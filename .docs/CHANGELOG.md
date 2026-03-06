@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file. See [standa
 - Integrated **pa11y** for automated accessibility testing (`@[/a11y]`).
 - Established **Playwright** visual regression suite (`@[/visual-check]`).
 - Created **Dependency Health** workflow (`@[/health]`) to track 3rd-party updates and security.
+- Created **Maintenance** workflow (`@[/maintenance]`) to toggle site status.
+
+### Changed
+
+- Reorganized maintenance worker from `workers/` to `.agent/scripts/maintenance/`.
 
 ### 0.0.1 (2026-03-06)
 
