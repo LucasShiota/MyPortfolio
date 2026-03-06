@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../src/consts";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../src/config/site";
 
 describe("site metadata", () => {
   it("exposes non-empty title and description", () => {

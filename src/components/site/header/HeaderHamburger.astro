@@ -1,0 +1,148 @@
+---
+import LetsTalk from './LetsTalk.astro';
+import { LINKS } from "../../../config/site";
+import HeaderQR from './HeaderQR.astro';
+import HeaderCredit from './HeaderCredit.astro';
+import ThemeToggle from '../../features/theme/ThemeToggle.astro';
+import PerformanceToggle from '../../features/performance/PerformanceToggle.astro';
+import AccessibilityToggle from '../../features/a11y/AccessibilityToggle.astro';
+import HeaderIconButton from '../HeaderIconButton.astro';
+
+interface Props {
+	isHome: boolean;
+}
+
+const { isHome } = Astro.props;
+---
+
+<div class="hmbrgr-menu-toggle-wrapper">
+    <HeaderIconButton id="hmbrgr-menu-toggle" title="Open Menu">
+        <i class="fa-solid fa-bars icon-bars"></i>
+        <i class="fa-solid fa-xmark icon-xmark hidden-icon"></i>
+    </HeaderIconButton>
+</div>
+
+<div id="hmbrgr-menu">
+    <div class="hmbrgr-row">
+        <div class:list={["hmbrgr-contacts", { "hmbrgr-contacts-full": !isHome }]}>
+            <div class="hmbrgr-contact-btn"> <i class="fa-solid fa-file-lines"></i>&#8194;CV </div>
+            <a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="hmbrgr-contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn </a>
+            <LetsTalk isHamburger={true} />
+            <div class="hmbrgr-contact-btn"> <i class="fa-solid fa-user"></i>&#8194;About </div>
+        </div>
+        {isHome && (
+            <div class="hmbrgr-nav-parent">
+                <div class="hmbrgr-nav" data-index="0"> Hey </div>
+                <div class="hmbrgr-nav" data-index="1"> Projects </div>
+                <div class="hmbrgr-nav" data-index="2"> About Me </div>
+                <div class="hmbrgr-nav" data-index="3"> Contacts </div>
+            </div>
+        )}
+    </div>
+    <div class="hmbrgr-toggles">
+        <AccessibilityToggle isHamburger={true} id="hmbrgr-accessibility-toggle" />
+        <ThemeToggle id="hmbrgr-theme-toggle" />
+        <PerformanceToggle id="hmbrgr-performance-toggle" />
+    </div>
+    <HeaderQR />
+    <HeaderCredit />
+</div>
+
+<script>
+    import { initMenuController } from "./menuController";
+    initMenuController();
+</script>
+
+<style>
+    @reference "../../../styles/global.css";
+
+    /* Icon Fading Logic */
+    :global(header:not(.menu-open)) .icon-bars {
+        opacity: 1 !important; transform: scale(1) rotate(0) !important;
+    }
+    :global(header:not(.menu-open)) .icon-xmark {
+        opacity: 0 !important; transform: scale(0.6) rotate(-90deg) !important;
+    }
+    :global(header.menu-open) .icon-bars {
+        opacity: 0 !important; transform: scale(0.6) rotate(90deg) !important;
+    }
+    :global(header.menu-open) .icon-xmark {
+        opacity: 1 !important; transform: scale(1) rotate(0) !important;
+    }
+
+/* ---------------------------------------------------------------- */
+/* ----- hmbrgr MENU ----- */
+/* ---------------------------------------------------------------- */
+
+    .hmbrgr-menu-toggle-wrapper {
+        @apply flx-algncntr-rw;
+        height: 100%; gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    #hmbrgr-menu {
+        @apply flx-cntr-clmn;
+        display: none;
+        position: fixed; width: 100%; left: 0; top: var(--header-height);
+        padding: 1rem 0; gap: 1rem;
+        background: var(--bg-color-tinted); box-shadow: var(--box-shadow); opacity: 1;
+        border-top: 1px solid rgba(var(--gray), 0.2);
+        z-index: var(--z-menu);
+    }
+    #hmbrgr-menu.open { display: flex; animation: slideDown 0.3s ease-out; }
+    #hmbrgr-menu.closing { animation: slideUp 0.3s ease-in forwards; }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    #hmbrgr-menu-toggle {
+        /* Spacing handled by parent container in Header.astro */
+    }
+
+    /* Override icon size for hamburger menu specifically */
+    .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn i) {
+        @apply text-3xl;
+    }
+
+    .hmbrgr-row { display: flex; flex-direction: row; justify-content: center;
+        width: 100%; padding: 0.5rem 0; }
+
+    .hmbrgr-toggles {
+        @apply flx-jstfycntr-rw;
+        width: 70%;
+        gap: 1rem; padding: 0.5rem 0;
+        border-bottom: var(--border); border-top: var(--border);
+    }
+
+    .hmbrgr-contacts { border-right: var(--border) }
+    .hmbrgr-contact-btn { @apply btn-type-main-reverse; }
+    
+    .hmbrgr-nav { 
+        @apply btn-fx-txtcolor;
+        transition: color 0.3s; @apply text-xl; line-height: 0.9; @apply font-bold;
+        padding: .7rem;
+    }
+
+    .hmbrgr-nav-parent, .hmbrgr-contacts { 
+        @apply flx-cntr-clmn; gap: .5rem; width: 40%;
+    }
+    .hmbrgr-contacts.hmbrgr-contacts-full { width: 100%; border-right: none; }
+
+    /* Media query specific for toggles visibility within header */
+    @media (min-width: 640px) {
+        .hmbrgr-contacts { display: none; }
+    }
+    @media (min-width: 768px) {
+        .hmbrgr-nav-parent, .hmbrgr-row  { display: none; }
+        .hmbrgr-toggles { border-top: none; }
+    }
+    @media (min-width: 1200px) {
+        .hmbrgr-toggles { display: none; }
+    }
+</style>

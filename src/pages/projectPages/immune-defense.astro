@@ -1,0 +1,14 @@
+---
+import { getEntry } from 'astro:content';
+import ProjectPageLayout from '../../components/projectPage/ProjectPageLayout.astro';
+
+// Fetch the project data from Content collections
+const entry = await getEntry('projects', 'immune-defense');
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { data } = entry;
+---
+
+<ProjectPageLayout data={data} />

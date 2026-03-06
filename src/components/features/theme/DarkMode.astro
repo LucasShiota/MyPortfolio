@@ -1,0 +1,15 @@
+---
+---
+
+<script>
+  import { initThemeController } from "./themeController";
+  initThemeController();
+</script>
+
+<style is:global>
+  .theme-switch-instant *:not(.theme-toggle *),
+  .theme-switch-instant *::before,
+  .theme-switch-instant *::after {
+    transition: none !important;
+  }
+</style>

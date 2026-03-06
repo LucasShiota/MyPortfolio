@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LINKS } from "../src/config/links";
+import { LINKS } from "../src/config/site";
 
 const EXTERNAL_KEYS = ["linkedin", "github", "steam", "substack", "itchio"] as const;
 const PROJECT_KEYS = ["drgmod", "baraliot", "tf2"] as const;
