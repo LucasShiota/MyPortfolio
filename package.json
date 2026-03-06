@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "husky",
-    "release": "standard-version"
+    "release": "standard-version",
+    "a11y": "pa11y http://localhost:4321"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
@@ -41,6 +42,9 @@
   "lint-staged": {
     "*.{js,ts,astro,json,md,css}": [
       "prettier --write"
+    ],
+    "*.{jpg,png,webp}": [
+      "node scripts/image-guard.mjs"
     ]
   }
 }

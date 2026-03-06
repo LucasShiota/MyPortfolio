@@ -88,4 +88,7 @@ We use the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
 
 - **Commit Hooks**: Commits that don't match the style guide will be rejected by `commitlint`.
 - **Auto-Formatting**: Code is automatically formatted using Prettier via `lint-staged` on every commit.
+- **Image Guard**: Staged images are checked for size limits to prevent site bloat.
+- **A11y Checks**: Run automated accessibility audits via `@[/a11y]`.
+- **Visual Checks**: Detect unintended UI changes using `@[/visual-check]`.
 - **Change Log Updates**: AI should proactively update `CHANGELOG.md` after major tasks.

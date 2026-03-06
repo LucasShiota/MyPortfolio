@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file. See [standa
 ### Added
 - Installed and configured **Prettier** for automated code formatting.
 - Integrated **lint-staged** to run formatting on every commit.
+- Created **Image Guard** script to prevent large images from being committed.
+- Integrated **pa11y** for automated accessibility testing (`@[/a11y]`).
+- Established **Playwright** visual regression suite (`@[/visual-check]`).
 
 ### 0.0.1 (2026-03-06)
 
