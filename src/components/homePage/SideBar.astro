@@ -1,5 +1,4 @@
 ---
-import PanelScroll from "../features/scroll/PanelScroll.astro"
 ---
 <div class="sidebar flx-cntr-clmn crsr-none">
   <div class="nav flx-cntr-clmn">
@@ -35,8 +34,12 @@ import PanelScroll from "../features/scroll/PanelScroll.astro"
       </div>
     </div>
   </div>
-  <PanelScroll/>
 </div>
+
+<script>
+  import { initPanelScroll } from "../features/scroll/scrollManager";
+  initPanelScroll();
+</script>
 
 <style>
   @reference "../../styles/global.css";

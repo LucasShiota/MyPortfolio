@@ -1,8 +1,7 @@
 ---
-import BaseHead from '../site/BaseHead.astro';
-import Header from '../site/header/Header.astro';
-import VantaFogBG from '../features/vantajs/VantaFogBG.astro';
-import ScrollKeyboard from '../features/scroll/ScrollKeyboard.astro';
+import BaseHead from '@components/site/BaseHead.astro';
+import Header from '@components/site/header/Header.astro';
+import VantaFogBG from '@components/features/vantajs/VantaFogBG.astro';
 interface Props {
   title: string;
   description: string;
@@ -77,10 +76,11 @@ const { title, description } = Astro.props;
     <Header />
     <slot />
     <VantaFogBG/>
-    <ScrollKeyboard />
     <script>
-      import { initStartupController } from '../features/startup/startupController';
+      import { initStartupController } from '@components/features/startup/startupController';
+      import { initKeyboardScroll } from '@components/features/scroll/scrollManager';
       initStartupController();
+      initKeyboardScroll();
     </script>
   </body>
 </html>

@@ -10,7 +10,7 @@ logo: ""
 filterTags: ["TRPG"]
 descriptorTags: ["Game System", "Typography", "Layout", "Writing"]
 descriptorTagColors: { "Game System": "green", "Typography": "purple", "Writing": "purple", "Layout": "purple" }
-previewButton: { text: "Learn more in depth", href: "/baraliot", ariaLabel: "Open project details" }
+previewButton: { text: "Learn more in depth", href: "/projectPages/baraliot", ariaLabel: "Open project details" }
 summary: |
   An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.
 sections:

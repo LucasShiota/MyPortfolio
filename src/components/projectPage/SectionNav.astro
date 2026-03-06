@@ -116,8 +116,8 @@ const { sections, title } = Astro.props;
 </div>
 
 <script>
-  import { initJumpToController } from "../features/scroll/jumpToController";
-  import { initSectionTracker } from "../../pages/projectPages/sectionTracker";
+  import { initJumpToController } from "../features/scroll/scrollManager";
+  import { initSectionTracker } from "@utils/sectionTracker";
   import { performSlowScroll } from "../features/startup/startupController";
   
   initJumpToController();

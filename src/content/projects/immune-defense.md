@@ -10,7 +10,7 @@ logo: ""
 filterTags: ["Video Game"]
 descriptorTags: ["System Design", "UI/UX", "Mobile"]
 descriptorTagColors: { "System Design": "green", "UI/UX": "purple", "Mobile": "blue" }
-previewButton: { text: "View Case Study", href: "/immune-defense", ariaLabel: "Open immune defense project details" }
+previewButton: { text: "View Case Study", href: "/projectPages/immune-defense", ariaLabel: "Open immune defense project details" }
 summary: "A strategic mobile experience focused on biological defense mechanisms. Designing complex systems for a casual but deep gameplay loop."
 sections:
   - id: "details"
