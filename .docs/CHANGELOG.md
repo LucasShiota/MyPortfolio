@@ -2,21 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [Unreleased]
+### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
-### Added
+### Features
 
-- Installed and configured **Prettier** for automated code formatting.
-- Integrated **lint-staged** to run formatting on every commit.
-- Created **Image Guard** script to prevent large images from being committed.
-- Integrated **pa11y** for automated accessibility testing (`@[/a11y]`).
-- Established **Playwright** visual regression suite (`@[/visual-check]`).
-- Created **Dependency Health** workflow (`@[/health]`) to track 3rd-party updates and security.
-- Created **Maintenance** workflow (`@[/maintenance]`) to toggle site status.
-
-### Changed
-
-- Reorganized maintenance worker from `workers/` to `.agent/scripts/maintenance/`.
+- **automation:** add /health workflow for dependency monitoring ([991c80f](https://github.com/LucasShiota/MyPortfolio/commit/991c80feabc1b2cf52c39598a390032170b09c08))
+- **automation:** add image-guard, a11y, and visual-check workflows ([fba89a6](https://github.com/LucasShiota/MyPortfolio/commit/fba89a64027b47c5d00311b50c76caf94ad12518))
+- **formatting:** install Prettier and configure lint-staged ([e9e91b6](https://github.com/LucasShiota/MyPortfolio/commit/e9e91b681ef00a1002be77f845aea503b5a7021b))
+- **standards:** add /plan workflow for high-efficiency execution ([3b77f18](https://github.com/LucasShiota/MyPortfolio/commit/3b77f18e30a688956dcc727e110d868247235591))
 
 ### 0.0.1 (2026-03-06)
 
