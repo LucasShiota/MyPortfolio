@@ -1,25 +1,22 @@
-/* 
-1. Accessibility (aria-label)
-For humans who can't see the screen. 
-Screen readers read this label out loud so 
-users know what an icon-only button does 
-(otherwise, it would be silent/meaningless).
+export const SITE_TITLE = 'Lucas Shiota';
+export const SITE_DESCRIPTION = 'Project Manager & Game Developer Portfolio';
 
-2. SEO (aria-label & title)
-For search bots (Google). Bots are effectively
-"blind" and can't see your icons; they use these
-text labels to understand what your site is about
-and how your links are connected to your brand.
-*/
+export const CONTACT = {
+  email: "hi@lucasshiota.com",
+  discord: "lucas_shiota",
+  discordDisplay: "@lucas_shiota",
+  github: "https://github.com/LucasShiota",
+  linkedin: "https://www.linkedin.com/in/lucasshiota/",
+};
 
 export interface LinkInfo {
   url: string;
   label: string;
   title: string;
-  [key: string]: any; // Allow nested properties for specific project links
+  [key: string]: any; 
 }
 
-interface LinksConfig {
+export interface SiteConfig {
   homepage: LinkInfo;
   linkedin: LinkInfo;
   github: LinkInfo;
@@ -35,22 +32,23 @@ interface LinksConfig {
   contact: {
     email: string;
     discord: string;
+    discordDisplay: string;
   };
 }
 
-export const LINKS: LinksConfig = {
+export const LINKS: SiteConfig = {
   homepage: {
-    url: "https://lucasshiota.com",
+    url: "/",
     label: "Return to homepage",
     title: "Homepage"
   },
   linkedin: {
-    url: "https://www.linkedin.com/in/lucasshiota/",
+    url: CONTACT.linkedin,
     label: "Find me on LinkedIn",
     title: "LinkedIn"
   },
   github: {
-    url: "https://github.com/LucasShiota",
+    url: CONTACT.github,
     label: "Check out my GitHub page",
     title: "GitHub"
   },
@@ -102,8 +100,8 @@ export const LINKS: LinksConfig = {
     }
   },
   contact: {
-    email: "hello@lucasshiota.com",
-    discord: "ryuukazu"
+    email: CONTACT.email,
+    discord: CONTACT.discord,
+    discordDisplay: CONTACT.discordDisplay,
   }
 };
-

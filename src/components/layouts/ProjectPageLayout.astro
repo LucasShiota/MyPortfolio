@@ -6,11 +6,10 @@ import SectionCardList from '../projectPage/SectionCardList.astro';
 import ComingSoon from '../projectPage/SectionComingSoon.astro';
 import TextSection from '../projectPage/SectionText.astro';
 import TagSection from '../projectPage/SectionTags.astro';
-import TextCompactSection from '../projectPage/SectionTextCompact.astro';
 import SectionTitle from '../projectPage/SectionTitle.astro';
 import SectionButton from '../projectPage/SectionButton.astro';
 import JumpToNav from '../projectPage/SectionNav.astro';
-import { SITE_TITLE } from '../../consts';
+import { SITE_TITLE } from '../../config/site';
 
 interface Props {
   data: any;
@@ -27,7 +26,7 @@ const COMPONENT_MAP: Record<string, any> = {
   Tags: TagSection,
   Title: SectionTitle,
   Button: SectionButton,
-  TextCompact: TextCompactSection,
+  TextCompact: TextSection,
 };
 
 const project = {

@@ -6,7 +6,7 @@ import HeaderHamburger from '../header/HeaderHamburger.astro';
 import HeaderLogo from '../header/HeaderLogo.astro';
 import ThemeToggle from '../header/ThemeToggle.astro';
 import PerformanceToggle from '../header/PerformanceToggle.astro';
-import { LINKS } from "../../config/links.ts";
+import { LINKS } from "../../config/site.ts";
 const today = new Date();
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/' || pathname === '';

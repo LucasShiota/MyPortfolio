@@ -1,5 +1,5 @@
 import Matter from "matter-js";
-import { LINKS } from "../config/links.ts";
+import { LINKS } from "../config/site.ts";
 
 const {
   Engine,

@@ -20,7 +20,7 @@ sections:
       title: "Project Details"
       icon: "fa-solid fa-circle-info"
     subsections:
-      - component: "TextCompact"
+      - component: "Text"
         options: { barColor: "transparent", compact: true }
         props: 
           title: "Size"

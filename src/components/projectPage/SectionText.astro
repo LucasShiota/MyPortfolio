@@ -36,6 +36,7 @@ const {
   isSubsection={isSubsection}
   parentOrder={parentOrder}
   options={options}
+  class={options?.compact ? "text-compact-section" : ""}
 >
   <div class="text-content">
     {content.split('\n').map(line => (
@@ -58,5 +59,54 @@ const {
   .text-content p {
     margin: 0;
     opacity: 0.9;
+  }
+
+  /* --- COMPACT LAYOUT OVERRIDES --- */
+  
+  :global(.text-compact-section) :global(.panel-card) {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 3rem !important;
+    padding-top: var(--section-pad-y) !important;
+    padding-bottom: var(--section-pad-bottom, var(--section-pad-y)) !important;
+  }
+
+  :global(.text-compact-section) :global(.section-title) {
+    margin-bottom: 0 !important;
+    width: var(--section-label-width) !important;
+    flex-shrink: 0;
+    padding-top: 0.25rem;
+  }
+
+  :global(.text-compact-section) :global(.content-wrapper) {
+    width: auto !important;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  :global(.text-compact-section) .text-content {
+    gap: 0.5rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1024px) {
+    :global(.text-compact-section) :global(.panel-card) {
+      gap: 1.5rem !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    :global(.text-compact-section) :global(.panel-card) {
+      flex-direction: column !important;
+      gap: 0.75rem !important;
+    }
+    :global(.text-compact-section) :global(.section-title) {
+      width: 100% !important;
+    }
+    :global(.text-compact-section) :global(.content-wrapper) {
+      width: 100% !important;
+    }
   }
 </style>
