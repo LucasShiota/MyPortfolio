@@ -12,7 +12,7 @@ This workflow helps you catch "pixel shifts" and unintended layout breaks.
 
 // turbo
 
-1. Run `npx playwright test`.
+1. Run `npm run visual-check`.
 2. This will compare the current site against "threshold" images.
 
 ### 3. Reviewing Results
@@ -23,5 +23,5 @@ This workflow helps you catch "pixel shifts" and unintended layout breaks.
 ### 4. Updating Baselines
 
 1. If the change was intended (e.g., you updated a button's color), run:
-   `npx playwright test --update-snapshots`
+   `npm run visual-check -- --update-snapshots`
 2. Commit the new snapshots to lock in the new look.
