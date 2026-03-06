@@ -1,3 +1,14 @@
+/**
+ * ══════════════════════════════════════════════
+ *  PROJECTS ENTRIES CONTROLLER
+ * ══════════════════════════════════════════════
+ * 
+ * PURPOSE: Manages the project list interaction, including 
+ * filtering, physics-based dragging, and active state tracking.
+ * 
+ * DESIGN RULE (CRITICAL):
+ * - Ensure 'visibleEntries' is synced before any index-based selection.
+ */
 import { ProjectSliderPhysics } from "./projectsPhysics";
 
 type Options = {
@@ -90,8 +101,11 @@ export const initProjectsEntriesController = ({
 
   // --- INTERACTIONS ---
   const handleWheel = (e: WheelEvent) => {
-    e.preventDefault();
-    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    const isHorizontalDominant = Math.abs(e.deltaX) >= Math.abs(e.deltaY);
+    if (isHorizontalDominant) {
+      e.preventDefault();
+    }
+    const delta = isHorizontalDominant ? e.deltaX : e.deltaY;
     physics.applyDelta(delta * 1.5);
   };
 

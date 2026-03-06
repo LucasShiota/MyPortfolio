@@ -1,19 +1,10 @@
-interface PerformanceWindow extends Window {
-  performanceModeVanta?: any;
-  performanceModeMatter?: any;
-  performanceModeMarquee?: any;
-  performanceModeScroll?: any;
-  __performanceModeEnabled?: boolean;
-  togglePerformanceMode?: () => void;
-}
 
-const win = window as unknown as PerformanceWindow;
 const STORAGE_KEY = "performance-mode";
 const TOGGLE_SELECTOR = ".performance-toggle";
 
 export const initPerformanceController = () => {
   const setPerformanceMode = (enabled: boolean) => {
-    win.__performanceModeEnabled = enabled;
+    window.__performanceModeEnabled = enabled;
     document.documentElement.classList.toggle("performance-mode", enabled);
 
     const buttons = document.querySelectorAll<HTMLElement>(TOGGLE_SELECTOR);
@@ -22,20 +13,20 @@ export const initPerformanceController = () => {
     });
 
     if (enabled) {
-      win.performanceModeVanta?.freeze();
-      win.performanceModeMatter?.stop();
-      win.performanceModeMarquee?.refresh();
-      win.performanceModeScroll?.disableSnap();
+      window.performanceModeVanta?.freeze();
+      window.performanceModeMatter?.stop();
+      window.performanceModeMarquee?.refresh();
+      window.performanceModeScroll?.disableSnap();
     } else {
-      win.performanceModeVanta?.resume();
-      win.performanceModeMatter?.start();
-      win.performanceModeMarquee?.refresh();
-      win.performanceModeScroll?.enableSnap();
+      window.performanceModeVanta?.resume();
+      window.performanceModeMatter?.start();
+      window.performanceModeMarquee?.refresh();
+      window.performanceModeScroll?.enableSnap();
     }
   };
 
-  win.togglePerformanceMode = () => {
-    const nextState = !win.__performanceModeEnabled;
+  window.togglePerformanceMode = () => {
+    const nextState = !window.__performanceModeEnabled;
     setPerformanceMode(nextState);
     localStorage.setItem(STORAGE_KEY, nextState ? "on" : "off");
   };
@@ -61,7 +52,7 @@ export const initPerformanceController = () => {
       return;
     }
 
-    win.togglePerformanceMode?.();
+    window.togglePerformanceMode?.();
   });
 
   // Handle Animation End for delayed toggles
@@ -72,7 +63,7 @@ export const initPerformanceController = () => {
     const btn = target.closest('.performance-toggle.fling');
     if (btn) {
       btn.classList.remove('fling');
-      win.togglePerformanceMode?.();
+      window.togglePerformanceMode?.();
     }
   }, { capture: true });
 };

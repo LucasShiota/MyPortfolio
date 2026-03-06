@@ -19,6 +19,7 @@ interface VantaEffect {
 interface Window {
   vantaEffect?: VantaEffect;
   __performanceModeEnabled?: boolean;
+  togglePerformanceMode?: () => void;
   performanceModeVanta?: {
     freeze: () => void;
     resume: () => void;

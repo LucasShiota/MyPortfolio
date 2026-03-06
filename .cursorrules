@@ -1,0 +1,32 @@
+# AI Project Rules & Standards
+
+When working on this project, you MUST adhere to the following standards to ensure consistency and pass automated CI checks.
+
+## 1. Commit Messages
+All commit messages MUST follow the **Conventional Commits** specification. The project uses `commitlint` to enforce this.
+- **Format**: `<type>(<scope>): <description>`
+- **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
+- **Example**: `feat(scroll): add smooth snapping to panel transitions`
+
+## 2. File Commenting
+Every major logic file (.ts, .astro) MUST start with a stylized header block.
+- **Header Structure**:
+```typescript
+/**
+ * ══════════════════════════════════════════════
+ *  [MODULE NAME]
+ * ══════════════════════════════════════════════
+ * 
+ * PURPOSE: Brief explanation.
+ * CRITICAL RULES: List any gotchas here.
+ */
+```
+- **Section Dividers**: Use `// --- SECTION NAME ---` to group logic.
+
+## 3. Documentation
+- **Change Log**: Updates should be added to `.docs/CHANGELOG.md` following the "Keep a Changelog" format.
+- **Style Guide**: Refer to `.docs/STYLEGUIDE.md` for detailed rules.
+
+## 4. Hierarchy
+- Keep logic-heavy TypeScript in `src/components/features/`.
+- Keep reusable components in `src/components/`.
