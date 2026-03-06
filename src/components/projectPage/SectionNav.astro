@@ -2,6 +2,7 @@
 import BackButton from "./SectionBackButton.astro";
 
 interface Props {
+  title: string;
   sections: {
     id?: string;
     label?: string;
@@ -18,7 +19,7 @@ interface Props {
   }[];
 }
 
-const { sections } = Astro.props;
+const { sections, title } = Astro.props;
 ---
 
 <div class="jump-to-container">
@@ -31,7 +32,7 @@ const { sections } = Astro.props;
     <!-- Mobile Toggle Button -->
     <button id="jump-toggle" class="jump-toggle" aria-expanded="false" aria-label="Toggle section navigation">
       <i class="fa-solid fa-list-ul"></i>
-      <span> Sections </span>
+      <span>Sections</span>
       <i class="fa-solid fa-chevron-up toggle-chevron"></i>
     </button>
 
@@ -46,8 +47,13 @@ const { sections } = Astro.props;
 
     <div class="nav-sections">
       <div class="nav-header">
-        <i class="fa-solid fa-list-ul"></i>
-        <span>Sections</span>
+        <div class="nav-project-title">
+          {title.split(' ').map(word => <span>{word}</span>)}
+        </div>
+        <div class="nav-header-sub">
+          <i class="fa-solid fa-list-ul"></i>
+          <span>Sections</span>
+        </div>
       </div>
       <ul class="nav-list" id="nav-list">
         {(() => {
@@ -286,23 +292,33 @@ const { sections } = Astro.props;
 
     .nav-sections {
       @apply surface-panel;
-      padding: 1.5rem 0.75rem; /* Reduced horizontal padding for better fit */
+      padding: 1.5rem 1rem; /* Balanced horizontal padding */
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
 
-    .nav-header {
-      @apply txt-color-accent font-bold txt-body;
-      letter-spacing: 0.05em;
-      padding-bottom: 0.5rem;
-      border-bottom: var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-    }
+  }
+
+  /* Shared Header Layout for both Mobile and Desktop Popovers */
+  .nav-header {
+    border-bottom: var(--border);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+  }
+
+  .nav-header-sub {
+    @apply txt-color-accent font-bold;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: 0.05em;
   }
 
   /* Mobile/Tablet Layout: Bottom centered bar */  
@@ -318,7 +334,7 @@ const { sections } = Astro.props;
       align-items: center;
       width: 100%;
       padding: 0 1.5rem;
-      pointer-events: none; /* Allow clicks through container but not buttons */
+      pointer-events: none;
     }
 
     .bottom-bar {
@@ -354,25 +370,17 @@ const { sections } = Astro.props;
       color: var(--accent-reverse);
     }
 
-    .snap-btn:active {
-      transform: scale(0.9);
-    }
-
     .jump-toggle {
       @apply btn-type-main;
+      @apply font-semibold;
+      @apply txt-body;
+      box-shadow: none;
+      transition: transform 0.3s ease, background 0.3s ease;
       display: flex;
       align-items: center;
       gap: 0.75rem;
       padding-right: 1.5rem;
       padding-left: 1.5rem;
-      @apply font-semibold;
-      @apply txt-body-sm;
-      box-shadow: none;
-      transition: transform 0.3s ease, background 0.3s ease;
-    }
-
-    .jump-toggle:active {
-      transform: scale(0.95);
     }
 
     .toggle-chevron {
@@ -382,6 +390,15 @@ const { sections } = Astro.props;
 
     .jump-toggle[aria-expanded="true"] .toggle-chevron {
       transform: rotate(180deg);
+    }
+
+    .nav-header {
+      border-bottom-color: rgba(var(--gray), 0.1);
+    }
+
+    .nav-header-sub {
+      @apply txt-body;
+      opacity: 0.8;
     }
 
     .jump-nav {
@@ -402,8 +419,8 @@ const { sections } = Astro.props;
 
     .nav-sections {
       @apply surface-panel;
-      padding: 1rem;
-      min-width: 200px;
+      padding: 1.25rem;
+      min-width: 240px;
     }
 
     .jump-nav.is-open {
@@ -411,9 +428,12 @@ const { sections } = Astro.props;
       visibility: visible;
       transform: translateY(0);
     }
+  }
 
-    .nav-header {
-      display: none; /* Hide header on mobile, toggle button serves this role */
+  /* Desktop Sidebar adjustment */
+  @media (min-width: 1024px) {
+    .nav-header-sub {
+      @apply txt-body-lg;
     }
   }
 
@@ -448,12 +468,12 @@ const { sections } = Astro.props;
   .nav-link {
     text-decoration: none;
     color: var(--text-color);
-    @apply txt-body-sm;
-    @apply font-medium;
+    @apply txt-body;
+    @apply font-bold;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.4rem 0.75rem;
+    padding: 0.6rem 1rem;
     border-radius: 8px;
     transition: all 0.2s ease;
     opacity: 0.7;
@@ -467,12 +487,12 @@ const { sections } = Astro.props;
   }
 
   .sub-link .nav-label {
-    font-size: 0.8em;
+    font-size: 0.85em;
   }
 
   .nav-label {
 
-    font-size: 0.85em;
+    font-size: 0.95em;
     transition: transform 0.2s ease;
   }
 
@@ -512,6 +532,7 @@ const { sections } = Astro.props;
     transform: translateX(0) rotate(45deg) scale(0.85);
   }
 
+  /* Remove the general .nav-header outside media queries to avoid duplication */
   .nav-link.active .nav-label {
     font-weight: bold;
     color: var(--accent-reverse);
@@ -521,6 +542,26 @@ const { sections } = Astro.props;
   .nav-item-group:has(.sub-nav-list.is-collapsed .sub-link.active) .nav-link-wrapper .nav-link .nav-label {
     color: var(--accent-reverse);
     opacity: 1;
+  }
+
+  .nav-project-title {
+    font-family: "Notable", sans-serif;
+    font-size: 1rem;
+    line-height: 1.1;
+    color: var(--accent-reverse);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0; /* Resetting direct padding to use gap instead */
+  }
+
+  .nav-project-title span {
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 
 </style>

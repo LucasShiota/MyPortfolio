@@ -65,17 +65,16 @@ sections:
           icon: "fa-solid fa-compass"
           content: |
             An NSR TRPG blending deckbuilding gameplay and deep character fantasy. Embracing improv, mixing, and synergy. A high-variety system players can easily jump into and get lost in.
-      - component: "CardList"
-        props: 
+      - component: "List"
+        props:
           title: "Goals"
           icon: "fa-solid fa-bullseye"
-          items:
-            - "Use the gameplay potential of card and deckbuilding mechanics to their fullest"
-            - "Evoke a sense of satisfaction in players realizing their character fantasy"
-            - "Streamline rules and rulebook to lower the barrier of entry and the cost of play"
-            - "Excite players with many choices and freedom without overwhelming them"
-            - "A high-density, low-complexity approach to the overarching rules package"
-
+          entries:
+            - ["Make the New Medium Shine", "Harness the unique potential of cards to facilitate emergent and new gameplay loops"]
+            - ["Nurture Imagination", "Evoke a sense of satisfaction in players manifesting their character fantasy"]
+            - ["Low Cost of Play", "Streamline rules and rulebook to minimize cognitive load and time investment"]
+            - ["Banquet of Fun Choices", "Empower players with many choices and freedoms without paralysing them"]
+            - ["Wide Scope, Simple Execution", "Mechanically cover character survival, adventuring, and lifestyle comprehensively without the friction of bloated mechanics."] 
   - id: "work-in-progress"
     label: "Work In Progress"
     component: "Title"

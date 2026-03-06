@@ -2,6 +2,7 @@
 import BaseHead from './BaseHead.astro';
 import Header from './Header.astro';
 import VantaFogBG from '../features/VantaFogBG.astro';
+import ScrollKeyboard from '../scroll/ScrollKeyboard.astro';
 interface Props {
   title: string;
   description: string;
@@ -76,6 +77,7 @@ const { title, description } = Astro.props;
     <Header />
     <slot />
     <VantaFogBG/>
+    <ScrollKeyboard />
     <script>
       import { initStartupController } from '../../scripts/ui/startupController';
       initStartupController();

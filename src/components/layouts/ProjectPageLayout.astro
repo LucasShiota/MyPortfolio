@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import ProjectIntro from '../projectPage/SectionIntro.astro';
 import ProjectOverview from '../projectPage/SectionOverview.astro';
 import SectionCardList from '../projectPage/SectionCardList.astro';
+import SectionList from '../projectPage/SectionList.astro';
 import ComingSoon from '../projectPage/SectionComingSoon.astro';
 import TextSection from '../projectPage/SectionText.astro';
 import TagSection from '../projectPage/SectionTags.astro';
@@ -21,6 +22,7 @@ const { data } = Astro.props;
 const COMPONENT_MAP: Record<string, any> = {
   Overview: ProjectOverview,
   CardList: SectionCardList,
+  List: SectionList,
   ComingSoon: ComingSoon,
   Text: TextSection,
   Tags: TagSection,
@@ -45,7 +47,7 @@ const sections = data.sections || [];
 
 <BaseLayout title={`${project.title} | ${SITE_TITLE}`} description={project.description}>
   <main class="project-page">
-    <JumpToNav sections={sections} />
+    <JumpToNav sections={sections} title={project.title} />
 
     <ProjectIntro 
       id="intro"

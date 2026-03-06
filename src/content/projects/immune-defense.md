@@ -57,23 +57,22 @@ sections:
           title: "Problem"
           icon: "fa-solid fa-circle-question"
           content: |
-            The modern MOBA and hero shooter landscape has become increasingly unaccommodating to the average player due to extreme skill ceilings and unbudging design molds. This creates a polarized player base where the performance gap between casual and elite tiers results in awful matchmaking and toxicity, while development cycles prioritize FOMO-driven monetization and retention methods.
+            The modern MOBA and hero shooter landscape has become increasingly unaccommodating to the average player due to extreme skill ceilings and unbudging design molds. This creates a polarized player base where the performance gap between casual and elite tiers results in unbalanced matchmaking and toxicity while being subjected to FOMO-driven monetization and retention methods. This leaves the target audience exhausted in engaging the genre they love.
       - component: "Text"
         props:
           title: "Vision"
           icon: "fa-solid fa-compass"
           content: |
-            A charmingly unserious topdown shooter that reimagines what a big picture objective based multiplayer can be. An intuitive and expressive multiplayer thats easy to learn and fun to master. Prioritizing frictionless casual experience for mass audience appeal and reliable fun.
-      - component: "CardList"
-        props: 
+            A charmingly unserious topdown shooter that reimagines what a big picture objective based multiplayer can be. An intuitive and expressive team shooter thats easy to learn and fun to master. Prioritizing frictionless casual experience for mass audience appeal and reliable fun.
+      - component: "List"
+        props:
           title: "Goals"
           icon: "fa-solid fa-bullseye"
-          items:
-            - "Prioritize instinctive skill expression over mechanics while ensuring a skill ceiling that doesnt exponentially increase skill delta"
-            - "Lower match friction and play fatigue by delivering humor, unserious visuals, and "
-            - "Create new challenges, variables, and assymetrical contributions to let players tackle the classic team battle formula in fresh different ways"
-            - "Respect players time and accomodate them in matchmaking and reward systems despite skill or retention"
-            - ""
+          entries:
+            - ["Game Sense over Execution", "Prioritize horizontal skill expression over a mechanics-heavy vertical ceiling."]
+            - ["Cheerful Style, Cheerful Matches", "Lower match friction and play fatigue by delivering humor, lighthearted visuals, and a low-pressure atmosphere."]
+            - ["New Axes of Play", "Introduce new variables and asymmetrical roles to let players tackle the classic team battle formula in fresh ways."]
+            - ["Reliable Fun", "Respect players' time and accommodate them in matchmaking and rewards regardless of skill or retention levels."]
 
   - id: "work-in-progress"
     label: "Work In Progress"

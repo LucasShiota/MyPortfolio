@@ -1,0 +1,110 @@
+<script>
+	import { gsap } from "gsap";
+	import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+	gsap.registerPlugin(ScrollToPlugin);
+
+	/**
+	 * ScrollKeyboard
+	 * Adapts Space, Shift+Space, PageDown, and PageUp to snap between major sections
+	 * instead of the browser default 1 viewport scroll.
+	 */
+
+	// Selectors that define important sections on different types of pages
+	const SNAPPABLE_SELECTORS = [".panel", ".section-group", ".hero-section", ".project-section"];
+	const HEADER_VAR = "--header-height";
+	
+	let isScrolling = false;
+
+	function getTargetElements() {
+		return Array.from(document.querySelectorAll<HTMLElement>(SNAPPABLE_SELECTORS.join(",")))
+			.map(el => ({
+				el,
+				top: el.getBoundingClientRect().top + window.scrollY
+			}))
+			.filter(({ el, top }) => {
+				const rect = el.getBoundingClientRect();
+				// Ensure element is actually visible/has height and isn't nested redundantly
+				if (el.classList.contains("project-section") && el.closest(".section-group")) {
+					return false;
+				}
+				return rect.height > 20; 
+			})
+			.sort((a, b) => a.top - b.top);
+	}
+
+	function handleKeyboard(e: KeyboardEvent) {
+		const isSpace = e.code === "Space";
+		const isPageDown = e.code === "PageDown";
+		const isPageUp = e.code === "PageUp";
+
+		if (!isSpace && !isPageDown && !isPageUp) return;
+
+		// Don't override if typing in an input
+		const active = document.activeElement;
+		if (
+			active && 
+			(active.tagName === "INPUT" || 
+			 active.tagName === "TEXTAREA" || 
+			 (active as HTMLElement).isContentEditable)
+		) {
+			return;
+		}
+
+		e.preventDefault();
+
+		const isForward = isPageDown || (isSpace && !e.shiftKey);
+		const scrollY = window.scrollY;
+		const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue(HEADER_VAR)) || 0;
+		const buffer = 20; // Tolerance to avoid sticking on current section
+
+		const targets = getTargetElements();
+		
+		if (targets.length === 0) {
+			// Fallback to standard smooth scroll if nothing to snap to
+			const amount = window.innerHeight * 0.8;
+			gsap.to(window, {
+				duration: 0.5,
+				scrollTo: { y: isForward ? scrollY + amount : scrollY - amount },
+				ease: "power2.out"
+			});
+			return;
+		}
+
+		let targetY = -1;
+
+		if (isForward) {
+			// Find the first target that is clearly below our current view
+			// We subtract headerHeight because content usually scrolls under it
+			const next = targets.find((t) => t.top > scrollY + headerHeight + buffer);
+			
+			if (next) {
+				targetY = next.top - headerHeight;
+			} else {
+				// We're at the last section, snap to the very bottom
+				targetY = document.documentElement.scrollHeight;
+			}
+		} else {
+			// Find the first target that is clearly above our current view
+			const prev = [...targets].reverse().find((t) => t.top < scrollY + headerHeight - buffer);
+			
+			if (prev) {
+				targetY = prev.top - headerHeight;
+			} else {
+				// We're at the top, snap to zero
+				targetY = 0;
+			}
+		}
+
+		if (targetY !== -1) {
+			isScrolling = true;
+			gsap.to(window, {
+				duration: 0.7,
+				scrollTo: { y: targetY },
+				ease: "power4.out", // Snappy but smooth feel
+				onComplete: () => { isScrolling = false; }
+			});
+		}
+	}
+
+	window.addEventListener("keydown", handleKeyboard, { passive: false });
+</script>
