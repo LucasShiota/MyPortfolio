@@ -8,7 +8,14 @@ All commit messages MUST follow the **Conventional Commits** specification. The 
 - **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
 - **Example**: `feat(scroll): add smooth snapping to panel transitions`
 
-## 2. File Commenting
+## 2. Branching Strategy
+To maintain a clean production history, we use a PR-based workflow.
+- **Direct Push**: **FORBIDDEN** to `main`.
+- **Branch Naming**: Use `feature/`, `fix/`, `chore/`, `refactor/`, or `hotfix/`.
+- **PRs**: Require Astro/TypeCheck to pass and at least one approval.
+- **Merge Style**: **Squash and Merge** is the default.
+
+## 3. File Commenting
 Every major logic file (.ts, .astro) MUST start with a stylized header block.
 - **Header Structure**:
 ```typescript

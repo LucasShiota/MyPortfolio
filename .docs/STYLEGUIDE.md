@@ -4,6 +4,19 @@ This document defines the coding, documentation, and workflow standards for **My
 
 ---
 
+## 0. Branching Strategy
+
+To maintain a clean production history, we use a PR-based workflow.
+
+- **Direct Push**: **FORBIDDEN** to `main`.
+- **Branch Naming**: Use `feature/`, `fix/`, `chore/`, `refactor/`, or `hotfix/`.
+- **PRs**: Require Astro/TypeCheck to pass and at least one approval.
+- **Merge Style**: **Squash and Merge** is the default.
+
+See [CONTRIBUTING.md](file:///c:/Users/lshio/Desktop/Lucas%20Shiota/GitHub%20Repo/MyPortfolio/CONTRIBUTING.md) for full details.
+
+---
+
 ## 1. Commit Message Style
 
 We follow the **Conventional Commits** specification. This allows for automated changelog generation.

@@ -2,9 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [Unreleased]
+
+### Added
+
+- Created **Dependency Health** workflow (`@[/health]`) to track 3rd-party updates and security.
+- Created **Maintenance** workflow (`@[/maintenance]`) to toggle site status.
+- Enhanced **Visual Regression** suite (`@[/visual-check]`) with responsive checks and masking for dynamic elements.
+- Established **Design Tokens** system (`tokens.css` & `@[/design-tokens]`) to centralize styling and variables.
+
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
-### Features
+### Features (0.0.2)
 
 - **automation:** add /health workflow for dependency monitoring ([991c80f](https://github.com/LucasShiota/MyPortfolio/commit/991c80feabc1b2cf52c39598a390032170b09c08))
 - **automation:** add image-guard, a11y, and visual-check workflows ([fba89a6](https://github.com/LucasShiota/MyPortfolio/commit/fba89a64027b47c5d00311b50c76caf94ad12518))
@@ -14,22 +23,22 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### 0.0.1 (2026-03-06)
 
-### Features
+### Features (0.0.1)
 
 - add cloudflare maintenance worker and deploy workflow ([e4baed1](https://github.com/LucasShiota/MyPortfolio/commit/e4baed1abf7eb719aaead8ef5a831c68876c10e3))
 - Add core portfolio UI components and implement a new styling system. ([a89a076](https://github.com/LucasShiota/MyPortfolio/commit/a89a0764ba22235deca430179205e1795f04e29c))
 - Add foundational Astro components for portfolio home and project pages, global styles, and utilities. ([78656f4](https://github.com/LucasShiota/MyPortfolio/commit/78656f4f5487570d63437bbb739e059e8ec1e43f))
 - add GitHub Actions workflow for deploying the maintenance worker ([f28b0cf](https://github.com/LucasShiota/MyPortfolio/commit/f28b0cf3463c14aad96c9e516bd787555b4138b7))
 - Add initial header component, global styles, and an interactive projects section with list, previews, and filtering. ([2e487f7](https://github.com/LucasShiota/MyPortfolio/commit/2e487f7a6b30eebd396b735880845676bb9d756d))
-- add initial UI components and styling for portfolio sections. ([8fceddf](https://github.com/LucasShiota/MyPortfolio/commit/8fceddfe8105e89b3a515751cc774b0b51b17678))
-- add maintenance mode Cloudflare Worker with physics animation and remove Tailwind reference file. ([7fc3de9](https://github.com/LucasShiota/MyPortfolio/commit/7fc3de9c24808544ba52d98b2b648fef29753287))
-- add new components for About, Hero background text, Sidebar, and Simple Mode toggle ([2a2d28e](https://github.com/LucasShiota/MyPortfolio/commit/2a2d28e2eeca0d53c8a30abb4cd3cd05d53dfaa7))
 - Add new icons and update styles ([0e6e75b](https://github.com/LucasShiota/MyPortfolio/commit/0e6e75b2022bcb9f0d8934feea80b3287da076de))
 - Add new project page components, Baraliot project content, and centralized link configuration. ([6333343](https://github.com/LucasShiota/MyPortfolio/commit/6333343e9366728a32cb215745a558b71d113b20))
 - Add new project pages and components for enhanced project display and navigation. ([be9b058](https://github.com/LucasShiota/MyPortfolio/commit/be9b058f6f35e3d1298fe345b5d8eb2a00406706))
 - add panel scroll functionality with GSAP animations and sidebar scaling ([f1dd858](https://github.com/LucasShiota/MyPortfolio/commit/f1dd8584be0bfdfc87a875ccd6c0e138e6dbccda))
 - add project management components and functionality ([aa3950a](https://github.com/LucasShiota/MyPortfolio/commit/aa3950a625c22a131b6b4216398e93122e7950a7))
 - add project showcase and details components ([2927bb5](https://github.com/LucasShiota/MyPortfolio/commit/2927bb5f62ccc375c8fbc9a47c6f39d78c21c20a))
+- add maintenance mode Cloudflare Worker with physics animation and remove Tailwind reference file. ([7fc3de9](https://github.com/LucasShiota/MyPortfolio/commit/7fc3de9c24808544ba52d98b2b648fef29753287))
+- add new components for About, Hero background text, Sidebar, and Simple Mode toggle ([2a2d28e](https://github.com/LucasShiota/MyPortfolio/commit/2a2d28e2eeca0d53c8a30abb4cd3cd05d53dfaa7))
+- add initial UI components and styling for portfolio sections. ([8fceddf](https://github.com/LucasShiota/MyPortfolio/commit/8fceddfe8105e89b3a515751cc774b0b51b17678))
 - enhance header animations and improve theme handling ([efe2db6](https://github.com/LucasShiota/MyPortfolio/commit/efe2db655ebb545b7e1ef8c1af198be07e8bf5df))
 - Implement a dynamic project page layout with modular sections and add initial project content. ([ea14824](https://github.com/LucasShiota/MyPortfolio/commit/ea14824a72a567e11c0f644294cea43ef51ba977))
 - Implement a new projects section featuring a selectable list, detailed previews, and their associated data and control scripts. ([2e1f1f1](https://github.com/LucasShiota/MyPortfolio/commit/2e1f1f1e120c1c93b5da10e29e6502e874974c61))

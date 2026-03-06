@@ -1,0 +1,48 @@
+/**
+ * ══════════════════════════════════════════════
+ *  DESIGN TOKENS (tokens.css)
+ * ══════════════════════════════════════════════
+ * 
+ * PURPOSE: Global variables for the design system. 
+ * Theme-independent values go here.
+ */
+
+:root {
+  /* Z-INDEX REGISTRY */
+  --z-vanta: -1;
+  --z-marquee: 5;
+  --z-sidebar: 100;
+  --z-menu: 900;
+  --z-nav: 950;
+  --z-header: 1000;
+  --z-menu-toggle: 1100;
+
+  /* LAYOUT TOKENS */
+  --header-height: 4.5rem;
+  --sidebar-width: clamp(180px, 15vw, 240px);
+  --panel-height: calc(100vh - var(--header-height));
+
+  /* TYPOGRAPHY */
+  --font-display: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --herobgtext-font-size: 24vh;
+  --font-size-huge: 26vh;
+
+  /* SPACING TOKENS */
+  --space-unit: 1rem;
+  --space-xs: calc(var(--space-unit) * 0.25);
+  --space-sm: calc(var(--space-unit) * 0.5);
+  --space-md: var(--space-unit);
+  --space-lg: calc(var(--space-unit) * 2);
+  --space-xl: calc(var(--space-unit) * 4);
+
+  /* UI SYSTEM */
+  --border-radius-sm: 0.5rem;
+  --border-radius-md: 1rem;
+  --border-radius-lg: 1.25rem;
+  --border-radius-full: 9999px;
+
+  --transition-speed: 0.6s;
+  --transition-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+  --border: 2px solid rgba(var(--gray), 0.2);
+}
