@@ -91,4 +91,5 @@ We use the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
 - **Image Guard**: Staged images are checked for size limits to prevent site bloat.
 - **A11y Checks**: Run automated accessibility audits via `@[/a11y]`.
 - **Visual Checks**: Detect unintended UI changes using `@[/visual-check]`.
+- **Health Checks**: Monitor dependency updates and security via `@[/health]`.
 - **Change Log Updates**: AI should proactively update `CHANGELOG.md` after major tasks.
