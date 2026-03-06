@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **automation:** add image-guard, a11y, and visual-check workflows ([fba89a6](https://github.com/LucasShiota/MyPortfolio/commit/fba89a64027b47c5d00311b50c76caf94ad12518))
 - **formatting:** install Prettier and configure lint-staged ([e9e91b6](https://github.com/LucasShiota/MyPortfolio/commit/e9e91b681ef00a1002be77f845aea503b5a7021b))
 - **standards:** add /plan workflow for high-efficiency execution ([3b77f18](https://github.com/LucasShiota/MyPortfolio/commit/3b77f18e30a688956dcc727e110d868247235591))
+- **maintenance:** reorganize worker and add `/maintenance` workflow
 
 ### 0.0.1 (2026-03-06)
 
