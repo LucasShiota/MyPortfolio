@@ -5,11 +5,13 @@ This document defines the coding, documentation, and workflow standards for **My
 ---
 
 ## 1. Commit Message Style
+
 We follow the **Conventional Commits** specification. This allows for automated changelog generation.
 
 **Format**: `<type>(<scope>): <description>`
 
 ### Types:
+
 - `feat`: A new feature
 - `fix`: A bug fix
 - `docs`: Documentation only changes
@@ -20,24 +22,28 @@ We follow the **Conventional Commits** specification. This allows for automated 
 - `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
 
 ### Example:
+
 `feat(scroll): add smooth snapping to panel transitions`
 `refactor(sidebar): consolidate mobile and desktop classes`
 
 ---
 
 ## 2. File Commenting Standards
+
 Every major file (especially `.ts` and `.astro` logic) should have a header block and clear section dividers.
 
 ### Header Block
+
 Used at the top of the file to explain its purpose and any critical rules.
+
 ```typescript
 /**
  * ══════════════════════════════════════════════
  *  [FILE NAME / MODULE NAME]
  * ══════════════════════════════════════════════
- * 
+ *
  * PURPOSE: Brief explanation of what this file does.
- * 
+ *
  * CRITICAL RULES:
  * - List any "gotchas" or strict design rules here.
  * - [Rule 1]
@@ -45,7 +51,9 @@ Used at the top of the file to explain its purpose and any critical rules.
 ```
 
 ### Section Dividers
+
 Used to group related logic within a file.
+
 ```typescript
 // --- SECTION NAME (e.g. SHARED STATE, HELPERS, LISTENERS) ---
 ```
@@ -53,9 +61,11 @@ Used to group related logic within a file.
 ---
 
 ## 3. Change Log Structure
+
 We use the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
 
 ### Structure:
+
 - `Added`: for new features.
 - `Changed`: for changes in existing functionality.
 - `Deprecated`: for soon-to-be removed features.
@@ -66,6 +76,7 @@ We use the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
 ---
 
 ## 4. File & Folder Hierarchy
+
 - `src/components/`: Reusable Astro components.
 - `src/components/features/`: Logic-heavy modules (e.g., scroll, interactions). Try to keep `.ts` logic separate from `.astro` if it exceeds 100 lines.
 - `src/layouts/`: Base page templates.
@@ -74,5 +85,7 @@ We use the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
 ---
 
 ## 5. Automation
+
 - **Commit Hooks**: Commits that don't match the style guide will be rejected by `commitlint`.
+- **Auto-Formatting**: Code is automatically formatted using Prettier via `lint-staged` on every commit.
 - **Change Log Updates**: AI should proactively update `CHANGELOG.md` after major tasks.

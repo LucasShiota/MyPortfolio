@@ -30,3 +30,8 @@ Every major logic file (.ts, .astro) MUST start with a stylized header block.
 ## 4. Hierarchy
 - Keep logic-heavy TypeScript in `src/components/features/`.
 - Keep reusable components in `src/components/`.
+
+## 5. Formatting
+- The project uses **Prettier**.
+- Code is automatically formatted on commit via `lint-staged`.
+- Ensure your editor has the Prettier extension enabled for real-time feedback.
