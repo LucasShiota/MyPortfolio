@@ -12,7 +12,8 @@
     "prepare": "husky",
     "release": "standard-version",
     "a11y": "pa11y http://localhost:4321",
-    "visual-check": "playwright test --config .config/playwright.config.ts"
+    "visual-check": "playwright test --config .config/playwright.config.ts",
+    "archive-changelog": "node .agent/scripts/archive-changelog.mjs"
   },
   "standard-version": {
     "infile": ".docs/CHANGELOG.md",
