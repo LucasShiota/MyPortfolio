@@ -3,7 +3,7 @@ name: Deploy Maintenance Worker
 on:
   push:
     paths:
-      - 'workers/maintenance/**'
+      - '.agent/scripts/maintenance/**'
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'workers/maintenance'
+          workingDirectory: '.agent/scripts/maintenance'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
