@@ -24,6 +24,7 @@
   /* Default Spacing Logic (Normal Section) */
   --section-pad-x: var(--section-spacing-base);
   --section-pad-y: var(--section-spacing-base);
+  --subsection-border-margin-bottom: 0rem;
   
   /* Layout */
   --section-indent: calc(var(--section-spacing-base) * var(--indent-mod));
@@ -34,21 +35,25 @@
 .project-section.subsection {
   padding-left: var(--section-indent);
   --section-pad-y: calc(var(--section-spacing-base) * var(--sub-mod));
+  --subsection-border-margin-bottom: 1rem;
 }
 
 .project-section.compact {
   --section-pad-y: calc(var(--section-spacing-base) * var(--compact-mod));
+  --subsection-border-margin-bottom: 0rem;
 }
 
 .project-section.compact.subsection {
   --section-pad-x: 0rem;
   --section-pad-y: calc(var(--section-spacing-base) * var(--sub-compact-mod));
+  --subsection-border-margin-bottom: 0.5rem;
 }
 
 /* Core Component Styles */
 .panel-card {
   @apply surface-panel;
   padding: var(--section-pad-y) var(--section-pad-x);
+  margin-bottom: var(--subsection-border-margin-bottom);
   display: flex;
   flex-direction: column;
   position: relative;

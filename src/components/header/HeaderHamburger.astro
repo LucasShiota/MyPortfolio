@@ -5,6 +5,7 @@ import HeaderQR from './HeaderQR.astro';
 import HeaderCredit from './HeaderCredit.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import PerformanceToggle from './PerformanceToggle.astro';
+import AccessibilityToggle from './AccessibilityToggle.astro';
 import HeaderIconButton from './HeaderIconButton.astro';
 
 interface Props {
@@ -39,6 +40,7 @@ const { isHome } = Astro.props;
         )}
     </div>
     <div class="hmbrgr-toggles">
+        <AccessibilityToggle isHamburger={true} id="hmbrgr-accessibility-toggle" />
         <ThemeToggle id="hmbrgr-theme-toggle" />
         <PerformanceToggle id="hmbrgr-performance-toggle" />
     </div>
