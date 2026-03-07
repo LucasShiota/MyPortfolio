@@ -13,7 +13,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Changed
 
-- Enhanced hamburger menu toggle with full-height wrapper and improved styling.
+- Refactored header and panel buttons to use semantically correct HTML tags (`<a>` vs `<button>`).
+- Updated button utility classes (`btn-type-main`) to correctly override global link hover styles.
+- Enhanced hamburger menu toggle with full-height wrapper and improved border layout.
 
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 

@@ -116,12 +116,17 @@ const { isHome } = Astro.props;
     @apply flx-cntr-rw;
     height: var(--header-height);
     width: var(--header-height);
-    background: var(--accent);
+    background: var(--accent-reverse);
+    border-bottom: 3px solid color-mix(in srgb, var(--accent-reverse) 80%, black);
     transition: background var(--transition-speed) ease;
+
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   #hmbrgr-menu {
-    @apply flx-cntr-clmn;
+    @apply flx-cntr-clmn surface-panel;
     display: none;
     position: fixed;
     width: 100%;
@@ -129,11 +134,14 @@ const { isHome } = Astro.props;
     top: var(--header-height);
     padding: 1rem 0;
     gap: 1rem;
-    background: var(--bg-color-tinted);
-    box-shadow: var(--box-shadow);
     opacity: 1;
-    border-top: 1px solid rgba(var(--gray), 0.2);
     z-index: var(--z-menu);
+
+    /* Overrides since it attaches to the header */
+    border-radius: 0 0 clamp(1rem, 3cqi, 2.5rem) clamp(1rem, 3cqi, 2.5rem);
+    border-top: none; /* Already defined by header */
+    border-left: none;
+    border-right: none;
   }
   #hmbrgr-menu.open {
     display: flex;
@@ -169,7 +177,7 @@ const { isHome } = Astro.props;
     width: 100%;
     height: 100%;
     border-radius: 0;
-    color: var(--text-color);
+    color: var(--bg-color);
   }
 
   @media (hover: hover) {
@@ -203,9 +211,6 @@ const { isHome } = Astro.props;
 
   .hmbrgr-contacts {
     border-right: var(--border);
-  }
-  .hmbrgr-contact-btn {
-    @apply btn-type-main-reverse;
   }
 
   .hmbrgr-nav {

@@ -3,48 +3,100 @@
 @import "./text.css";
 @import "./root.css";
 
-
 /* -------------------- */
 /* ----- FLEXBOX -----*/
 /* -------------------- */
 /* #region flexbox */
 
-@utility flx-clmn { display: flex; flex-direction: column; }
-@utility flx-rw { display: flex; flex-direction: row; }
+@utility flx-clmn {
+  display: flex;
+  flex-direction: column;
+}
+@utility flx-rw {
+  display: flex;
+  flex-direction: row;
+}
 
-@utility flx-jstfycntr-clmn { display: flex; flex-direction: column; justify-content: center; }
-@utility flx-jstfycntr-rw { display: flex; flex-direction: row; justify-content: center; }
-@utility flx-algncntr-clmn { display: flex; flex-direction: column; align-items: center; }
-@utility flx-algncntr-rw { display: flex; flex-direction: row; align-items: center; }
+@utility flx-jstfycntr-clmn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+@utility flx-jstfycntr-rw {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+@utility flx-algncntr-clmn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@utility flx-algncntr-rw {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-@utility flx-cntr { display: flex; justify-content: center; align-items: center; }
-@utility flx-cntr-clmn { display: flex; justify-content: center; align-items: center; flex-direction: column; }
-@utility flx-cntr-rw { display: flex; justify-content: center; align-items: center; flex-direction: row; }
+@utility flx-cntr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@utility flx-cntr-clmn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+@utility flx-cntr-rw {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
 
-@utility cntr { justify-content: center; align-items: center; }
+@utility cntr {
+  justify-content: center;
+  align-items: center;
+}
 
 /* #endregion */
 
+@utility wh100 {
+  width: 100%;
+  height: 100%;
+}
 
-
-@utility wh100 { width: 100%; height: 100%; }
-
-@utility mrgn-pddng-none { margin: 0; padding: 0; }
+@utility mrgn-pddng-none {
+  margin: 0;
+  padding: 0;
+}
 
 @utility surface-panel {
   background: var(--bg-color-tinted);
-  border: var(--border); border-radius: 1rem;
+  border: var(--border);
+  border-radius: clamp(1rem, 1cqi, 2.5rem);
   box-shadow: var(--box-shadow);
+  container-type: inline-size;
 }
 
 /* -------------------- */
 /* --- MASTER LAYOUT -- */
 /* -------------------- */
 
-body > header { z-index: var(--z-header); }
-.sidebar { z-index: var(--z-sidebar); }
-#hmbrgr-menu { z-index: var(--z-menu); }
-#hmbrgr-menu-toggle { z-index: var(--z-menu-toggle); }
+body > header {
+  z-index: var(--z-header);
+}
+.sidebar {
+  z-index: var(--z-sidebar);
+}
+#hmbrgr-menu {
+  z-index: var(--z-menu);
+}
+#hmbrgr-menu-toggle {
+  z-index: var(--z-menu-toggle);
+}
 
 .master-layout {
   display: grid;

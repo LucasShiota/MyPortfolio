@@ -45,5 +45,5 @@
 
   --transition-speed: 0.6s;
   --transition-cubic: cubic-bezier(0.4, 0, 0.2, 1);
-  --border: 2px solid rgba(var(--gray), 0.2);
+  --border: 3px solid rgba(var(--gray), 0.2);
 }

@@ -24,34 +24,38 @@ const pathname = Astro.url.pathname;
 const isHome = pathname === "/" || pathname === "";
 ---
 
-<header class="flx-cntr-rw">
+<header class="flx-cntr-rw surface-panel">
   <HeaderLogo />
   <div class="header-contacts">
-    <div class="contact-btn"><i class="contact-icon fa-solid fa-file-lines"></i></div>CV
+    <div class="contact-btn">
+      <i class="contact-icon fa-solid fa-file-lines"></i>CV
+    </div>
+    <a
+      href={LINKS.linkedin.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="contact-btn"
+      aria-label={LINKS.linkedin.label}
+      title={LINKS.linkedin.title}
+    >
+      <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn
+    </a>
+    <LetsTalk />
+    <a href="/#about" class="contact-btn">
+      <i class="contact-icon fa-solid fa-user"></i> About
+    </a>
   </div>
-  <a
-    href={LINKS.linkedin.url}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="contact-btn"
-    aria-label={LINKS.linkedin.label}
-    title={LINKS.linkedin.title}
-  >
-    <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn
-  </a>
-  <LetsTalk />
-  <a href="/#about" class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i> About </a>
+  <div class="header-actions">
+    <div class="header-toggles">
+      <AccessibilityToggle />
+      <ThemeToggle />
+      <PerformanceToggle />
+    </div>
+    <HeaderHamburger isHome={isHome} />
+  </div>
+  <DarkMode />
+  <PerformanceMode />
 </header>
-<div class="header-actions">
-  <div class="header-toggles">
-    <AccessibilityToggle />
-    <ThemeToggle />
-    <PerformanceToggle />
-  </div>
-  <HeaderHamburger isHome={isHome} />
-</div>
-<DarkMode />
-<PerformanceMode />
 
 <style>
   @reference "../../../styles/global.css";
@@ -65,9 +69,15 @@ const isHome = pathname === "/" || pathname === "";
     position: fixed;
     height: var(--header-height);
     width: 100%;
+    z-index: var(--z-header);
+
+    /* Overrides for surface-panel to make it a header */
     background: var(--bg-color);
     box-shadow: var(--box-shadow-small);
-    z-index: var(--z-header);
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
   }
 
   header.menu-open {
@@ -107,6 +117,7 @@ const isHome = pathname === "/" || pathname === "";
     justify-content: flex-end;
     justify-self: flex-end;
     margin-right: 0;
+    padding-right: var(--header-height);
   }
 
   /* #endregion */
@@ -117,7 +128,7 @@ const isHome = pathname === "/" || pathname === "";
   /* #region Contacts */
 
   .contact-btn {
-    @apply btn-type-main-reverse;
+    @apply btn-type-main;
   }
   .contact-icon {
     display: none;

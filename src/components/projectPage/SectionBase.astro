@@ -1,5 +1,5 @@
 ---
-import './SectionSpacing.css';
+import "./SectionSpacing.css";
 
 interface Props {
   title?: string;
@@ -16,51 +16,53 @@ interface Props {
   };
 }
 
-const { 
-  title, 
-  icon, 
-  id, 
-  order, 
-  isSubsection = false, 
+const {
+  title,
+  icon,
+  id,
+  order,
+  isSubsection = false,
   parentOrder,
   class: className,
-  options = {}
+  options = {},
 } = Astro.props;
 
 const shouldShowCounter = !!(order && !options.excludeFromOrder);
 
 // Inline style for custom variables
 const sectionStyles = {
-  ...(options.barColor && { '--section-bar-color': options.barColor })
+  ...(options.barColor && { "--section-bar-color": options.barColor }),
 };
 ---
 
-<section 
+<section
   class:list={[
-    'project-section',
+    "project-section",
     { subsection: isSubsection },
     { excluded: options.excludeFromOrder },
     { compact: options.compact },
-    className
+    className,
   ]}
   id={id}
   style={sectionStyles}
   data-debug-compact={options.compact}
 >
   <div class="panel-card">
-    {(title || icon || shouldShowCounter) && (
-      <div class="section-title">
-        <div class="title-left">
-          {icon && <i class={`${icon} title-icon ${isSubsection ? 'sub-icon' : ''}`}></i>}
-          {title && <h2>{title}</h2>}
-        </div>
-        {shouldShowCounter && (
-          <div class="section-counter">
-            {isSubsection ? `${parentOrder}.${order}` : `${order}`}
+    {
+      (title || icon || shouldShowCounter) && (
+        <div class="section-title">
+          <div class="title-left">
+            {icon && <i class={`${icon} title-icon ${isSubsection ? "sub-icon" : ""}`} />}
+            {title && <h2>{title}</h2>}
           </div>
-        )}
-      </div>
-    )}
+          {shouldShowCounter && (
+            <div class="section-counter">
+              {isSubsection ? `${parentOrder}.${order}` : `${order}`}
+            </div>
+          )}
+        </div>
+      )
+    }
     <div class="content-wrapper">
       <slot />
     </div>
@@ -86,17 +88,24 @@ const sectionStyles = {
     top: 0; /* Start at 5% */
     height: 100%; /* End at 95% (total 90% height) */
     width: 4px;
-    background: var(--section-bar-color, color-mix(in srgb, var(--accent-reverse) 40%, transparent)); /* Lighter accent */
+    background: var(
+      --section-bar-color,
+      color-mix(in srgb, var(--accent-reverse) 40%, transparent)
+    ); /* Lighter accent */
     border-radius: 99px;
   }
 
   .panel-card {
     position: relative;
+    @apply surface-panel;
+    padding: var(--section-pad-y, 2rem) var(--section-pad-x, 2rem);
   }
 
   .section-title {
     @apply txt-h4;
-    display: flex; justify-content: space-between; align-items: baseline;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     width: 100%;
     margin-bottom: 1rem;
     position: relative;
@@ -116,13 +125,13 @@ const sectionStyles = {
   }
 
   .section-title h2 {
-    @apply uppercase txt-color-accent font-bold; 
+    @apply txt-color-accent font-bold uppercase;
     margin: 0;
     letter-spacing: 0.02em;
   }
 
   .section-counter {
-    @apply font-mono txt-body-sm font-bold;
+    @apply txt-body-sm font-mono font-bold;
     position: absolute;
     top: var(--section-pad-y);
     right: var(--section-pad-x);

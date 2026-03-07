@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from "astro:content";
 
 export type Project = {
   id: string;
@@ -10,7 +10,7 @@ export type Project = {
   previewVideo?: string;
   tags: string[]; // filterTags
   descriptorTags?: string[];
-  descriptorTagColors?: Record<string, 'green' | 'purple' | 'red' | 'blue'>;
+  descriptorTagColors?: Record<string, "green" | "purple" | "red" | "blue">;
   previewButton: {
     text: string;
     href: string;
@@ -19,17 +19,17 @@ export type Project = {
 };
 
 export async function getProjects(): Promise<Project[]> {
-  const collection = await getCollection('projects');
-  
-  return collection.map((entry: CollectionEntry<'projects'>) => {
+  const collection = await getCollection("projects");
+
+  return collection.map((entry: CollectionEntry<"projects">) => {
     const data = entry.data;
-    
+
     // Convert summary & goals back into the HTML body format the UI currently expects
-    const goalsHtml = data.goals 
-      ? `<ul>${data.goals.map((g: string) => `<li>${g}</li>`).join('')}</ul>` 
-      : '';
+    const goalsHtml = data.goals
+      ? `<ul>${data.goals.map((g: string) => `<li>${g}</li>`).join("")}</ul>`
+      : "";
     const bodyHtml = `<p>${data.summary}</p>${goalsHtml}`;
-    
+
     return {
       id: data.id,
       title: data.title,
@@ -41,7 +41,11 @@ export async function getProjects(): Promise<Project[]> {
       tags: data.filterTags,
       descriptorTags: data.descriptorTags,
       descriptorTagColors: data.descriptorTagColors,
-      previewButton: data.previewButton,
+      previewButton: {
+        text: data.previewButton.text,
+        ariaLabel: data.previewButton.ariaLabel,
+        href: `/${entry.slug}`, // Dynamically centralized! Ensures the button always points to the live [slug].astro route
+      },
     };
   });
 }

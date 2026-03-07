@@ -500,16 +500,8 @@ const { sections, title } = Astro.props;
   }
 
   .nav-link {
-    text-decoration: none;
-    color: var(--text-color);
-    @apply txt-body;
-    @apply font-bold;
-    display: flex;
-    align-items: center;
+    @apply btn-type-panel txt-body font-bold;
     gap: 0.5rem;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    transition: all 0.2s ease;
     opacity: 0.7;
     position: relative;
     overflow: hidden;
@@ -531,8 +523,6 @@ const { sections, title } = Astro.props;
 
   .nav-link:hover,
   .nav-link.active {
-    background: rgba(var(--gray), 0.1);
-    color: var(--accent-reverse);
     opacity: 1;
   }
 
