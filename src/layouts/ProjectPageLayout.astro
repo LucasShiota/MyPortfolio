@@ -1,16 +1,16 @@
 ---
-import BaseLayout from '@layouts/HomePageLayout.astro';
-import ProjectIntro from '@components/projectPage/SectionIntro.astro';
-import ProjectOverview from '@components/projectPage/SectionOverview.astro';
-import SectionCardList from '@components/projectPage/SectionCardList.astro';
-import SectionList from '@components/projectPage/SectionList.astro';
-import ComingSoon from '@components/projectPage/SectionComingSoon.astro';
-import TextSection from '@components/projectPage/SectionText.astro';
-import TagSection from '@components/projectPage/SectionTags.astro';
-import SectionTitle from '@components/projectPage/SectionTitle.astro';
-import SectionButton from '@components/projectPage/SectionButton.astro';
-import JumpToNav from '@components/projectPage/SectionNav.astro';
-import { SITE_TITLE } from '@/config/site';
+import BaseLayout from "@layouts/HomePageLayout.astro";
+import ProjectIntro from "@components/projectPage/SectionIntro.astro";
+import ProjectOverview from "@components/projectPage/SectionOverview.astro";
+import SectionCardList from "@components/projectPage/SectionCardList.astro";
+import SectionList from "@components/projectPage/SectionList.astro";
+import ComingSoon from "@components/projectPage/SectionComingSoon.astro";
+import TextSection from "@components/projectPage/SectionText.astro";
+import TagSection from "@components/projectPage/SectionTags.astro";
+import SectionTitle from "@components/projectPage/SectionTitle.astro";
+import SectionButton from "@components/projectPage/SectionButton.astro";
+import JumpToNav from "@components/projectPage/SectionNav.astro";
+import { SITE_TITLE } from "@/config/site";
 
 interface Props {
   data: any;
@@ -49,7 +49,7 @@ const sections = data.sections || [];
   <main class="project-page">
     <JumpToNav sections={sections} title={project.title} />
 
-    <ProjectIntro 
+    <ProjectIntro
       id="intro"
       title={project.title}
       subtitle={project.subtitle}
@@ -58,61 +58,63 @@ const sections = data.sections || [];
     />
 
     <div class="content-wrapper">
-      {(() => {
-        let sectionCounter = 0;
-        return sections.map((section: any) => {
-          // Smart Exclusion: If no label is provided, it's treated as excluded from order automatically
-          const isExcluded = section.options?.excludeFromOrder || !section.label;
-          if (!isExcluded) sectionCounter++;
-          const currentSectionOrder = isExcluded ? 0 : sectionCounter;
+      {
+        (() => {
+          let sectionCounter = 0;
+          return sections.map((section: any) => {
+            // Smart Exclusion: If no label is provided, it's treated as excluded from order automatically
+            const isExcluded = section.options?.excludeFromOrder || !section.label;
+            if (!isExcluded) sectionCounter++;
+            const currentSectionOrder = isExcluded ? 0 : sectionCounter;
 
-          return (
-            <div class="section-group">
-              {(() => {
-                const Component = COMPONENT_MAP[section.component];
-                if (!Component) return null;
+            return (
+              <div class="section-group">
+                {(() => {
+                  const Component = COMPONENT_MAP[section.component];
+                  if (!Component) return null;
 
-                return (
-                  <Component 
-                    id={section.id || `${section.component}-${sectionCounter}`} 
-                    {...section.props} 
-                    order={currentSectionOrder} 
-                    options={section.options}
-                  />
-                );
-              })()}
-              
-              {section.subsections && section.subsections.length > 0 && (
-                <div class="subsections-group">
-                  {(() => {
-                    let subCounter = 0;
-                    return section.subsections.map((sub: any) => {
-                      const SubComponent = COMPONENT_MAP[sub.component];
-                      if (!SubComponent) return null;
-                      
-                      // Smart Exclusion for subsections
-                      const isSubExcluded = sub.options?.excludeFromOrder || !sub.label;
-                      if (!isSubExcluded) subCounter++;
-                      const currentSubOrder = isSubExcluded ? 0 : subCounter;
+                  return (
+                    <Component
+                      id={section.id || `${section.component}-${sectionCounter}`}
+                      {...section.props}
+                      order={currentSectionOrder}
+                      options={section.options}
+                    />
+                  );
+                })()}
 
-                      return (
-                        <SubComponent 
-                          id={sub.id || `${sub.component}-${subCounter}`} 
-                          {...sub.props}
-                          isSubsection={true}
-                          parentOrder={currentSectionOrder}
-                          order={currentSubOrder}
-                          options={{...sub.options, excludeFromOrder: isSubExcluded }}
-                        />
-                      );
-                    });
-                  })()}
-                </div>
-              )}
-            </div>
-          );
-        });
-      })()}
+                {section.subsections && section.subsections.length > 0 && (
+                  <div class="subsections-group">
+                    {(() => {
+                      let subCounter = 0;
+                      return section.subsections.map((sub: any) => {
+                        const SubComponent = COMPONENT_MAP[sub.component];
+                        if (!SubComponent) return null;
+
+                        // Smart Exclusion for subsections
+                        const isSubExcluded = sub.options?.excludeFromOrder || !sub.label;
+                        if (!isSubExcluded) subCounter++;
+                        const currentSubOrder = isSubExcluded ? 0 : subCounter;
+
+                        return (
+                          <SubComponent
+                            id={sub.id || `${sub.component}-${subCounter}`}
+                            {...sub.props}
+                            isSubsection={true}
+                            parentOrder={currentSectionOrder}
+                            order={currentSubOrder}
+                            options={{ ...sub.options, excludeFromOrder: isSubExcluded }}
+                          />
+                        );
+                      });
+                    })()}
+                  </div>
+                )}
+              </div>
+            );
+          });
+        })()
+      }
       <div class="page-bottom-buffer"></div>
     </div>
   </main>
@@ -145,7 +147,7 @@ const sections = data.sections || [];
 
   .section-group {
     @apply surface-panel;
-    background: var(--bg-color);
+    background: var(--bg-base);
     display: flex;
     flex-direction: column;
     overflow: hidden; /* Ensure shared radius clips children */
@@ -166,7 +168,7 @@ const sections = data.sections || [];
 
   /* Differentiate subsections group with a tinted background */
   .subsections-group {
-    background: var(--bg-color-tinted);
+    background: var(--bg-panel);
     display: flex;
     flex-direction: column;
     padding: 1rem 0;

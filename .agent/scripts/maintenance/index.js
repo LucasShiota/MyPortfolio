@@ -24,7 +24,7 @@ const HTML_CONTENT = `
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: ${MAINTENANCE_CONFIG.accentColor};
+            --brand-primary: ${MAINTENANCE_CONFIG.accentColor};
             --blue: ${MAINTENANCE_CONFIG.secondaryColor};
             --bg: #070707;
         }
@@ -98,7 +98,7 @@ const HTML_CONTENT = `
         }
 
         .contacts a:hover { 
-            color: var(--accent);
+            color: var(--brand-primary);
             border-bottom-color: rgba(245, 163, 0, 0.3);
         }
 

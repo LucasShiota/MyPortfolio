@@ -96,7 +96,7 @@ pre > code {
 
 /* quote text */
 blockquote {
-  border-left: 4px solid var(--accent);
+  border-left: 4px solid var(--brand-primary);
   padding: 0 0 0 20px;
   margin: 0;
   font-size: 1.333em;
@@ -174,7 +174,7 @@ body {
 }
 
 @utility txt-color-accent {
-  color: var(--accent-reverse);
+  color: var(--brand-secondary);
 }
 
 /* ---------- UTILITY LAYER BASE ---------- */

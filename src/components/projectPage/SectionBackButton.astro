@@ -20,13 +20,13 @@ const { href = "/#projects", label = "All Projects" } = Astro.props;
   .back-btn-container {
     @apply surface-panel;
     padding: 0.75rem 1rem;
-    background: var(--bg-color); /* Lighter in light theme */
+    background: var(--bg-base); /* Lighter in light theme */
     display: flex;
     transition: background-color 0.6s var(--transition-cubic);
   }
 
   :global([data-theme="dark"]) .back-btn-container {
-    background: color-mix(in srgb, var(--bg-color-tinted), black 40%); /* Darker in dark theme */
+    background: color-mix(in srgb, var(--bg-base-tinted), black 40%); /* Darker in dark theme */
   }
 
   .back-btn {
@@ -50,7 +50,7 @@ const { href = "/#projects", label = "All Projects" } = Astro.props;
 
   .back-btn:hover {
     background: rgba(var(--gray), 0.1);
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
     opacity: 1;
     transform: translateX(-5px);
   }

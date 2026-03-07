@@ -6,12 +6,18 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Added
 
+- Implemented an accessible `Toggle.astro` component to manage visual modes and user preferences.
+- Added `btn-type-toggle` utility for generic, easily stylable UI switches.
 - Created **Dependency Health** workflow (`@[/health]`) to track 3rd-party updates and security.
 - Created **Maintenance** workflow (`@[/maintenance]`) to toggle site status.
 - Enhanced **Visual Regression** suite (`@[/visual-check]`) with responsive checks and masking for dynamic elements.
 - Established **Design Tokens** system (`tokens.css` & `@[/design-tokens]`) to centralize styling and variables.
 
 ### Changed
+
+- Fixed typos in `root.css` dark mode highlighting to correctly map shaded secondary colors.
+- Removed motion delays when `data-reduced-motion` is disabled by forcefully stopping button scale and transition effects.
+- Removed arbitrary color overrides from `btn-fx-scale` and applied specific branded hover states directly to `btn-type-main`.
 
 - Refactored header and panel buttons to use semantically correct HTML tags (`<a>` vs `<button>`).
 - Updated button utility classes (`btn-type-main`) to correctly override global link hover styles.

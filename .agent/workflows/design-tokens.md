@@ -23,7 +23,7 @@ Go to [src/styles/tokens.css](file:///c:/Users/lshio/Desktop/Lucas%20Shiota/GitH
 
 ```css
 :root {
-  --accent-new: #ff00ff;
+  --brand-primary-new: #ff00ff;
   --space-xxl: 8rem;
 }
 ```

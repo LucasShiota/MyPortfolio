@@ -74,7 +74,7 @@
 }
 
 @utility surface-panel {
-  background: var(--bg-color-tinted);
+  background: var(--bg-panel);
   border: var(--border);
   border-radius: clamp(1rem, 1cqi, 2.5rem);
   box-shadow: var(--box-shadow);

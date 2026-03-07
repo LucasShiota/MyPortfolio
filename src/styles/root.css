@@ -4,7 +4,7 @@
 /* --- TRANSITIONS & BASE --- */
 
 html {
-  background-color: var(--bg-color);
+  background-color: var(--bg-base);
   transition:
     background-color var(--transition-speed) var(--transition-cubic),
     color var(--transition-speed) var(--transition-cubic);
@@ -22,8 +22,12 @@ html {
 :root {
   color-scheme: light;
 
-  --accent: #f5a300;
-  --accent-reverse: #0062f5;
+  --brand-primary: #f5a300;
+  --brand-primary-shaded: color-mix(in srgb, var(--brand-primary), black 15%);
+  --brand-primary-tinted: color-mix(in srgb, var(--brand-primary), white 15%);
+  --brand-secondary: #0062f5;
+  --brand-secondary-shaded: color-mix(in srgb, var(--brand-secondary), black 15%);
+  --brand-secondary-tinted: color-mix(in srgb, var(--brand-secondary), white 15%);
 
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
@@ -34,12 +38,16 @@ html {
 
   --box-shadow-small: 0 1px 3px rgba(var(--gray), 0.06), 0 4px 12px rgba(var(--gray), 0.18);
 
-  --bg-color: #ffffff;
-  --bg-color-tinted: #f4f4f4;
+  --bg-base: #ffffff;
+  --bg-panel: color-mix(in srgb, var(--bg-base), black 3%);
+
   --bg-overlay: rgba(var(--black), 0.05);
   --bg-overlay-hover: rgba(var(--black), 0.08);
+
   --text-color: rgb(var(--black));
-  --link-color: var(--accent);
+  --text-alt: color-mix(in srgb, var(--black), white 5%);
+
+  --link-color: var(--brand-primary);
 
   /* VANTA */
   --vanta-highlight: #ffd787;
@@ -57,8 +65,13 @@ html {
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --accent: #0062f5;
-  --accent-reverse: #f5a300;
+  --brand-primary: #0062f5;
+  --brand-primary-shaded: color-mix(in srgb, var(--brand-primary), black 15%);
+  --brand-primary-tinted: color-mix(in srgb, var(--brand-primary), white 15%);
+  --brand-secondary: #f5a300;
+  --brand-secondary-shaded: color-mix(in srgb, var(--brand-secondary), black 15%);
+  --brand-secondary-tinted: color-mix(in srgb, var(--brand-secondary), white 15%);
+
   --black: 240, 240, 245;
   --gray: 70, 80, 100;
 
@@ -68,11 +81,15 @@ html {
 
   --box-shadow-small: 0 1px 4px rgba(var(--gray), 0.06), 0 2px 8px rgba(var(--gray), 0.12);
 
-  --bg-color: #111111;
-  --bg-color-tinted: #070707;
+  --bg-base: #111111;
+  --bg-panel: color-mix(in srgb, var(--bg-base), white 3%);
+
   --bg-overlay: rgba(var(--black), 0.08);
   --bg-overlay-hover: rgba(var(--black), 0.12);
+
   --text-color: rgb(var(--black));
+  --text-alt: color-mix(in srgb, var(--black), black 5%);
+
   --link-color: #4dabf7;
 
   /* VANTA */

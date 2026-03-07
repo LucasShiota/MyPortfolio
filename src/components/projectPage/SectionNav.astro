@@ -272,7 +272,7 @@ const { sections, title } = Astro.props;
   .sub-toggle:hover {
     opacity: 1;
     background: rgba(var(--gray), 0.1);
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
   }
 
   .chevron-icon {
@@ -390,7 +390,7 @@ const { sections, title } = Astro.props;
       border-radius: 50%;
       border: none;
       background: rgba(var(--gray), 0.1);
-      color: var(--bg-color);
+      color: var(--bg-base);
       cursor: pointer;
       transition: all 0.2s ease;
       opacity: 0.6;
@@ -399,7 +399,7 @@ const { sections, title } = Astro.props;
     .snap-btn:hover {
       opacity: 1;
       background: rgba(var(--gray), 0.2);
-      color: var(--accent-reverse);
+      color: var(--brand-secondary);
     }
 
     .jump-toggle {
@@ -537,7 +537,7 @@ const { sections, title } = Astro.props;
     /* Base rotation of 45deg to point top-right cursor towards 3 o'clock */
     transform: translateX(-10px) rotate(45deg) scale(0.3);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
   }
 
   /* Standard Active State */
@@ -562,7 +562,7 @@ const { sections, title } = Astro.props;
   /* Remove the general .nav-header outside media queries to avoid duplication */
   .nav-link.active .nav-label {
     font-weight: bold;
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
   }
 
   /* Make sure the text on parent also glows if it's housing an active child via proxy */
@@ -570,7 +570,7 @@ const { sections, title } = Astro.props;
     .nav-link-wrapper
     .nav-link
     .nav-label {
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
     opacity: 1;
   }
 
@@ -578,7 +578,7 @@ const { sections, title } = Astro.props;
     font-family: var(--font-display);
     font-size: 1rem;
     line-height: 1.1;
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     opacity: 0.9;

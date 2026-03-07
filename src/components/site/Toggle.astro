@@ -1,0 +1,121 @@
+---
+/**
+ * ══════════════════════════════════════════════
+ *  TOGGLE.ASTRO
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: A reusable, accessible switch toggle component for the site (often used for A11y settings).
+ *
+ * CRITICAL RULES:
+ * - Requires a dataAttribute and localStorageKey prop.
+ * - Manages state in localStorage and injects data attributes into the <html> element to allow instant CSS overrides.
+ */
+
+interface Props {
+  id: string;
+  label: string;
+  dataAttribute: string; // The data-* attribute to tie to the HTML tag, e.g., 'data-reduced-motion'
+  localStorageKey: string; // The key to store the user's preference
+  defaultChecked?: boolean;
+}
+
+const { id, label, dataAttribute, localStorageKey, defaultChecked = false } = Astro.props;
+---
+
+<div class="toggle-wrapper flx-algncntr-rw" style="gap: 0.75rem;">
+  <span id={`${id}-label`} class="txt-body-sm">{label}</span>
+  <button
+    type="button"
+    id={id}
+    class="btn-type-toggle"
+    role="switch"
+    aria-checked={defaultChecked ? "true" : "false"}
+    aria-labelledby={`${id}-label`}
+    data-attr={dataAttribute}
+    data-store={localStorageKey}
+  >
+    <span class="toggle-thumb"></span>
+  </button>
+</div>
+
+<script>
+  class A11yToggle {
+    button: HTMLElement;
+    dataAttr: string;
+    storageKey: string;
+
+    constructor(button: HTMLElement) {
+      this.button = button;
+      this.dataAttr = `data-${this.button.getAttribute("data-attr")}`;
+      this.storageKey = this.button.getAttribute("data-store") || "";
+
+      // Initialize state from localStorage or default
+      this.init();
+
+      // Bind click event
+      this.button.addEventListener("click", () => this.toggle());
+    }
+
+    init() {
+      // 1. Check local storage first
+      const storedVal = localStorage.getItem(this.storageKey);
+
+      if (storedVal !== null) {
+        const isChecked = storedVal === "true";
+        this.setVisualState(isChecked);
+        this.setHTMLState(isChecked);
+      } else {
+        // 2. Otherwise use the initial aria-checked value (default state from Astro props)
+        const isChecked = this.button.getAttribute("aria-checked") === "true";
+        this.setVisualState(isChecked);
+        this.setHTMLState(isChecked);
+      }
+    }
+
+    toggle() {
+      const currentState = this.button.getAttribute("aria-checked") === "true";
+      const newState = !currentState;
+
+      this.setVisualState(newState);
+      this.setHTMLState(newState);
+
+      // Persist to local storage
+      localStorage.setItem(this.storageKey, newState.toString());
+    }
+
+    setVisualState(isChecked: boolean) {
+      this.button.setAttribute("aria-checked", isChecked.toString());
+    }
+
+    setHTMLState(isChecked: boolean) {
+      if (isChecked) {
+        document.documentElement.setAttribute(this.dataAttr, "true");
+      } else {
+        document.documentElement.removeAttribute(this.dataAttr);
+      }
+    }
+  }
+
+  // Initialize all toggles on the page
+  const initToggles = () => {
+    const toggleButtons = document.querySelectorAll(".btn-type-toggle");
+    toggleButtons.forEach((btn) => new A11yToggle(btn as HTMLElement));
+  };
+
+  // Run on first load
+  initToggles();
+
+  // Re-run safely on Astro view transitions
+  document.addEventListener("astro:page-load", initToggles);
+</script>
+
+<style>
+  /* Optional: Additional wrapper scoping if needed, but styling is mostly handled by global utility classes */
+  .toggle-wrapper {
+    cursor: pointer;
+  }
+  .toggle-wrapper:hover span.txt-body-sm {
+    color: var(--brand-secondary);
+    transition: color 0.2s ease;
+  }
+</style>

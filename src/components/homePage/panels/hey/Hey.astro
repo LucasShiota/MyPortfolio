@@ -1,27 +1,35 @@
 ---
-import HeroBGText from "./HeyBGTEXT.astro"
+import HeroBGText from "./HeyBGTEXT.astro";
 ---
+
 <section id="hello" class="panel hero-panel flx-cntr-clmn">
   <div class="hero-foreground flx-cntr-rw">
     <div class="hero-fg-parent flx-cntr-clmn">
-      <h1 class="hero-fg-hello txt-h1 txt-brand txt-color-accent align-end; "> I'm Lucas</h1>
-      <h2 class="hero-fg-tagline txt-h3 align-start"> Eclectic Game Dev </h2>    
+      <h1 class="hero-fg-hello txt-h1 txt-brand txt-color-accent align-end;">I'm Lucas</h1>
+      <h2 class="hero-fg-tagline txt-h3 align-start">Eclectic Game Dev</h2>
       <h4 class="hero-fg-tagline txt-h4 align-start">
-        Blending what everyone loves with what's next & different. 
-        Crafting games that scratch itches players have — or didn't know they had.
-      </h4> 
+        Blending what everyone loves with what's next & different. Crafting games that scratch
+        itches players have — or didn't know they had.
+      </h4>
     </div>
     <div class="headshot-wrapper">
       <div id="flip-card" class="flip-container">
         <div class="flipper">
-          <div class="front"> <img class="headshot" src="../images/headshot.webp" alt="Headshot" /></div>
-          <div class="back"> </div><img class="headshot" src="/logo/crazyblenderV2.webp" alt="CrazyBlender" /></div>
+          <div class="front">
+            <img class="headshot" src="../images/headshot.webp" alt="Headshot" />
+          </div>
+          <div class="back"></div><img
+            class="headshot"
+            src="/logo/crazyblenderV2.webp"
+            alt="CrazyBlender"
+          />
         </div>
       </div>
     </div>
   </div>
-  <HeroBGText />
 </section>
+<HeroBGText />
+
 <style>
   @reference "../../../../styles/global.css";
   /* Panel */
@@ -37,7 +45,8 @@ import HeroBGText from "./HeyBGTEXT.astro"
     padding: 2rem;
   }
 
-  .hero-fg-parent, .headshot-wrapper {
+  .hero-fg-parent,
+  .headshot-wrapper {
     height: 70%;
     width: 50%;
     display: flex;
@@ -54,46 +63,70 @@ import HeroBGText from "./HeyBGTEXT.astro"
   /* #region Flip Container */
 
   .flip-container {
-    width: 360px; height: 360px; perspective: 1000px;
-    cursor: pointer; user-select: none; -webkit-user-select: none;
+    width: 360px;
+    height: 360px;
+    perspective: 1000px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
     transition: transform 0.3s ease;
     border-radius: 50%;
   }
   @media (hover: hover) {
-    .flip-container:hover .headshot { 
-      border-color: color-mix(in srgb, var(--accent-reverse) 80%, transparent);
+    .flip-container:hover .headshot {
+      border-color: color-mix(in srgb, var(--brand-secondary) 80%, transparent);
     }
-    .flip-container:hover { transform: scale(1.05); }
+    .flip-container:hover {
+      transform: scale(1.05);
+    }
   }
 
   .flipper {
-    position: relative; width: 100%; height: 100%;
+    position: relative;
+    width: 100%;
+    height: 100%;
     user-select: none;
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-style: preserve-3d;
   }
-  .flip-container.flipped .flipper { transform: rotateY(540deg); }
+  .flip-container.flipped .flipper {
+    transform: rotateY(540deg);
+  }
 
-  .front, .back {
-    position: absolute; width: 100%; height: 100%;
-    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  .front,
+  .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     border-radius: 50%;
     user-select: none;
   }
-  .front { z-index: 2; transform: rotateY(0deg); } .back { transform: rotateY(180deg); }
+  .front {
+    z-index: 2;
+    transform: rotateY(0deg);
+  }
+  .back {
+    transform: rotateY(180deg);
+  }
 
   .headshot {
-    width: 100%; height: 100%;
-    aspect-ratio: 1 / 1; object-fit: cover;
-    border-radius: 50%; box-shadow: var(--box-shadow);
-    user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: var(--box-shadow);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
     border: 6px solid transparent;
-    border-color: color-mix(in srgb, var(--accent-reverse) 40%, transparent);
+    border-color: color-mix(in srgb, var(--brand-secondary) 40%, transparent);
     transition: all 0.6s ease;
   }
 
   /* #endregion */
-
 </style>
 
 <script>

@@ -1,5 +1,5 @@
 ---
-import ProjectSection from './SectionBase.astro';
+import ProjectSection from "./SectionBase.astro";
 
 interface ListEntry {
   primary: string;
@@ -21,20 +21,20 @@ interface Props {
   };
 }
 
-const { 
-  entries = [], 
+const {
+  entries = [],
   title,
   icon,
-  id, 
-  order, 
+  id,
+  order,
   isSubsection = false,
   parentOrder,
-  options
+  options,
 } = Astro.props;
 
 // Normalize entries to ListEntry objects
-const normalizedEntries: ListEntry[] = entries.map(entry => {
-  if (typeof entry === 'string') {
+const normalizedEntries: ListEntry[] = entries.map((entry) => {
+  if (typeof entry === "string") {
     return { primary: entry };
   } else if (Array.isArray(entry)) {
     return { primary: entry[0], secondary: entry[1] };
@@ -44,30 +44,30 @@ const normalizedEntries: ListEntry[] = entries.map(entry => {
 });
 ---
 
-<ProjectSection 
-  title={title} 
-  icon={icon} 
-  id={id} 
-  order={order} 
+<ProjectSection
+  title={title}
+  icon={icon}
+  id={id}
+  order={order}
   isSubsection={isSubsection}
   parentOrder={parentOrder}
   options={options}
 >
   <div class="list-container">
     <ul class="section-list">
-      {normalizedEntries.map((entry, index) => (
-        <li class="list-entry" style={`--index: ${index}`}>
-          <div class="entry-header">
-            <span class="entry-number" aria-hidden="true">{index + 1}.</span>
-            <h3 class="entry-primary">{entry.primary}</h3>
-          </div>
-          {entry.secondary && (
-            <div class="entry-secondary">
-              {entry.secondary}
+      {
+        normalizedEntries.map((entry, index) => (
+          <li class="list-entry" style={`--index: ${index}`}>
+            <div class="entry-header">
+              <span class="entry-number" aria-hidden="true">
+                {index + 1}.
+              </span>
+              <h3 class="entry-primary">{entry.primary}</h3>
             </div>
-          )}
-        </li>
-      ))}
+            {entry.secondary && <div class="entry-secondary">{entry.secondary}</div>}
+          </li>
+        ))
+      }
     </ul>
   </div>
 </ProjectSection>
@@ -105,7 +105,7 @@ const normalizedEntries: ListEntry[] = entries.map(entry => {
   .entry-number {
     @apply font-bold;
     font-size: 1.25rem;
-    color: var(--accent-reverse);
+    color: var(--brand-secondary);
     width: 1.5rem; /* Precisely matched to section/subsection icon width */
     display: flex;
     justify-content: center;
@@ -135,7 +135,7 @@ const normalizedEntries: ListEntry[] = entries.map(entry => {
     .section-list {
       gap: 1.25rem;
     }
-    
+
     .entry-header {
       gap: 0.65rem; /* Slightly reduced gap on mobile */
     }
