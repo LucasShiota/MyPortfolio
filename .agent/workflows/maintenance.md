@@ -2,6 +2,8 @@
 description: Toggle Maintenance Mode (Take site down or bring it back up)
 ---
 
+# Maintenance Workflow
+
 This workflow manages the Cloudflare Worker that handles the maintenance page for the portfolio.
 
 ### 1. Identify Action
