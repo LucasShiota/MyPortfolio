@@ -23,10 +23,11 @@
   --panel-height: calc(100vh - var(--header-height));
 
   /* TYPOGRAPHY */
-  --font-display: "Outfit", sans-serif;
+  --font-display: "Notable", sans-serif;
+  --font-accent: "Outfit", sans-serif;
   --font-body: "Inter", sans-serif;
   --herobgtext-font-size: 24vh;
-  --font-size-huge: 26vh;
+  --font-size-marquee: 26vh;
 
   /* SPACING TOKENS */
   --space-unit: 1rem;

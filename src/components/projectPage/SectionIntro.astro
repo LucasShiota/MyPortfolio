@@ -15,16 +15,20 @@ const { title, subtitle, heroImage, logo, id = "intro", order, total } = Astro.p
 <section class="hero-section" id={id}>
   <div class="hero-content">
     <header class="project-header">
-      {order && total && (
-        <div class="section-counter">
-          {order}/{total}
-        </div>
-      )}
-      {logo && (
-        <div class="logo-container">
-          <img src={logo} alt={`${title} Logo`} class="project-logo" />
-        </div>
-      )}
+      {
+        order && total && (
+          <div class="section-counter">
+            {order}/{total}
+          </div>
+        )
+      }
+      {
+        logo && (
+          <div class="logo-container">
+            <img src={logo} alt={`${title} Logo`} class="project-logo" />
+          </div>
+        )
+      }
       <h1 class="project-title txt-h1 leading-tight">{title}</h1>
       <p class="project-subtitle txt-h4 font-light">{subtitle}</p>
     </header>
@@ -80,13 +84,13 @@ const { title, subtitle, heroImage, logo, id = "intro", order, total } = Astro.p
   }
 
   .project-title {
-    font-family: "Notable", sans-serif;
+    font-family: var(--font-display);
     margin: 0;
     color: var(--accent-reverse);
   }
 
   .section-counter {
-    @apply font-mono txt-body-sm font-bold;
+    @apply txt-body-sm font-mono font-bold;
     opacity: 0.4;
     letter-spacing: 0.15em;
     position: absolute;
@@ -114,6 +118,4 @@ const { title, subtitle, heroImage, logo, id = "intro", order, total } = Astro.p
     height: 100%;
     object-fit: cover;
   }
-
-
 </style>

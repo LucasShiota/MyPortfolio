@@ -1,16 +1,24 @@
 <div class="hero-background">
-  <div class="marquee" data-direction="left" data-speed="0.7"> <div class="marquee-track"> <span class="marquee-content">
-    A jack of all trades-&#8201;
-  </span> </div> </div>
-  <div class="marquee" data-direction="right" data-speed="0.5"> <div class="marquee-track"> <span class="marquee-content">
-    is a master of none.&#8201;
-  </span> </div> </div>
-  <div class="marquee" data-direction="left" data-speed="0.8"> <div class="marquee-track"> <span class="marquee-content">
-    But it sure sounds more fun-&#8201;
-  </span> </div> </div>
-  <div class="marquee" data-direction="right" data-speed="0.6"> <div class="marquee-track"> <span class="marquee-content">
-    than a master of one.&#8201;
-  </span> </div> </div>
+  <div class="marquee" data-direction="left" data-speed="0.7">
+    <div class="marquee-track">
+      <span class="marquee-content"> A jack of all trades-&#8201; </span>
+    </div>
+  </div>
+  <div class="marquee" data-direction="right" data-speed="0.5">
+    <div class="marquee-track">
+      <span class="marquee-content"> is a master of none.&#8201; </span>
+    </div>
+  </div>
+  <div class="marquee" data-direction="left" data-speed="0.8">
+    <div class="marquee-track">
+      <span class="marquee-content"> But it sure sounds more fun-&#8201; </span>
+    </div>
+  </div>
+  <div class="marquee" data-direction="right" data-speed="0.6">
+    <div class="marquee-track">
+      <span class="marquee-content"> than a master of one.&#8201; </span>
+    </div>
+  </div>
   <script>
     let isMarqueeInitialized = false;
     let marqueeApplyThrottle = () => {};
@@ -19,30 +27,31 @@
       if (isMarqueeInitialized) return;
       isMarqueeInitialized = true;
 
-      const marquees = document.querySelectorAll<HTMLElement>('.marquee');
+      const marquees = document.querySelectorAll<HTMLElement>(".marquee");
       const cleanups: Array<() => void> = [];
-      const heroPanel = document.querySelector('.hero-panel');
+      const heroPanel = document.querySelector(".hero-panel");
       let isHeroVisible = true;
 
       const applyMarqueeThrottle = () => {
-        const shouldPause = document.hidden || !isHeroVisible || Boolean(window.__performanceModeEnabled);
+        const shouldPause =
+          document.hidden || !isHeroVisible || Boolean(window.__performanceModeEnabled);
         marquees.forEach((marquee) => {
-          marquee.classList.toggle('marquee--paused', shouldPause);
+          marquee.classList.toggle("marquee--paused", shouldPause);
         });
       };
       marqueeApplyThrottle = applyMarqueeThrottle;
 
       const setupMarquee = (marquee: HTMLElement) => {
-        const track = marquee.querySelector<HTMLElement>('.marquee-track');
-        const baseContent = marquee.querySelector<HTMLElement>('.marquee-content');
+        const track = marquee.querySelector<HTMLElement>(".marquee-track");
+        const baseContent = marquee.querySelector<HTMLElement>(".marquee-content");
 
         if (!track || !baseContent) return;
 
-        const direction = marquee.getAttribute('data-direction') || 'left';
-        const customSpeed = parseFloat(marquee.getAttribute('data-speed') || '2');
+        const direction = marquee.getAttribute("data-direction") || "left";
+        const customSpeed = parseFloat(marquee.getAttribute("data-speed") || "2");
 
         const rebuildTrack = () => {
-          const allSegments = track.querySelectorAll<HTMLElement>('.marquee-content');
+          const allSegments = track.querySelectorAll<HTMLElement>(".marquee-content");
           allSegments.forEach((segment, index) => {
             if (index > 0) segment.remove();
           });
@@ -64,10 +73,10 @@
           const pxPerSecond = Math.max(12, customSpeed * 60);
           const duration = segmentWidth / pxPerSecond;
 
-          marquee.style.setProperty('--marquee-distance', `${segmentWidth}px`);
-          marquee.style.setProperty('--marquee-duration', `${duration.toFixed(2)}s`);
-          marquee.classList.toggle('marquee--right', direction === 'right');
-          marquee.classList.add('marquee--ready');
+          marquee.style.setProperty("--marquee-distance", `${segmentWidth}px`);
+          marquee.style.setProperty("--marquee-duration", `${duration.toFixed(2)}s`);
+          marquee.classList.toggle("marquee--right", direction === "right");
+          marquee.classList.add("marquee--ready");
         };
 
         rebuildTrack();
@@ -84,16 +93,19 @@
       const onVisibilityChange = () => {
         applyMarqueeThrottle();
       };
-      document.addEventListener('visibilitychange', onVisibilityChange);
+      document.addEventListener("visibilitychange", onVisibilityChange);
       cleanups.push(() => {
-        document.removeEventListener('visibilitychange', onVisibilityChange);
+        document.removeEventListener("visibilitychange", onVisibilityChange);
       });
 
       if (heroPanel) {
-        const heroObserver = new IntersectionObserver((entries) => {
-          isHeroVisible = entries.some((entry) => entry.isIntersecting);
-          applyMarqueeThrottle();
-        }, { threshold: 0.1 });
+        const heroObserver = new IntersectionObserver(
+          (entries) => {
+            isHeroVisible = entries.some((entry) => entry.isIntersecting);
+            applyMarqueeThrottle();
+          },
+          { threshold: 0.1 }
+        );
 
         heroObserver.observe(heroPanel);
         cleanups.push(() => heroObserver.disconnect());
@@ -101,9 +113,13 @@
 
       applyMarqueeThrottle();
 
-      window.addEventListener('beforeunload', () => {
-        cleanups.forEach((fn) => fn());
-      }, { once: true });
+      window.addEventListener(
+        "beforeunload",
+        () => {
+          cleanups.forEach((fn) => fn());
+        },
+        { once: true }
+      );
     };
 
     const bootstrapIfMissedStartup = () => {
@@ -117,13 +133,13 @@
           startMarquee();
         }
         marqueeApplyThrottle();
-      }
+      },
     };
 
-    window.addEventListener('startup:marquee', startMarquee);
+    window.addEventListener("startup:marquee", startMarquee);
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', bootstrapIfMissedStartup, { once: true });
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootstrapIfMissedStartup, { once: true });
     } else {
       bootstrapIfMissedStartup();
     }
@@ -132,48 +148,41 @@
 
 <style>
   .hero-background {
-    height: var(--panel-height);
+    height: 100vh;
     width: 100%;
     z-index: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     position: absolute;
     left: 0;
+    top: 0;
+    padding-top: var(--header-height);
+    padding-bottom: 2vh;
   }
 
   @media (hover: none) and (pointer: coarse) {
-    .hero-background{
+    .hero-background {
       display: none;
     }
   }
 
   @media (max-width: 48rem), (max-height: 48rem) {
-    .hero-background{
+    .hero-background {
       display: none;
     }
   }
-  
+
   .marquee {
     width: 100%;
-    height: 23.25vw;
+    flex: 1;
+    min-height: 0;
     overflow: hidden;
     position: relative;
     display: flex;
     align-items: center;
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 15%,
-      black 85%,
-      transparent
-    );
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 15%,
-      black 85%,
-      transparent
-    );
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
   }
   .marquee-track {
     height: 100%;
@@ -199,12 +208,12 @@
   }
   .marquee-content {
     height: 100%;
-    font-size: var(--font-size);
-    font-family: 'Notable';
+    font-size: var(--font-size-marquee);
+    font-family: var(--font-display);
     line-height: 0.62;
-    letter-spacing: calc(0.1 * var(--font-size));
-    word-spacing: calc(0.01 * var(--font-size));
-    -webkit-text-stroke: calc(0.12 * var(--font-size)) currentColor;
+    letter-spacing: calc(0.1 * var(--font-size-marquee));
+    word-spacing: calc(0.01 * var(--font-size-marquee));
+    -webkit-text-stroke: calc(0.12 * var(--font-size-marquee)) currentColor;
     opacity: 3%;
     display: inline-block;
     user-select: none;

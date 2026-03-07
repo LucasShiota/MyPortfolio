@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. See [standa
 - Enhanced **Visual Regression** suite (`@[/visual-check]`) with responsive checks and masking for dynamic elements.
 - Established **Design Tokens** system (`tokens.css` & `@[/design-tokens]`) to centralize styling and variables.
 
+### Changed
+
+- Enhanced hamburger menu toggle with full-height wrapper and improved styling.
+
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
 ### Features (0.0.2)

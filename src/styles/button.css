@@ -1,81 +1,98 @@
 @import "tailwindcss";
 
-@utility btn { user-select: none; cursor: pointer; }
-
+@utility btn {
+  user-select: none;
+  cursor: pointer;
+}
 
 /* ----- EFFECTS -----*/
 /* #region effects */
 
-  @utility btn-fx-txtcolor { 
-    &:hover { color: var(--accent-reverse); } 
+@utility btn-fx-txtcolor {
+  &:hover {
+    color: var(--accent-reverse);
   }
+}
 
-  @utility btn-fx-scale {
-    &:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: var(--box-shadow);
-    }
+@utility btn-fx-scale {
+  &:hover,
+  &[aria-expanded="true"] {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: var(--box-shadow);
   }
+}
 
 /* #endregion  */
 
-
 /* ----- TYPES -----*/
 /* #region types */
-  @utility btn-type-tag {
-    @apply shape-roundrect;
-    --tag-color: var(--accent-reverse);
-    background: color-mix(in srgb, var(--tag-color) 33%, transparent);
-    color: var(--text-color);
-    padding: 0.2rem 0.6rem;
-    font-family: monospace;
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border: 1.5px solid color-mix(in srgb, var(--tag-color) 66%, transparent);
-  }
-  @utility btn-tag-green {
-    --tag-color: var(--tag-green) !important;
-  }
-  @utility btn-tag-purple {
-    --tag-color: var(--tag-purple) !important;
-  }
-  @utility btn-tag-red {
-    --tag-color: var(--tag-red) !important;
-  }
-  @utility btn-tag-blue {
-    --tag-color: var(--accent-reverse) !important;
-  }
+@utility btn-type-tag {
+  @apply shape-roundrect;
+  --tag-color: var(--accent-reverse);
+  background: color-mix(in srgb, var(--tag-color) 33%, transparent);
+  color: var(--text-color);
+  padding: 0.2rem 0.6rem;
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1.5px solid color-mix(in srgb, var(--tag-color) 66%, transparent);
+}
+@utility btn-tag-green {
+  --tag-color: var(--tag-green) !important;
+}
+@utility btn-tag-purple {
+  --tag-color: var(--tag-purple) !important;
+}
+@utility btn-tag-red {
+  --tag-color: var(--tag-red) !important;
+}
+@utility btn-tag-blue {
+  --tag-color: var(--accent-reverse) !important;
+}
 
-  @utility btn-type-main {
-    @apply flx-cntr btn shape-pill btn-fx-scale;
-    height: 2rem; 
-    padding-top: 1.2rem; padding-bottom: 1.2rem;
-    padding-right: clamp(0.6rem, 1vw, 2rem); padding-left: clamp(0.6rem, 1vw, 2rem);
-    background: var(--accent-reverse);
-    color: var(--bg-color);
-    font-size: 1rem; font-weight: 600;
-    transition: all 0.3s ease;
-  }
-  @utility btn-type-main-reverse {
-    @apply btn-type-main;
-    background-color: var(--accent);
-		color: var(--text-color);
-  }
+@utility btn-type-main {
+  @apply flx-cntr btn shape-pill btn-fx-scale focus-visible;
+  height: 2rem;
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+  padding-right: clamp(0.6rem, 1vw, 2rem);
+  padding-left: clamp(0.6rem, 1vw, 2rem);
+  background: var(--accent-reverse);
+  color: var(--bg-color);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+@utility btn-type-main-reverse {
+  @apply btn-type-main;
+  background-color: var(--accent);
+  color: var(--text-color);
+}
 
 /* #endregion */
 
 /* ----- COMPONENTS -----*/
 /*#region components */
 
-  @utility shape-pill {
-    border-radius: 9999px;
+@utility shape-pill {
+  border-radius: 9999px;
+}
+
+@utility focus-visible {
+  &:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: 4px;
   }
-  
-  @utility shape-roundrect{
-    border-radius: 10px;
-  }
-  @utility crsr-none { user-select: none; pointer-events: none; }
+}
+
+@utility shape-roundrect {
+  border-radius: 10px;
+}
+@utility crsr-none {
+  user-select: none;
+  pointer-events: none;
+}
 
 /* #endregion */

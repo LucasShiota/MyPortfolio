@@ -1,5 +1,6 @@
 ---
-import HeaderIconButton from '../../site/HeaderIconButton.astro';
+import HeaderIconButton from "../../site/HeaderIconButton.astro";
+import PopUpPanel from "../../site/PopUpPanel.astro";
 
 interface Props {
   id?: string;
@@ -10,8 +11,9 @@ interface Props {
 const { id = "accessibility-toggle", class: className = "", isHamburger = false } = Astro.props;
 ---
 
-<div class={`accessibility-wrapper ${isHamburger ? 'hmbrgr-accessibility-wrapper' : ''}`}>
+<PopUpPanel isHamburger={isHamburger} wrapperClass="accessibility-wrapper">
   <HeaderIconButton
+    slot="trigger"
     id={id}
     class:list={["accessibility-btn", className]}
     title="Accessibility Options"
@@ -21,167 +23,27 @@ const { id = "accessibility-toggle", class: className = "", isHamburger = false 
     <i class="fa-solid fa-universal-access"></i>
   </HeaderIconButton>
 
-  <div class="accessibility-panel">
-    <!-- Section 1: Auto Scroll Explanation -->
-    <div class="panel-section">
-      <span class="section-label"><i class="fa-solid fa-arrows-up-down"></i> Quick Navigation</span>
-      <div class="panel-btn info-item"> 
-        <i class="fa-solid fa-keyboard"></i> 
-        <span><b class="key">Space</b> scrolls down, <b class="key">Shift + Space</b> up.</span> 
-      </div>
-    </div>
-
-    <!-- Section 2: Placeholder Action -->
-    <div class="panel-section">
-      <span class="section-label"><i class="fa-solid fa-sliders"></i> Adjustments</span>
-      <div class="panel-btn"> 
-        <i class="fa-solid fa-circle-info"></i> 
-        <span>Feature coming soon...</span> 
-      </div>
+  <!-- Section 1: Auto Scroll Explanation -->
+  <div class="panel-section">
+    <span class="section-label"><i class="fa-solid fa-arrows-up-down"></i> Quick Navigation</span>
+    <div class="panel-btn info-item">
+      <i class="fa-solid fa-keyboard"></i>
+      <span><b class="key">Space</b> scrolls down, <b class="key">Shift + Space</b> up.</span>
     </div>
   </div>
-</div>
 
-<script>
-  function setupAccessibility() {
-    const wrappers = document.querySelectorAll('.accessibility-wrapper');
-    
-    wrappers.forEach(wrapper => {
-      // Find the trigger button (the HeaderIconButton inside the wrapper)
-      const btn = wrapper.querySelector('.accessibility-btn');
-      
-      btn?.addEventListener('click', (e) => {
-        if (!btn) return;
-        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', (!isExpanded).toString());
-
-        // Toggle on mobile/touch only
-        if (window.matchMedia('(pointer: coarse)').matches) {
-          e.stopPropagation();
-          // Close others
-          document.querySelectorAll('.accessibility-wrapper').forEach(w => {
-            if (w !== wrapper) {
-              w.classList.remove('active');
-              w.querySelector('.accessibility-btn')?.setAttribute('aria-expanded', 'false');
-            }
-          });
-          wrapper.classList.toggle('active');
-        }
-      });
-      
-      const panel = wrapper.querySelector('.accessibility-panel');
-      panel?.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-
-      // Hover handling for aria-expanded (Desktop)
-      wrapper.addEventListener('mouseenter', () => {
-        if (!window.matchMedia('(pointer: coarse)').matches) {
-          btn?.setAttribute('aria-expanded', 'true');
-        }
-      });
-      wrapper.addEventListener('mouseleave', () => {
-        if (!window.matchMedia('(pointer: coarse)').matches) {
-          btn?.setAttribute('aria-expanded', 'false');
-        }
-      });
-    });
-
-    // Global click-to-close
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.accessibility-wrapper').forEach(w => {
-        w.classList.remove('active');
-        w.querySelector('.accessibility-btn')?.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
-  // Runs on initial load
-  setupAccessibility();
-  // Support for view transitions if needed
-  document.addEventListener('astro:after-swap', setupAccessibility);
-</script>
+  <!-- Section 2: Placeholder Action -->
+  <div class="panel-section">
+    <span class="section-label"><i class="fa-solid fa-sliders"></i> Adjustments</span>
+    <div class="panel-btn">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Feature coming soon...</span>
+    </div>
+  </div>
+</PopUpPanel>
 
 <style>
   @reference "../../../styles/global.css";
-
-  .accessibility-wrapper {
-    position: relative;
-    display: flex; align-items: center;
-  }
-
-  .accessibility-panel {
-    position: absolute; z-index: 100;
-    top: calc(100% + 4px); left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    background: var(--bg-color); box-shadow: var(--box-shadow);
-    border: 1px solid rgba(var(--gray), 0.2); border-radius: 1.5rem;
-    display: flex; flex-direction: column;
-    padding: 0.4rem;
-    opacity: 0; visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* SYNC: Matching LetsTalk panel min-width */
-    min-width: 220px; 
-  }
-
-  /* Bridge to keep hover active */
-  .accessibility-panel::before {
-    content: '';
-    position: absolute;
-    top: -15px; left: 0; right: 0;
-    height: 15px;
-    background: transparent;
-  }
-
-  .accessibility-wrapper:hover .accessibility-panel,
-  .accessibility-wrapper.active .accessibility-panel {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .accessibility-wrapper:hover .accessibility-btn,
-  .accessibility-wrapper.active .accessibility-btn {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: var(--box-shadow);
-  }
-
-  .panel-section {
-    display: flex; flex-direction: column;
-    gap: 0.2rem; padding: 0.5rem;
-    width: 100%;
-  }
-
-  /* 90% width separator logic */
-  .panel-section:not(:last-child) {
-    position: relative;
-    padding-bottom: 0.7rem;
-  }
-
-  .panel-section:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 5%;
-    height: 1px; width: 90%;
-    background: rgba(var(--gray), 0.15);
-  }
-
-  .panel-btn {
-    @apply btn-fx-txtcolor;
-    width: 100%;
-    white-space: nowrap;
-    padding: 0.5rem 0.8rem; gap: 0.75rem;
-    display: flex; justify-content: flex-start; align-items: center;
-    border: none; border-radius: 0.8rem;
-    background: transparent;
-    color: var(--text-color); @apply txt-body-sm;
-    @apply font-medium;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .panel-btn:hover { background-color: var(--bg-color-tinted); }
 
   .key {
     background: rgba(var(--gray), 0.15);
@@ -196,14 +58,8 @@ const { id = "accessibility-toggle", class: className = "", isHamburger = false 
     cursor: help;
   }
 
-  .hmbrgr-accessibility-wrapper { justify-content: center; }
-
   /* Specific to hamburger menu context */
   :global(#hmbrgr-menu) :global(.accessibility-btn i) {
     @apply text-3xl;
-  }
-
-  @media (min-width: 768px) {
-    /* Any specific desktop styles */
   }
 </style>

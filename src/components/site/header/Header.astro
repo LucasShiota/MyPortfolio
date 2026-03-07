@@ -1,103 +1,154 @@
 ---
-import DarkMode from '../../features/theme/DarkMode.astro';
-import PerformanceMode from '../../features/performance/PerformanceMode.astro';
-import LetsTalk from './LetsTalk.astro';
-import HeaderHamburger from './HeaderHamburger.astro';
-import HeaderLogo from './HeaderLogo.astro';
-import ThemeToggle from '../../features/theme/ThemeToggle.astro';
-import PerformanceToggle from '../../features/performance/PerformanceToggle.astro';
-import AccessibilityToggle from '../../features/a11y/AccessibilityToggle.astro';
+/**
+ * ══════════════════════════════════════════════
+ *  HEADER COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Main navigation header for the site, containing branding, contact links, actions, and UI toggles.
+ *
+ * CRITICAL RULES:
+ * - Layout depends on var(--header-height)
+ * - Toggles are hidden on smaller screens and visible on larger screens
+ */
+import DarkMode from "../../features/theme/DarkMode.astro";
+import PerformanceMode from "../../features/performance/PerformanceMode.astro";
+import LetsTalk from "./LetsTalk.astro";
+import HeaderHamburger from "./HeaderHamburger.astro";
+import HeaderLogo from "./HeaderLogo.astro";
+import ThemeToggle from "../../features/theme/ThemeToggle.astro";
+import PerformanceToggle from "../../features/performance/PerformanceToggle.astro";
+import AccessibilityToggle from "../../features/a11y/AccessibilityToggle.astro";
 import { LINKS } from "../../../config/site";
 
 const pathname = Astro.url.pathname;
-const isHome = pathname === '/' || pathname === '';
+const isHome = pathname === "/" || pathname === "";
 ---
+
 <header class="flx-cntr-rw">
-	<HeaderLogo />
-	<div class="header-contacts">
-		<div class="contact-btn"> <i class="contact-icon fa-solid fa-file-lines"></i></i>CV </div>
-		<a href={LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" class="contact-btn" aria-label={LINKS.linkedin.label} title={LINKS.linkedin.title}> <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn </a>
-		<LetsTalk />
-		<a href="/#about" class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i> About </a>
-	</div>
-	<div class="header-actions">
-		<div class="header-toggles">
-			<AccessibilityToggle />
-			<ThemeToggle />
-			<PerformanceToggle />
-		</div>
-		<HeaderHamburger isHome={isHome} />
-	</div>
-	<DarkMode /> <PerformanceMode />
+  <HeaderLogo />
+  <div class="header-contacts">
+    <div class="contact-btn"><i class="contact-icon fa-solid fa-file-lines"></i></div>CV
+  </div>
+  <a
+    href={LINKS.linkedin.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="contact-btn"
+    aria-label={LINKS.linkedin.label}
+    title={LINKS.linkedin.title}
+  >
+    <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn
+  </a>
+  <LetsTalk />
+  <a href="/#about" class="contact-btn"> <i class="contact-icon fa-solid fa-user"></i> About </a>
 </header>
+<div class="header-actions">
+  <div class="header-toggles">
+    <AccessibilityToggle />
+    <ThemeToggle />
+    <PerformanceToggle />
+  </div>
+  <HeaderHamburger isHome={isHome} />
+</div>
+<DarkMode />
+<PerformanceMode />
+
 <style>
-	@reference "../../../styles/global.css";
+  @reference "../../../styles/global.css";
 
-/* ---------------------------------------------------------------- */
-/* HEADER */
-/* ---------------------------------------------------------------- */
-/* #region Header */
-	header {
-		@apply justify-between;
-		position: fixed; height: var(--header-height); width: 100%;
-		background: var(--bg-color); box-shadow: var(--box-shadow-small);
-		z-index: var(--z-header);
-	}
+  /* ---------------------------------------------------------------- */
+  /* HEADER */
+  /* ---------------------------------------------------------------- */
+  /* #region Header */
+  header {
+    @apply justify-between;
+    position: fixed;
+    height: var(--header-height);
+    width: 100%;
+    background: var(--bg-color);
+    box-shadow: var(--box-shadow-small);
+    z-index: var(--z-header);
+  }
 
-	header.menu-open { box-shadow: var(--box-shadow-small); }
-	.header-actions, .header-contacts {
-		@apply flx-algncntr-rw;
-		height: 80%;
-		gap: 0.25rem; /* Gap between the toggle-group and the hamburger */
-	}
+  header.menu-open {
+    box-shadow: var(--box-shadow-small);
+  }
+  .header-actions,
+  .header-contacts {
+    @apply flx-algncntr-rw;
+    gap: 0.25rem; /* Gap between the toggle-group and the hamburger */
+  }
 
-	.header-toggles { 
-		@apply flx-algncntr-rw;
-		gap: 0.25rem; /* Gap between theme and performance specifically */
-	}
+  .header-contacts {
+    height: 80%;
+  }
+  .header-actions {
+    height: 100%;
+  }
 
-	.header-contacts, .header-toggles { display: none; }
-	.header-contacts { 
-		justify-content: center; justify-self: center;
-		flex: 1; @apply font-bold; 
-		gap: clamp(0.5rem, 1vw, 1rem);
-	}
-	.header-actions { 
-		justify-content: flex-end; 
-		justify-self: flex-end; 
-		margin-right: 1rem;
-	}
+  .header-toggles {
+    @apply flx-algncntr-rw;
+    gap: 0.25rem; /* Gap between theme and performance specifically */
+    margin-right: 1rem;
+  }
 
-/* #endregion */
+  .header-contacts,
+  .header-toggles {
+    display: none;
+  }
+  .header-contacts {
+    justify-content: center;
+    justify-self: center;
+    flex: 1;
+    @apply font-bold;
+    gap: clamp(0.5rem, 1vw, 1rem);
+  }
+  .header-actions {
+    justify-content: flex-end;
+    justify-self: flex-end;
+    margin-right: 0;
+  }
 
-/* ---------------------------------------------------------------- */
-/* ----- CONTACTS ----- */
-/* ---------------------------------------------------------------- */
-/* #region Contacts */
+  /* #endregion */
 
-	.contact-btn { 
-		@apply btn-type-main-reverse;
-		
-	}
-	.contact-icon { display: none; }
+  /* ---------------------------------------------------------------- */
+  /* ----- CONTACTS ----- */
+  /* ---------------------------------------------------------------- */
+  /* #region Contacts */
 
-/* #endregion */
+  .contact-btn {
+    @apply btn-type-main-reverse;
+  }
+  .contact-icon {
+    display: none;
+  }
 
-/* ---------------------------------------------------------------- */
-/* ----- QUERY ----- */
-/* ---------------------------------------------------------------- */
-/* #region Query */
+  /* #endregion */
 
-	@media (min-width: 640px) { /* #2: Large Phone - Shrink, Hide, Remove Some Elements */
-		.header-contacts { display: flex; } /* Show */
-	}
-	@media (min-width: 768px) { /* #3: Tablet - Start Shrink, Remove Elements */
-		.contact-icon { display: flex; } /* Show */
-	}
-	@media (min-width: 1200px) { /* #4: Laptop */
-		.header-toggles, .contact-icon { display: flex; } /* Show */
-	}
+  /* ---------------------------------------------------------------- */
+  /* ----- QUERY ----- */
+  /* ---------------------------------------------------------------- */
+  /* #region Query */
 
-/* #endregion */
+  @media (min-width: 640px) {
+    /* #2: Large Phone - Shrink, Hide, Remove Some Elements */
+    .header-contacts {
+      display: flex;
+    } /* Show */
+  }
+  @media (min-width: 768px) {
+    /* #3: Tablet - Start Shrink, Remove Elements */
+    .contact-icon {
+      display: flex;
+    } /* Show */
+  }
+  @media (min-width: 1200px) {
+    /* #4: Laptop */
+    .header-toggles,
+    .contact-icon {
+      display: flex;
+    } /* Show */
+  }
 
+  /* #endregion */
 </style>

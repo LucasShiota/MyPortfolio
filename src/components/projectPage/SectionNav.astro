@@ -3,8 +3,8 @@
  * ══════════════════════════════════════════════
  *  SECTION NAVIGATION COMPONENT
  * ══════════════════════════════════════════════
- * 
- * PURPOSE: Provides a jump-to menu and snapped navigation 
+ *
+ * PURPOSE: Provides a jump-to menu and snapped navigation
  * for project sections.
  */
 import BackButton from "./SectionBackButton.astro";
@@ -38,7 +38,12 @@ const { sections, title } = Astro.props;
     </button>
 
     <!-- Mobile Toggle Button -->
-    <button id="jump-toggle" class="jump-toggle" aria-expanded="false" aria-label="Toggle section navigation">
+    <button
+      id="jump-toggle"
+      class="jump-toggle"
+      aria-expanded="false"
+      aria-label="Toggle section navigation"
+    >
       <i class="fa-solid fa-list-ul"></i>
       <span>Sections</span>
       <i class="fa-solid fa-chevron-up toggle-chevron"></i>
@@ -56,7 +61,7 @@ const { sections, title } = Astro.props;
     <div class="nav-sections">
       <div class="nav-header">
         <div class="nav-project-title">
-          {title.split(' ').map(word => <span>{word}</span>)}
+          {title.split(" ").map((word) => <span>{word}</span>)}
         </div>
         <div class="nav-header-sub">
           <i class="fa-solid fa-list-ul"></i>
@@ -64,60 +69,78 @@ const { sections, title } = Astro.props;
         </div>
       </div>
       <ul class="nav-list" id="nav-list">
-        {(() => {
-          let visibleIndex = 0;
-          return sections.map((section) => {
-            const isExcluded = section.options?.excludeFromOrder || !section.label;
-            if (isExcluded) return null;
-            
-            visibleIndex++;
-            
-            return (
-              <li class="nav-item-group">
-                <div class="nav-link-wrapper">
-                  <a href={`#${section.id}`} class="nav-link" data-section={section.id}>
-                    <i class="fa-solid fa-location-arrow active-arrow"></i>
-                    <span class="nav-label">
-                      <span class="nav-counter">{visibleIndex}. </span>
-                      {section.label}
-                    </span>
-                  </a>
-                  {section.subsections && section.subsections.some(sub => !sub.options?.excludeFromOrder && sub.label) && (
-                    <button class="sub-toggle" aria-expanded="true" aria-label="Toggle subsections">
-                      <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                    </button>
-                  )}
-                </div>
-                
-                {section.subsections && section.subsections.some(sub => !sub.options?.excludeFromOrder && sub.label) && (
-                  <ul class="sub-nav-list">
-                    {(() => {
-                      let visibleSubIndex = 0;
-                      return section.subsections.map((sub) => {
-                        const isSubExcluded = sub.options?.excludeFromOrder || !sub.label;
-                        if (isSubExcluded) return null;
-                        
-                        visibleSubIndex++;
+        {
+          (() => {
+            let visibleIndex = 0;
+            return sections.map((section) => {
+              const isExcluded = section.options?.excludeFromOrder || !section.label;
+              if (isExcluded) return null;
 
-                        return (
-                          <li>
-                            <a href={`#${sub.id}`} class="nav-link sub-link" data-section={sub.id}>
-                              <i class="fa-solid fa-location-arrow active-arrow"></i>
-                              <span class="nav-label">
-                                <span class="nav-counter">{visibleIndex}.{visibleSubIndex} </span>
-                                {sub.label}
-                              </span>
-                            </a>
-                          </li>
-                        );
-                      });
-                    })()}
-                  </ul>
-                )}
-              </li>
-            );
-          });
-        })()}
+              visibleIndex++;
+
+              return (
+                <li class="nav-item-group">
+                  <div class="nav-link-wrapper">
+                    <a href={`#${section.id}`} class="nav-link" data-section={section.id}>
+                      <i class="fa-solid fa-location-arrow active-arrow" />
+                      <span class="nav-label">
+                        <span class="nav-counter">{visibleIndex}. </span>
+                        {section.label}
+                      </span>
+                    </a>
+                    {section.subsections &&
+                      section.subsections.some(
+                        (sub) => !sub.options?.excludeFromOrder && sub.label
+                      ) && (
+                        <button
+                          class="sub-toggle"
+                          aria-expanded="true"
+                          aria-label="Toggle subsections"
+                        >
+                          <i class="fa-solid fa-chevron-down chevron-icon" />
+                        </button>
+                      )}
+                  </div>
+
+                  {section.subsections &&
+                    section.subsections.some(
+                      (sub) => !sub.options?.excludeFromOrder && sub.label
+                    ) && (
+                      <ul class="sub-nav-list">
+                        {(() => {
+                          let visibleSubIndex = 0;
+                          return section.subsections.map((sub) => {
+                            const isSubExcluded = sub.options?.excludeFromOrder || !sub.label;
+                            if (isSubExcluded) return null;
+
+                            visibleSubIndex++;
+
+                            return (
+                              <li>
+                                <a
+                                  href={`#${sub.id}`}
+                                  class="nav-link sub-link"
+                                  data-section={sub.id}
+                                >
+                                  <i class="fa-solid fa-location-arrow active-arrow" />
+                                  <span class="nav-label">
+                                    <span class="nav-counter">
+                                      {visibleIndex}.{visibleSubIndex}{" "}
+                                    </span>
+                                    {sub.label}
+                                  </span>
+                                </a>
+                              </li>
+                            );
+                          });
+                        })()}
+                      </ul>
+                    )}
+                </li>
+              );
+            });
+          })()
+        }
       </ul>
     </div>
   </nav>
@@ -127,47 +150,49 @@ const { sections, title } = Astro.props;
   import { initJumpToController } from "../features/scroll/scrollManager";
   import { initSectionTracker } from "@utils/sectionTracker";
   import { performSlowScroll } from "../features/startup/startupController";
-  
+
   initJumpToController();
   initSectionTracker();
 
   // Snapping Logic
   const initSnapControls = () => {
-    const prevBtn = document.getElementById('snap-prev');
-    const nextBtn = document.getElementById('snap-next');
-    
+    const prevBtn = document.getElementById("snap-prev");
+    const nextBtn = document.getElementById("snap-next");
+
     if (!prevBtn || !nextBtn) return;
 
     const getMainSections = () => {
       // Find all top-level section links to identify main sections
-      const links = document.querySelectorAll('.nav-link:not(.sub-link)');
-      const ids = ['intro']; // Always start with intro
-      links.forEach(link => {
-        const id = link.getAttribute('data-section');
+      const links = document.querySelectorAll(".nav-link:not(.sub-link)");
+      const ids = ["intro"]; // Always start with intro
+      links.forEach((link) => {
+        const id = link.getAttribute("data-section");
         if (id) ids.push(id);
       });
       return ids;
     };
 
-    const snap = (direction: 'prev' | 'next') => {
+    const snap = (direction: "prev" | "next") => {
       const sectionIds = getMainSections();
-      const activeLink = document.querySelector('.nav-link.active');
-      
-      let currentId = 'intro';
+      const activeLink = document.querySelector(".nav-link.active");
+
+      let currentId = "intro";
       if (activeLink) {
         // If we are in a sub-section, find the parent main section ID
-        if (activeLink.classList.contains('sub-link')) {
-          const mainLink = activeLink.closest('.nav-item-group')?.querySelector('.nav-link:not(.sub-link)');
-          currentId = mainLink?.getAttribute('data-section') || 'intro';
+        if (activeLink.classList.contains("sub-link")) {
+          const mainLink = activeLink
+            .closest(".nav-item-group")
+            ?.querySelector(".nav-link:not(.sub-link)");
+          currentId = mainLink?.getAttribute("data-section") || "intro";
         } else {
-          currentId = activeLink.getAttribute('data-section') || 'intro';
+          currentId = activeLink.getAttribute("data-section") || "intro";
         }
       }
 
       const currentIndex = sectionIds.indexOf(currentId);
       let targetIndex = currentIndex;
 
-      if (direction === 'next') {
+      if (direction === "next") {
         targetIndex = Math.min(currentIndex + 1, sectionIds.length - 1);
       } else {
         targetIndex = Math.max(currentIndex - 1, 0);
@@ -178,33 +203,33 @@ const { sections, title } = Astro.props;
         const targetEl = document.getElementById(targetId);
         if (targetEl) {
           // Update URL hash without jumping
-          const hash = targetId === 'intro' ? '#' : `#${targetId}`;
-          history.pushState(null, '', hash);
-          
+          const hash = targetId === "intro" ? "#" : `#${targetId}`;
+          history.pushState(null, "", hash);
+
           performSlowScroll(targetEl);
         }
       }
     };
 
-    prevBtn.addEventListener('click', () => snap('prev'));
-    nextBtn.addEventListener('click', () => snap('next'));
+    prevBtn.addEventListener("click", () => snap("prev"));
+    nextBtn.addEventListener("click", () => snap("next"));
   };
 
   initSnapControls();
 
   // Handle Subsection Toggles
-  const subToggles = document.querySelectorAll('.sub-toggle');
-  subToggles.forEach(toggle => {
-    toggle.addEventListener('click', (e) => {
+  const subToggles = document.querySelectorAll(".sub-toggle");
+  subToggles.forEach((toggle) => {
+    toggle.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      
-      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', (!isExpanded).toString());
-      
+
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+
       const subList = toggle.parentElement?.nextElementSibling;
-      if (subList && subList.classList.contains('sub-nav-list')) {
-        subList.classList.toggle('is-collapsed', isExpanded);
+      if (subList && subList.classList.contains("sub-nav-list")) {
+        subList.classList.toggle("is-collapsed", isExpanded);
       }
     });
   });
@@ -305,7 +330,6 @@ const { sections, title } = Astro.props;
       flex-direction: column;
       gap: 1rem;
     }
-
   }
 
   /* Shared Header Layout for both Mobile and Desktop Popovers */
@@ -329,7 +353,7 @@ const { sections, title } = Astro.props;
     letter-spacing: 0.05em;
   }
 
-  /* Mobile/Tablet Layout: Bottom centered bar */  
+  /* Mobile/Tablet Layout: Bottom centered bar */
   @media (max-width: 1023px) {
     .jump-to-container {
       position: fixed;
@@ -383,7 +407,9 @@ const { sections, title } = Astro.props;
       @apply font-semibold;
       @apply txt-body;
       box-shadow: none;
-      transition: transform 0.3s ease, background 0.3s ease;
+      transition:
+        transform 0.3s ease,
+        background 0.3s ease;
       display: flex;
       align-items: center;
       gap: 0.75rem;
@@ -499,12 +525,12 @@ const { sections, title } = Astro.props;
   }
 
   .nav-label {
-
     font-size: 0.95em;
     transition: transform 0.2s ease;
   }
 
-  .nav-link:hover, .nav-link.active {
+  .nav-link:hover,
+  .nav-link.active {
     background: rgba(var(--gray), 0.1);
     color: var(--accent-reverse);
     opacity: 1;
@@ -519,7 +545,7 @@ const { sections, title } = Astro.props;
     white-space: nowrap;
     opacity: 0;
     /* Base rotation of 45deg to point top-right cursor towards 3 o'clock */
-    transform: translateX(-10px) rotate(45deg) scale(0.3); 
+    transform: translateX(-10px) rotate(45deg) scale(0.3);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     color: var(--accent-reverse);
   }
@@ -529,11 +555,14 @@ const { sections, title } = Astro.props;
     width: 0.8rem;
     margin-right: 0.4rem;
     opacity: 1;
-    transform: translateX(0) rotate(45deg) scale(0.85); 
+    transform: translateX(0) rotate(45deg) scale(0.85);
   }
 
   /* Active Proxy: Parent link inherits arrow if active child is collapsed */
-  .nav-item-group:has(.sub-nav-list.is-collapsed .sub-link.active) .nav-link-wrapper .nav-link .active-arrow {
+  .nav-item-group:has(.sub-nav-list.is-collapsed .sub-link.active)
+    .nav-link-wrapper
+    .nav-link
+    .active-arrow {
     width: 0.8rem;
     margin-right: 0.4rem;
     opacity: 0.6; /* Slightly dimmer to indicate it's a proxy */
@@ -547,13 +576,16 @@ const { sections, title } = Astro.props;
   }
 
   /* Make sure the text on parent also glows if it's housing an active child via proxy */
-  .nav-item-group:has(.sub-nav-list.is-collapsed .sub-link.active) .nav-link-wrapper .nav-link .nav-label {
+  .nav-item-group:has(.sub-nav-list.is-collapsed .sub-link.active)
+    .nav-link-wrapper
+    .nav-link
+    .nav-label {
     color: var(--accent-reverse);
     opacity: 1;
   }
 
   .nav-project-title {
-    font-family: "Notable", sans-serif;
+    font-family: var(--font-display);
     font-size: 1rem;
     line-height: 1.1;
     color: var(--accent-reverse);
@@ -571,5 +603,4 @@ const { sections, title } = Astro.props;
     margin: 0;
     padding: 0;
   }
-
 </style>
