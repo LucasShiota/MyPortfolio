@@ -49,6 +49,55 @@ const progressToScrollY = (progress: number) => {
   return progress * maxScroll;
 };
 
+// --- CORE SCROLL LOGIC ---
+const scrollToIndex = (index: number) => {
+  if (_totalSteps <= 0) return;
+  const clamped = gsap.utils.clamp(0, _totalSteps, index);
+  const targetY = progressToScrollY(clamped * _step);
+
+  const isReducedMotion = document.documentElement.getAttribute("data-reduced-motion") === "true";
+
+  activeScrollTween?.kill();
+  activeScrollTween = gsap.to(window, {
+    duration: isReducedMotion ? 0 : 0.7,
+    scrollTo: { y: targetY },
+    ease: "power2.inOut",
+  });
+};
+
+// --- MODULE INITIALIZATIONS ---
+const initScrollNavigation = () => {
+  const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
+
+  navSections.forEach((section, index) => {
+    section.addEventListener("click", () => {
+      scrollToIndex(index);
+    });
+
+    // Add keyboard navigation for Enter/Space
+    section.setAttribute("tabindex", "0"); // Make it focusable
+    section.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault(); // Prevent default scroll behavior for spacebar
+        scrollToIndex(index);
+      }
+    });
+  });
+};
+
+const initFocusScroll = () => {
+  window.addEventListener("focusin", (e) => {
+    const target = e.target as HTMLElement;
+    const panel = target.closest(".panel") as HTMLElement;
+    if (panel) {
+      const panelIndex = _panels.indexOf(panel);
+      if (panelIndex !== -1) {
+        scrollToIndex(panelIndex);
+      }
+    }
+  });
+};
+
 // --- VISUAL/STATE UPDATERS ---
 function updateSidebarVisuals(progress: number) {
   const sidebar = document.querySelector<HTMLElement>(".sidebar");
@@ -141,7 +190,7 @@ export const initPanelScroll = () => {
 
           return gsap.utils.clamp(0, 1, targetIndex * _step);
         },
-        duration: { min: 0.2, max: 0.4 },
+        duration: { min: 0.1, max: 0.3 }, // Snappier for reduced motion compatibility
         delay: 0.03,
         ease: "power1.inOut",
       },
@@ -180,6 +229,7 @@ export const initPanelScroll = () => {
   initScrollResize();
   initKeyboardScroll();
   initJumpToController();
+  initFocusScroll();
 
   // --- CLEANUP ---
   window.addEventListener(
@@ -193,36 +243,6 @@ export const initPanelScroll = () => {
   );
 };
 
-// --- NAVIGATION (Sidebar Clicks) ---
-const initScrollNavigation = () => {
-  const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
-  const SECTION_INDEX_STEP = 2; // Sync with SideBar.astro indexing (dots create offsets)
-
-  const scrollToIndex = (index: number) => {
-    if (_totalSteps <= 0) return;
-    const clamped = gsap.utils.clamp(0, _totalSteps, index);
-    const targetY = progressToScrollY(clamped * _step);
-
-    activeScrollTween?.kill();
-    activeScrollTween = gsap.to(window, {
-      duration: 0.8,
-      scrollTo: { y: targetY },
-      ease: "power2.inOut",
-    });
-  };
-
-  navSections.forEach((section) => {
-    section.style.cursor = "pointer";
-    section.addEventListener("click", () => {
-      const navDataIndex = Number(section.dataset.index);
-      if (Number.isNaN(navDataIndex)) return;
-      const panelIndex = navDataIndex / SECTION_INDEX_STEP;
-      scrollToIndex(panelIndex);
-    });
-  });
-};
-
-// --- KEYBOARD (Space/PgDown Snap) ---
 export const initKeyboardScroll = () => {
   const handleKeyboard = (e: KeyboardEvent) => {
     const isSpace = e.code === "Space";
@@ -257,13 +277,7 @@ export const initKeyboardScroll = () => {
     }
 
     const targetY = progressToScrollY(targetIndex * _step);
-
-    activeScrollTween?.kill();
-    activeScrollTween = gsap.to(window, {
-      duration: 0.7,
-      scrollTo: { y: targetY },
-      ease: "power2.inOut", // Using consistent ease with sidebar navigation
-    });
+    scrollToIndex(targetIndex);
   };
 
   window.addEventListener("keydown", handleKeyboard, { passive: false });

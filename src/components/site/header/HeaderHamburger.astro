@@ -36,7 +36,9 @@ const { isHome } = Astro.props;
 <div id="hmbrgr-menu">
   <div class="hmbrgr-row">
     <div class:list={["hmbrgr-contacts", { "hmbrgr-contacts-full": !isHome }]}>
-      <div class="hmbrgr-contact-btn"><i class="fa-solid fa-file-lines"></i>&#8194;CV</div>
+      <div class="hmbrgr-contact-btn" tabindex="0" role="button" aria-label="View CV">
+        <i class="fa-solid fa-file-lines"></i>&#8194;CV
+      </div>
       <a
         href={LINKS.linkedin.url}
         target="_blank"
@@ -48,24 +50,50 @@ const { isHome } = Astro.props;
         <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn
       </a>
       <LetsTalk isHamburger={true} />
-      <div class="hmbrgr-contact-btn"><i class="fa-solid fa-user"></i>&#8194;About</div>
+      <div class="hmbrgr-contact-btn" tabindex="0" role="button" aria-label="View About me">
+        <i class="fa-solid fa-user"></i>&#8194;About
+      </div>
     </div>
     {
       isHome && (
         <div class="hmbrgr-nav-parent">
-          <div class="hmbrgr-nav" data-index="0">
+          <div
+            class="hmbrgr-nav"
+            data-index="0"
+            tabindex="0"
+            role="link"
+            aria-label="Scroll to Hey section"
+          >
             {" "}
             Hey{" "}
           </div>
-          <div class="hmbrgr-nav" data-index="1">
+          <div
+            class="hmbrgr-nav"
+            data-index="1"
+            tabindex="0"
+            role="link"
+            aria-label="Scroll to Projects section"
+          >
             {" "}
             Projects{" "}
           </div>
-          <div class="hmbrgr-nav" data-index="2">
+          <div
+            class="hmbrgr-nav"
+            data-index="2"
+            tabindex="0"
+            role="link"
+            aria-label="Scroll to About Me section"
+          >
             {" "}
             About Me{" "}
           </div>
-          <div class="hmbrgr-nav" data-index="3">
+          <div
+            class="hmbrgr-nav"
+            data-index="3"
+            tabindex="0"
+            role="link"
+            aria-label="Scroll to Contacts section"
+          >
             {" "}
             Contacts{" "}
           </div>
@@ -108,6 +136,14 @@ const { isHome } = Astro.props;
     transform: scale(1) rotate(0) !important;
   }
 
+  /* --- Reduced Motion Icon Overrides --- */
+  html[data-reduced-motion="true"] :global(header:not(.menu-open)) .icon-xmark {
+    display: none !important;
+  }
+  html[data-reduced-motion="true"] :global(header.menu-open) .icon-bars {
+    display: none !important;
+  }
+
   /* ---------------------------------------------------------------- */
   /* ----- hmbrgr MENU ----- */
   /* ---------------------------------------------------------------- */
@@ -117,7 +153,14 @@ const { isHome } = Astro.props;
     height: var(--header-height);
     width: var(--header-height);
     background: var(--brand-secondary);
-    border-bottom: 3px solid color-mix(in srgb, var(--brand-secondary) 80%, black);
+
+    /* MIMIC HEADER: Bottom border only. No Top, Right, or Left borders. */
+    border-bottom: var(--border-width) solid color-mix(in srgb, var(--brand-secondary) 80%, black);
+    border-top: none;
+    border-right: none;
+    border-left: none;
+
+    box-sizing: border-box;
     transition: background var(--transition-speed) ease;
 
     position: absolute;
@@ -138,10 +181,10 @@ const { isHome } = Astro.props;
     z-index: var(--z-menu);
 
     /* Overrides since it attaches to the header */
-    border-radius: 0 0 clamp(1rem, 3cqi, 2.5rem) clamp(1rem, 3cqi, 2.5rem);
-    border-top: none; /* Already defined by header */
-    border-left: none;
-    border-right: none;
+    border-bottom: var(--border); /* Maintain border for layout stability */
+    border-top: var(--border-width) solid transparent;
+    border-left: var(--border-width) solid transparent;
+    border-right: var(--border-width) solid transparent;
   }
   #hmbrgr-menu.open {
     display: flex;
@@ -149,6 +192,12 @@ const { isHome } = Astro.props;
   }
   #hmbrgr-menu.closing {
     animation: slideUp 0.3s ease-in forwards;
+  }
+
+  /* --- Reduced Motion Menu Overrides --- */
+  html[data-reduced-motion="true"] #hmbrgr-menu {
+    animation: none !important;
+    transform: none !important;
   }
 
   @keyframes slideDown {
@@ -178,6 +227,8 @@ const { isHome } = Astro.props;
     height: 100%;
     border-radius: 0;
     color: var(--bg-base);
+    /* Remove internal border to ensure icon stays perfectly centered in the wrapper */
+    border: none !important;
   }
 
   @media (hover: hover) {
@@ -190,6 +241,26 @@ const { isHome } = Astro.props;
   /* Override icon size for hamburger menu specifically */
   .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn i) {
     @apply text-3xl;
+  }
+
+  /* --- High Contrast Overrides --- */
+  html[data-high-contrast="true"] .hmbrgr-menu-toggle-wrapper {
+    background: var(--brand-primary);
+    border-top: none;
+    border-bottom: var(--border-primary);
+  }
+
+  html[data-high-contrast="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
+  html[data-high-contrast="true"]
+    .hmbrgr-menu-toggle-wrapper
+    :global(.header-icon-btn[aria-expanded="true"]) {
+    background: var(--brand-secondary) !important;
+    outline: var(--border-width) solid var(--brand-secondary);
+    outline-offset: calc(var(--border-width) * -1);
+  }
+
+  html[data-high-contrast="true"] #hmbrgr-menu {
+    border-bottom: var(--border-primary);
   }
 
   .hmbrgr-row {
@@ -214,12 +285,14 @@ const { isHome } = Astro.props;
   }
 
   .hmbrgr-nav {
-    @apply btn-fx-txtcolor;
+    @apply btn-fx-txtcolor focus-visible;
     transition: color 0.3s;
     @apply text-xl;
     line-height: 0.9;
     @apply font-bold;
     padding: 0.7rem;
+    border-radius: 8px;
+    outline-offset: 4px !important;
   }
 
   .hmbrgr-nav-parent,

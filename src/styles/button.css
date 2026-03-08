@@ -20,17 +20,15 @@
     transform: translateY(-2px) scale(1.05);
     box-shadow: var(--box-shadow);
   }
-}
 
-[data-reduced-motion="true"] .btn-fx-scale {
-  transition: none;
+  /* Look for state on the HTML root element */
+  html[data-reduced-motion="true"] & {
+    transition: none !important;
 
-  &:hover,
-  &[aria-expanded="true"] {
-    /* Remove motion */
-    transform: none !important;
-    /* Set new static hover effect */
-    background-color: var(--brand-primary) !important;
+    &:hover,
+    &[aria-expanded="true"] {
+      transform: none !important;
+    }
   }
 }
 
@@ -81,8 +79,28 @@
     color: var(
       --bg-base
     ); /* Forces text to stay the right color instead of using the `a` hover color */
-    background: var(--brand-secondary-shaded); /* Good brand color alteration for hover */
+    background: var(--brand-primary); /* Good brand color alteration for hover */
     text-decoration: none; /* In case your `a` tag adds an underline on hover */
+  }
+
+  /* High Contrast Interaction Override */
+  html[data-high-contrast="true"] & {
+    background: var(--brand-primary);
+
+    &:hover {
+      /* Mixed with luminosity for a perceivable value shift even for color-blind users */
+      background: color-mix(in srgb, var(--brand-secondary), white 10%);
+      color: var(--bg-base);
+
+      /* Dark mode adjustment for luminosity */
+      html[data-theme="dark"] & {
+        background: color-mix(in srgb, var(--brand-secondary), black 10%);
+      }
+
+      outline: var(--border-width) solid var(--brand-secondary);
+      outline-offset: 2px;
+      transform: scale(1.02);
+    }
   }
 }
 
@@ -151,8 +169,9 @@
 
 @utility focus-visible {
   &:focus-visible {
-    outline: 2px solid var(--text-color);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 4px;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--focus-ring) 25%, transparent);
   }
 }
 

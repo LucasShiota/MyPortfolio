@@ -24,11 +24,12 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
   @reference "../../styles/global.css";
 
   .header-icon-btn {
+    @apply focus-visible;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background: transparent;
-    border: transparent;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;

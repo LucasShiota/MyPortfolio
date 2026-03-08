@@ -99,7 +99,7 @@ const { id, wrapperClass = "", panelClass = "", isHamburger = false } = Astro.pr
   .popup-panel {
     @apply surface-panel;
     position: absolute;
-    z-index: 100;
+    z-index: var(--z-popup);
     top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
@@ -128,6 +128,23 @@ const { id, wrapperClass = "", panelClass = "", isHamburger = false } = Astro.pr
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
+  }
+
+  /* --- Reduced Motion Support --- */
+  html[data-reduced-motion="true"] .popup-panel {
+    transition: none !important;
+    /* Remove vertical drift/pop anim */
+    transform: translateX(-50%) !important;
+  }
+
+  html[data-reduced-motion="true"] .popup-wrapper:hover .popup-panel,
+  html[data-reduced-motion="true"] .popup-wrapper.active .popup-panel {
+    transform: translateX(-50%) !important;
+  }
+
+  /* --- High Contrast Support --- */
+  html[data-high-contrast="true"] .popup-panel {
+    border: var(--border-secondary) !important;
   }
 
   /* Common Panel Styles */

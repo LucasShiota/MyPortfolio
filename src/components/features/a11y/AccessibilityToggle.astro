@@ -32,12 +32,38 @@ const { id = "accessibility-toggle", class: className = "", isHamburger = false 
     </div>
   </div>
 
-  <!-- Section 2: Placeholder Action -->
+  <!-- Section 2: Adjustments -->
   <div class="panel-section">
     <span class="section-label"><i class="fa-solid fa-sliders"></i> Adjustments</span>
-    <div class="panel-btn">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Feature coming soon...</span>
+
+    <div class="a11y-adjustment-row">
+      <div class="adjustment-info">
+        <i class="fa-solid fa-person-running"></i>
+        <span>Reduced Motion</span>
+      </div>
+      <button
+        class="reduced-motion-toggle btn-type-toggle"
+        role="switch"
+        aria-checked="false"
+        aria-label="Toggle reduced motion"
+      >
+        <span class="toggle-thumb"></span>
+      </button>
+    </div>
+
+    <div class="a11y-adjustment-row">
+      <div class="adjustment-info">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+        <span>High Contrast</span>
+      </div>
+      <button
+        class="high-contrast-toggle btn-type-toggle"
+        role="switch"
+        aria-checked="false"
+        aria-label="Toggle high contrast"
+      >
+        <span class="toggle-thumb"></span>
+      </button>
     </div>
   </div>
 </PopUpPanel>
@@ -56,6 +82,23 @@ const { id = "accessibility-toggle", class: className = "", isHamburger = false 
 
   .info-item {
     cursor: help;
+  }
+
+  .a11y-adjustment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    gap: 1rem;
+    color: var(--text-color);
+  }
+
+  .adjustment-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    @apply font-medium;
   }
 
   /* Specific to hamburger menu context */

@@ -4,14 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
-### Added
-
-- Implemented an accessible `Toggle.astro` component to manage visual modes and user preferences.
-- Added `btn-type-toggle` utility for generic, easily stylable UI switches.
-- Created **Dependency Health** workflow (`@[/health]`) to track 3rd-party updates and security.
-- Created **Maintenance** workflow (`@[/maintenance]`) to toggle site status.
-- Enhanced **Visual Regression** suite (`@[/visual-check]`) with responsive checks and masking for dynamic elements.
-- Established **Design Tokens** system (`tokens.css` & `@[/design-tokens]`) to centralize styling and variables.
+- Added systemic **Shadow Tokens** (`--shadow-sm` through `--shadow-xl`) to `tokens.css` for consistent elevation.
+- Implemented **High Contrast** mode with a curated dual-theme palette: "Mature" Crimson/Navy for Light mode and "Poppy" Cherry/Cyan for Dark mode.
+- Established a **Hierarchical Border System** for clarity: Primary brand colors for structural panels (Header, Sections) and Secondary brand colors for floating UX elements (Popups).
+- Standardized global `--border-width` to ensure zero layout shifting when toggling accessibility modes.
+- Enhanced high-contrast button interactions with **Luminosity-Shifted** hover states for better value-change detection.
 
 ### Changed
 

@@ -18,6 +18,7 @@ import HeaderLogo from "./HeaderLogo.astro";
 import ThemeToggle from "../../features/theme/ThemeToggle.astro";
 import PerformanceToggle from "../../features/performance/PerformanceToggle.astro";
 import AccessibilityToggle from "../../features/a11y/AccessibilityToggle.astro";
+import ReducedMotion from "../../features/a11y/ReducedMotion.astro";
 import { LINKS } from "../../../config/site";
 
 const pathname = Astro.url.pathname;
@@ -55,6 +56,7 @@ const isHome = pathname === "/" || pathname === "";
   </div>
   <DarkMode />
   <PerformanceMode />
+  <ReducedMotion />
 </header>
 
 <style>
@@ -75,6 +77,7 @@ const isHome = pathname === "/" || pathname === "";
     background: var(--bg-base);
     box-shadow: var(--box-shadow-small);
     border-radius: 0;
+    border-bottom: var(--border);
     border-top: none;
     border-left: none;
     border-right: none;
