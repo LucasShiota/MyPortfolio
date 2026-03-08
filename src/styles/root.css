@@ -104,7 +104,7 @@ html {
 /* --- HIGH CONTRAST MODE --- */
 [data-high-contrast="true"] {
   --bg-base: #f8f9fa; /* Mature Off-White */
-  --bg-panel: #f8f9fa;
+  --bg-panel: color-mix(in srgb, var(--bg-base), black 7%); /* Mixed for depth */
   --text-color: #0d0d0d; /* Mature Off-Black */
   --text-alt: #0d0d0d;
 
@@ -189,7 +189,7 @@ html {
 
 [data-theme="dark"][data-high-contrast="true"] {
   --bg-base: #0d0d0d; /* Mature Off-Black */
-  --bg-panel: #0d0d0d;
+  --bg-panel: color-mix(in srgb, var(--bg-base), white 9%); /* Mixed for depth */
   --text-color: #f8f9fa; /* Mature Off-White */
   --text-alt: #f8f9fa;
 

@@ -25,6 +25,9 @@ export const initA11yController = () => {
     toggles.forEach((toggle) => {
       toggle.setAttribute("aria-checked", String(enabled));
     });
+
+    // Refresh sidebar scaling logic immediately
+    window.performanceModeScroll?.refresh?.();
   };
 
   const toggleReducedMotion = () => {
@@ -42,6 +45,9 @@ export const initA11yController = () => {
     toggles.forEach((toggle) => {
       toggle.setAttribute("aria-checked", String(enabled));
     });
+
+    // Refresh sidebar scaling logic immediately
+    window.performanceModeScroll?.refresh?.();
   };
 
   const toggleHighContrast = () => {

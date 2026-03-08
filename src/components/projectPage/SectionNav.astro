@@ -526,6 +526,25 @@ const { sections, title } = Astro.props;
     opacity: 1;
   }
 
+  /* --- High Contrast Overrides --- */
+  html[data-high-contrast="true"] .nav-link {
+    border: var(--border-width) solid var(--brand-secondary);
+    background: transparent;
+    opacity: 1;
+    margin-bottom: 2px; /* Small gap between bordered items */
+  }
+
+  html[data-high-contrast="true"] .nav-link:hover,
+  html[data-high-contrast="true"] .nav-link.active {
+    background: var(--brand-secondary);
+    color: var(--bg-base);
+  }
+
+  html[data-high-contrast="true"] .sub-link {
+    border-style: dashed; /* Differentiate sub-links with a dashed border */
+    border-width: 2px;
+  }
+
   /* Active Indicator Arrow */
   .active-arrow {
     @apply text-[0.65rem]; /* Specific small size for the arrow */

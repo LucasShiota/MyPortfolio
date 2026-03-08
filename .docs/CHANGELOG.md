@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file. See [standa
 - Established a **Hierarchical Border System** for clarity: Primary brand colors for structural panels (Header, Sections) and Secondary brand colors for floating UX elements (Popups).
 - Standardized global `--border-width` to ensure zero layout shifting when toggling accessibility modes.
 - Enhanced high-contrast button interactions with **Luminosity-Shifted** hover states for better value-change detection.
+- Refactored **SideBar** with a triple-layer architecture to decouple scaling animations from structural borders.
+- Implemented **Proportional Dynamic Margins** in the sidebar that scale alongside button sizes for consistent breathing room.
+- Added **Binary Scaling** logic for Reduced Motion mode in the sidebar navigation.
+- Synchronized sidebar **Navigation Circles** with the scaling "wave" for a fluid, sequence-based transition.
 
 ### Changed
 

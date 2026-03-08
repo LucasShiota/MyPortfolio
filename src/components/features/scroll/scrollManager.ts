@@ -28,7 +28,6 @@ let _step = 0;
 let activeScrollTween: gsap.core.Tween | null = null;
 
 const SIDEBAR_SCALE = { min: 1, max: 1.45, falloffRate: 1, falloffPower: 1.7 } as const;
-const ICON_BASE_SCALE = 1;
 
 // --- CONFIG HELPERS ---
 const refreshPanelConfig = () => {
@@ -101,8 +100,14 @@ const initFocusScroll = () => {
 // --- VISUAL/STATE UPDATERS ---
 function updateSidebarVisuals(progress: number) {
   const sidebar = document.querySelector<HTMLElement>(".sidebar");
-  const navSections = document.querySelectorAll<HTMLElement>(".nav-section");
+  const navContainer = document.querySelector<HTMLElement>(".nav");
+  if (!navContainer) return;
+
+  // Select BOTH sections and circles in their DOM order
+  const allNavElements = Array.from(navContainer.children) as HTMLElement[];
   const contactsEnterThreshold = gsap.utils.clamp(0, 1, 1 - _step * 0.5);
+  const isHighContrast = document.documentElement.getAttribute("data-high-contrast") === "true";
+  const isReducedMotion = document.documentElement.getAttribute("data-reduced-motion") === "true";
 
   // Toggle footer spacing
   if (sidebar) {
@@ -111,20 +116,49 @@ function updateSidebarVisuals(progress: number) {
 
   // Dynamic scaling
   const activeSectionPosition = progress * _totalSteps;
-  navSections.forEach((sectionEl, sectionIndex) => {
-    const sectionDistanceFromActive = Math.abs(sectionIndex - activeSectionPosition);
 
-    // Exponential falloff for smooth scaling
-    const falloff = Math.exp(
-      -SIDEBAR_SCALE.falloffRate * Math.pow(sectionDistanceFromActive, SIDEBAR_SCALE.falloffPower)
-    );
-    const sectionScale = SIDEBAR_SCALE.min + (SIDEBAR_SCALE.max - SIDEBAR_SCALE.min) * falloff;
+  allNavElements.forEach((el) => {
+    const dataIndex = parseInt(el.getAttribute("data-index") || "0");
+    // Convert DOM index (0,1,2,3,4,5,6) to Scroll index (0, 0.5, 1, 1.5, 2, 2.5, 3)
+    const virtualIndex = dataIndex / 2;
 
-    sectionEl.style.transform = `scale(${sectionScale})`;
+    const isSection = el.classList.contains("nav-section");
+    const isDirectMatch = isSection && Math.abs(virtualIndex - activeSectionPosition) < 0.35;
+    const distanceFromActive = Math.abs(virtualIndex - activeSectionPosition);
 
-    const iconEl = sectionEl.querySelector<HTMLElement>(".navsec-icon");
-    if (iconEl) {
-      iconEl.style.transform = `translate(-50%, -50%) scale(${ICON_BASE_SCALE * sectionScale})`;
+    // Update active class for High Contrast border fills (only for sections)
+    if (isSection) {
+      el.classList.toggle("active", isDirectMatch);
+    }
+
+    let scale = 1;
+
+    if (isReducedMotion) {
+      // BINARY SCALE for Reduced Motion
+      // For circles, we use a smaller scale bump or none, but here we'll match user intent
+      const matchThreshold = isSection ? 0.35 : 0.25;
+      scale = Math.abs(virtualIndex - activeSectionPosition) < matchThreshold ? 1.25 : 1;
+    } else {
+      // Exponential falloff for smooth scaling
+      const falloff = Math.exp(
+        -SIDEBAR_SCALE.falloffRate * Math.pow(distanceFromActive, SIDEBAR_SCALE.falloffPower)
+      );
+      scale = SIDEBAR_SCALE.min + (SIDEBAR_SCALE.max - SIDEBAR_SCALE.min) * falloff;
+    }
+
+    // Apply scaling
+    el.style.transform = `scale(${scale})`;
+
+    // DYNAMIC MARGINS: Scale margins proportionally
+    const baseMargin = el.classList.contains("nav-circle") ? 4 : 6; // Circles are tighter
+    const dynamicMargin = baseMargin * scale;
+    el.style.marginTop = `${dynamicMargin}px`;
+    el.style.marginBottom = `${dynamicMargin}px`;
+
+    // Explicitly handle color inversion for High Contrast active state
+    if (isHighContrast && isSection) {
+      const box = el.querySelector<HTMLElement>(".navsec-box");
+      if (box) box.style.transform = "translateZ(0)";
     }
   });
 }
@@ -169,7 +203,6 @@ export const initPanelScroll = () => {
    * Constraint: MUST NOT HAVE scrub or onUpdate/callbacks.
    */
   let snapTrigger: ScrollTrigger | null = null;
-  const isPerformanceMode = () => document.documentElement.classList.contains("performance-mode");
 
   const enableSnapping = () => {
     if (snapTrigger || _totalSteps <= 0) return;
@@ -276,7 +309,6 @@ export const initKeyboardScroll = () => {
       targetIndex = gsap.utils.clamp(0, _totalSteps, currentIndex - 1);
     }
 
-    const targetY = progressToScrollY(targetIndex * _step);
     scrollToIndex(targetIndex);
   };
 

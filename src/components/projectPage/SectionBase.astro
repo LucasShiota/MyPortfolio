@@ -99,6 +99,11 @@ const sectionStyles = {
     position: relative;
     @apply surface-panel;
     padding: var(--section-pad-y, 2rem) var(--section-pad-x, 2rem);
+
+    /* Main sections use base bg, while subsections retain surface-panel (bg-panel) */
+    .project-section:not(.subsection) & {
+      background: var(--bg-base);
+    }
   }
 
   .section-title {
