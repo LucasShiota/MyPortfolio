@@ -10,6 +10,12 @@ All notable changes to this project will be documented in this file. See [standa
 - Added **Perceptual Scale Correction** (10% bump) to icons in Clarity Mode to counteract the irradiation illusion on solid backgrounds.
 - Added default structural borders for all toggle buttons (Accessibility, Theme, Performance) in Clarity Mode.
 - Dynamic color inversion for Hamburger menu icons in Clarity Mode to ensure visibility against structural fills.
+- Redesigned the **Hamburger Menu** into a responsive, sectioned layout with adaptive width stages (Overlay -> Drawer -> Flyout).
+- Implemented **Pinning Logic** for PopUpPanels (Accessibility & Let's Talk), supporting both hover-to-peek and click-to-pin interactions.
+- Modernized legacy hamburger menu elements with rounded pill buttons and progressive content visibility logic.
+- Standardized section dividers with rounded-end bars for improved visual polish.
+- Hardcoded **QR Code** color tokens to strict Black & White for scannability across all site themes.
+- Increased header spacing for toggles and contact buttons to improve visual balance.
 
 ### Changed
 

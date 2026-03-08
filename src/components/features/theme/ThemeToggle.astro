@@ -35,8 +35,5 @@ const { id = "theme-toggle", class: className = "" } = Astro.props;
     pointer-events: auto !important;
   }
 
-  /* Specific to hamburger menu context */
-  :global(#hmbrgr-menu) :global(.theme-toggle i) {
-    @apply text-3xl;
-  }
+  /* Removed hamburger override to maintain consistency with header */
 </style>

@@ -1,4 +1,11 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  ACCESSIBILITY TOGGLE COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Interactive toggle for accessibility features (Reduced Motion, Clarity Mode).
+ */
 import HeaderIconButton from "../../site/HeaderIconButton.astro";
 import PopUpPanel from "../../site/PopUpPanel.astro";
 
@@ -101,8 +108,5 @@ const { id = "accessibility-toggle", class: className = "", isHamburger = false 
     @apply font-medium;
   }
 
-  /* Specific to hamburger menu context */
-  :global(#hmbrgr-menu) :global(.accessibility-btn i) {
-    @apply text-3xl;
-  }
+  /* Removed hamburger override to maintain consistency with header */
 </style>

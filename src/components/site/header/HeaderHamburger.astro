@@ -34,80 +34,97 @@ const { isHome } = Astro.props;
 </div>
 
 <div id="hmbrgr-menu">
-  <div class="hmbrgr-row">
-    <div class:list={["hmbrgr-contacts", { "hmbrgr-contacts-full": !isHome }]}>
-      <div class="hmbrgr-contact-btn" tabindex="0" role="button" aria-label="View CV">
-        <i class="fa-solid fa-file-lines"></i>&#8194;CV
-      </div>
-      <a
-        href={LINKS.linkedin.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hmbrgr-contact-btn"
-        aria-label={LINKS.linkedin.label}
-        title={LINKS.linkedin.title}
-      >
-        <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn
-      </a>
-      <LetsTalk isHamburger={true} />
-      <div class="hmbrgr-contact-btn" tabindex="0" role="button" aria-label="View About me">
-        <i class="fa-solid fa-user"></i>&#8194;About
-      </div>
-    </div>
+  <div class="hmbrgr-scroll-container">
     {
       isHome && (
-        <div class="hmbrgr-nav-parent">
-          <div
-            class="hmbrgr-nav"
-            data-index="0"
-            tabindex="0"
-            role="link"
-            aria-label="Scroll to Hey section"
-          >
-            {" "}
-            Hey{" "}
-          </div>
-          <div
-            class="hmbrgr-nav"
-            data-index="1"
-            tabindex="0"
-            role="link"
-            aria-label="Scroll to Projects section"
-          >
-            {" "}
-            Projects{" "}
-          </div>
-          <div
-            class="hmbrgr-nav"
-            data-index="2"
-            tabindex="0"
-            role="link"
-            aria-label="Scroll to About Me section"
-          >
-            {" "}
-            About Me{" "}
-          </div>
-          <div
-            class="hmbrgr-nav"
-            data-index="3"
-            tabindex="0"
-            role="link"
-            aria-label="Scroll to Contacts section"
-          >
-            {" "}
-            Contacts{" "}
+        <div class="hmbrgr-section">
+          <span class="hmbrgr-section-label">Navigation</span>
+          <div class="hmbrgr-nav-grid">
+            <div
+              class="hmbrgr-nav"
+              data-index="0"
+              tabindex="0"
+              role="link"
+              aria-label="Scroll to Hey section"
+            >
+              {" "}
+              Hey{" "}
+            </div>
+            <div
+              class="hmbrgr-nav"
+              data-index="1"
+              tabindex="0"
+              role="link"
+              aria-label="Scroll to Projects section"
+            >
+              {" "}
+              Projects{" "}
+            </div>
+            <div
+              class="hmbrgr-nav"
+              data-index="2"
+              tabindex="0"
+              role="link"
+              aria-label="Scroll to About Me section"
+            >
+              {" "}
+              About Me{" "}
+            </div>
+            <div
+              class="hmbrgr-nav"
+              data-index="3"
+              tabindex="0"
+              role="link"
+              aria-label="Scroll to Contacts section"
+            >
+              {" "}
+              Contacts{" "}
+            </div>
           </div>
         </div>
       )
     }
+
+    <div class="hmbrgr-section hmbrgr-connect-section">
+      <span class="hmbrgr-section-label">Connect</span>
+      <div class="hmbrgr-contact-grid">
+        <a href="/cv.pdf" class="hmbrgr-contact-btn" target="_blank">
+          <i class="fa-solid fa-file-lines"></i>&#8194;CV
+        </a>
+        <a
+          href={LINKS.linkedin.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hmbrgr-contact-btn hmbrgr-pill"
+        >
+          <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn
+        </a>
+        <div class="hmbrgr-talk-wrapper">
+          <LetsTalk isHamburger={true} />
+        </div>
+        <a href="/#about" class="hmbrgr-contact-btn hmbrgr-pill">
+          <i class="fa-solid fa-user"></i>&#8194;About
+        </a>
+      </div>
+    </div>
+
+    <div class="hmbrgr-section hmbrgr-toggles-section">
+      <span class="hmbrgr-section-label">Interface Settings</span>
+      <div class="hmbrgr-toggles">
+        <AccessibilityToggle isHamburger={true} id="hmbrgr-accessibility-toggle" />
+        <ThemeToggle id="hmbrgr-theme-toggle" />
+        <PerformanceToggle id="hmbrgr-performance-toggle" />
+      </div>
+    </div>
+
+    <div class="hmbrgr-section">
+      <span class="hmbrgr-section-label">Resources</span>
+      <div class="hmbrgr-resources-grid">
+        <HeaderQR />
+        <HeaderCredit />
+      </div>
+    </div>
   </div>
-  <div class="hmbrgr-toggles">
-    <AccessibilityToggle isHamburger={true} id="hmbrgr-accessibility-toggle" />
-    <ThemeToggle id="hmbrgr-theme-toggle" />
-    <PerformanceToggle id="hmbrgr-performance-toggle" />
-  </div>
-  <HeaderQR />
-  <HeaderCredit />
 </div>
 
 <script>
@@ -145,7 +162,7 @@ const { isHome } = Astro.props;
   }
 
   /* ---------------------------------------------------------------- */
-  /* ----- hmbrgr MENU ----- */
+  /* ----- hmbrgr MENU TOGGLE ----- */
   /* ---------------------------------------------------------------- */
 
   .hmbrgr-menu-toggle-wrapper {
@@ -153,54 +170,92 @@ const { isHome } = Astro.props;
     height: var(--header-height);
     width: var(--header-height);
     background: var(--brand-secondary);
-
-    /* MIMIC HEADER: Bottom border only. No Top, Right, or Left borders. */
-    border-bottom: var(--border-width) solid color-mix(in srgb, var(--brand-secondary) 80%, black);
-    border-top: none;
-    border-right: none;
-    border-left: none;
-
+    border-bottom: var(--border-width) solid color-mix(in srgb, transparent, var(--text-color) 20%);
     box-sizing: border-box;
-    transition: background var(--transition-speed) ease;
-
+    transition: background var(--transition-fast) ease;
     position: absolute;
     right: 0;
     top: 0;
   }
 
+  .fa-solid {
+    color: var(--bg-base);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* ----- hmbrgr MENU PANEL ----- */
+  /* ---------------------------------------------------------------- */
+
   #hmbrgr-menu {
     @apply flx-cntr-clmn surface-panel;
-    border-radius: 0%; /* exception override*/
+    border-radius: 0;
     display: none;
     position: fixed;
     width: 100%;
+    height: calc(100vh - var(--header-height));
     left: 0;
     top: var(--header-height);
-    padding: 1rem 0;
-    gap: 1rem;
-    opacity: 1;
     z-index: var(--z-menu);
-
-    /* Overrides since it attaches to the header */
-    border-bottom: var(--border); /* Maintain border for layout stability */
-    border-top: var(--border-width) solid transparent;
-    border-left: var(--border-width) solid transparent;
-    border-right: var(--border-width) solid transparent;
+    border: none;
+    border-bottom: var(--border);
+    overflow: hidden;
+    transition: width var(--transition-fast) ease;
   }
+
+  /* Gradual Width Transitions */
+  @media (min-width: 640px) {
+    #hmbrgr-menu {
+      width: 70%;
+      left: auto;
+      right: 0;
+      border-left: var(--border);
+    }
+  }
+
+  @media (min-width: 900px) {
+    #hmbrgr-menu {
+      width: 50%;
+    }
+  }
+
+  /* Desktop Flyout Style */
+  @media (min-width: 1200px) {
+    #hmbrgr-menu {
+      width: 400px;
+    }
+  }
+
   #hmbrgr-menu.open {
     display: flex;
     animation: slideDown var(--transition-fast) ease-out;
   }
+
+  @media (min-width: 640px) {
+    #hmbrgr-menu.open {
+      animation: slideLeft var(--transition-fast) ease-out;
+    }
+  }
+
   #hmbrgr-menu.closing {
     animation: slideUp var(--transition-fast) ease-in forwards;
   }
 
-  /* --- Reduced Motion Menu Overrides --- */
-  html[data-reduced-motion="true"] #hmbrgr-menu {
-    animation: none !important;
-    transform: none !important;
+  @media (min-width: 640px) {
+    #hmbrgr-menu.closing {
+      animation: slideRight var(--transition-fast) ease-in forwards;
+    }
   }
 
+  .hmbrgr-scroll-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 2rem 1.5rem;
+    @apply flx-clmn;
+    gap: 2.5rem;
+  }
+
+  /* Animations */
   @keyframes slideDown {
     from {
       opacity: 0;
@@ -221,16 +276,185 @@ const { isHome } = Astro.props;
       transform: translateY(-10px);
     }
   }
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes slideRight {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+  }
 
-  /* Override button to cover the wrapper and set contrast colors */
+  /* ---------------------------------------------------------------- */
+  /* ----- SECTIONS ----- */
+  /* ---------------------------------------------------------------- */
+
+  .hmbrgr-section {
+    @apply flx-clmn;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .hmbrgr-section-label {
+    @apply txt-body-sm font-bold uppercase;
+    color: var(--brand-secondary);
+    letter-spacing: 0.1em;
+    padding-bottom: 0.5rem;
+    position: relative;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .hmbrgr-section-label::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--border-width);
+    background: color-mix(in srgb, var(--brand-secondary) 30%, transparent);
+    border-radius: var(--border-radius-full);
+  }
+
+  .hmbrgr-connect-section {
+    display: flex;
+  }
+
+  @media (min-width: 640px) {
+    .hmbrgr-connect-section {
+      display: none;
+    }
+  }
+
+  /* Navigation Links */
+  .hmbrgr-nav-grid,
+  .hmbrgr-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .hmbrgr-nav {
+    @apply btn-fx-txtcolor focus-visible font-bold;
+    transition: all var(--transition-fast);
+    padding: 0.75rem 1rem;
+    background: color-mix(in srgb, var(--bg-panel) 100%, var(--brand-secondary));
+    border-radius: 12px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    @apply text-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 200px;
+    justify-self: center;
+    height: 3.5rem;
+  }
+
+  .hmbrgr-nav:hover {
+    background: var(--brand-secondary);
+    color: var(--bg-base);
+    transform: translateY(-2px);
+  }
+
+  /* Contact Buttons */
+  .hmbrgr-contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .hmbrgr-contact-btn {
+    @apply btn-type-main;
+    width: 100%;
+    max-width: 200px;
+    justify-self: center;
+    text-decoration: none;
+  }
+
+  .hmbrgr-pill {
+    border-radius: 9999px;
+  }
+
+  .hmbrgr-talk-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hmbrgr-talk-wrapper :global(.hmbrgr-contact-btn) {
+    width: 100% !important;
+    max-width: 200px;
+  }
+
+  .hmbrgr-resources-grid {
+    @apply flx-cntr-clmn;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  /* Toggles */
+  .hmbrgr-toggles {
+    @apply flx-jstfycntr-rw;
+    background: transparent;
+    padding: 1rem;
+    border-radius: 16px;
+    gap: 1.5rem;
+  }
+
+  .hmbrgr-footer {
+    @apply flx-cntr-clmn;
+    margin-top: auto;
+    padding-top: 2rem;
+    gap: 1.5rem;
+  }
+
+  /* Media Queries for Layout Balance */
+  @media (max-width: 480px) {
+    .hmbrgr-nav-grid,
+    .hmbrgr-contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hmbrgr-nav-grid,
+    .hmbrgr-contact-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Desktop Drawer Specifics */
+  @media (min-width: 1200px) {
+    .hmbrgr-toggles-section {
+      display: none; /* Already prominently in header */
+    }
+    .hmbrgr-scroll-container {
+      padding: 3rem 2rem;
+    }
+  }
+
+  /* Toggle Wrapper Overrides */
   .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn) {
     width: 100%;
     height: 100%;
     border-radius: 0;
     color: var(--bg-base);
-    /* Remove internal border to ensure icon stays perfectly centered in the wrapper */
     border: none !important;
-    /* Use 0.3s to match interactive button behavior across the site */
     transition: background var(--transition-fast) ease;
   }
 
@@ -241,97 +465,15 @@ const { isHome } = Astro.props;
     }
   }
 
-  /* Override icon size for hamburger menu specifically */
   .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn i) {
     @apply text-3xl;
   }
 
-  /* --- Clarity Mode Overrides --- */
+  /* Clarity Mode */
   html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper {
     background: var(--brand-primary);
-    border-top: none;
-    border-bottom: var(--border-primary);
   }
-
-  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn) {
-    color: var(--bg-base); /* Inverted: White on light theme, Black on dark theme */
-  }
-
-  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
-  html[data-clarity="true"]
-    .hmbrgr-menu-toggle-wrapper
-    :global(.header-icon-btn[aria-expanded="true"]) {
-    background: var(--brand-secondary) !important;
-    color: var(--bg-base);
-    /* Remove redundant outline that desyncs from background transition */
-    outline: none;
-  }
-
-  html[data-clarity="true"] #hmbrgr-menu {
-    border-bottom: var(--border-primary);
-  }
-
-  .hmbrgr-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    padding: 0.5rem 0;
-  }
-
-  .hmbrgr-toggles {
-    @apply flx-jstfycntr-rw;
-    width: 70%;
-    gap: 1rem;
-    padding: 0.5rem 0;
-    border-bottom: var(--border);
-    border-top: var(--border);
-  }
-
-  .hmbrgr-contacts {
-    border-right: var(--border);
-  }
-
-  .hmbrgr-nav {
-    @apply btn-fx-txtcolor focus-visible;
-    transition: color var(--transition-fast);
-    @apply text-xl;
-    line-height: 0.9;
-    @apply font-bold;
-    padding: 0.7rem;
-    border-radius: 8px;
-    outline-offset: 4px !important;
-  }
-
-  .hmbrgr-nav-parent,
-  .hmbrgr-contacts {
-    @apply flx-cntr-clmn;
-    gap: 0.5rem;
-    width: 40%;
-  }
-  .hmbrgr-contacts.hmbrgr-contacts-full {
-    width: 100%;
-    border-right: none;
-  }
-
-  /* Media query specific for toggles visibility within header */
-  @media (min-width: 640px) {
-    .hmbrgr-contacts {
-      display: none;
-    }
-  }
-  @media (min-width: 768px) {
-    .hmbrgr-nav-parent,
-    .hmbrgr-row {
-      display: none;
-    }
-    .hmbrgr-toggles {
-      border-top: none;
-    }
-  }
-  @media (min-width: 1200px) {
-    .hmbrgr-toggles {
-      display: none;
-    }
+  html[data-clarity="true"] .hmbrgr-nav {
+    border: var(--border-width) solid var(--brand-secondary);
   }
 </style>

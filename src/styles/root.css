@@ -194,8 +194,8 @@ html {
   --text-alt: #f8f9fa;
 
   /* In dark mode we use lighter versions for contrast */
-  --brand-primary: #ff3b5c; /* Poppy Cherry */
-  --brand-secondary: #00e5ff; /* Poppy Cyan */
+  --brand-primary: #00e5ff; /* Poppy Cherry */
+  --brand-secondary: #ff3b5c; /* Poppy Cyan */
 
   --brand-primary-shaded: var(--brand-primary);
   --brand-primary-tinted: var(--brand-primary);

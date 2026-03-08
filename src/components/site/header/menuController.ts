@@ -38,7 +38,7 @@ export const initMenuController = () => {
   });
 
   window.addEventListener("resize", () => {
-    if (window.innerWidth > 900 && mobileMenu.classList.contains("open")) {
+    if (window.innerWidth > 1200 && mobileMenu.classList.contains("open")) {
       mobileMenu.classList.remove("open");
       mobileMenu.classList.remove("closing");
       header.classList.remove("menu-open");

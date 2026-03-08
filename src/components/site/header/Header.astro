@@ -101,8 +101,8 @@ const isHome = pathname === "/" || pathname === "";
 
   .header-toggles {
     @apply flx-algncntr-rw;
-    gap: 0.25rem; /* Gap between theme and performance specifically */
-    margin-right: 1rem;
+    gap: 0.5rem; /* Increased gap between toggles */
+    margin-right: 1.25rem;
   }
 
   .header-contacts,
@@ -114,7 +114,7 @@ const isHome = pathname === "/" || pathname === "";
     justify-self: center;
     flex: 1;
     @apply font-bold;
-    gap: clamp(0.5rem, 1vw, 1rem);
+    gap: clamp(0.75rem, 1.5vw, 1.25rem); /* Increased gap between contact buttons */
   }
   .header-actions {
     justify-content: flex-end;
