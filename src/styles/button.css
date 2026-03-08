@@ -1,3 +1,15 @@
+/**
+ * ══════════════════════════════════════════════
+ *  BUTTON STYLES (button.css)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Central logic for all button utility classes and interactions.
+ * Defines shared animations, shapes, and theme-aware button variants.
+ *
+ * CRITICAL RULES:
+ * - btn-type-main height is set to auto to allow padding-driven sizing.
+ * - Global button resets are defined in @layer base to stay non-aggressive.
+ */
 @import "tailwindcss";
 
 @utility btn {
@@ -58,17 +70,40 @@
 @utility btn-tag-red {
   --tag-color: var(--tag-red) !important;
 }
+/* Global Reset for UI elements */
+@layer base {
+  button {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
 @utility btn-tag-blue {
   --tag-color: var(--brand-secondary) !important;
 }
 
 @utility btn-type-main {
   @apply flx-cntr btn shape-pill btn-fx-scale focus-visible;
-  height: 2rem;
-  padding-top: 1.2rem;
-  padding-bottom: 1.2rem;
-  padding-right: clamp(0.6rem, 1vw, 2rem);
-  padding-left: clamp(0.6rem, 1vw, 2rem);
+  height: auto; /* Remove small conflicting height */
+  min-height: 2.5rem; /* Keep a minimum height baseline */
+  padding-right: clamp(1rem, 1vw, 2rem);
+  padding-left: clamp(1rem, 1vw, 2rem);
   background: var(--brand-secondary);
   color: var(--bg-base);
   font-size: 1rem;

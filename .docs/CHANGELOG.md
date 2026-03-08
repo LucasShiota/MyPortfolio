@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
+- Centralized contact links and popup triggers into a unified `ContactButton.astro` component.
+- Implemented global `box-sizing: border-box` to ensure consistent layout calculations across all browsers.
+- Refactored `PopUpPanel` with a `fullWidth` prop for better responsive layout control.
+- Synchronized **Clarity Mode** and **Theme** colors across all header and menu buttons (Blue/Orange transitions).
 - Implemented **Clarity Mode** project-wide (renamed from High Contrast) with consistent data-attribute handling.
 - Integrated **Reduced Motion** into GSAP snapping logic, ensuring animations are disabled alongside Performance Mode.
 - Unified scroll snapping control with the new `syncSnapping` method.
@@ -19,9 +23,17 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Changed
 
+- Refactored `Header.astro`, `HeaderHamburger.astro`, and `LetsTalk.astro` to use the standardized `ContactButton` component.
+- Simplified `btn-type-main` utility with `height: auto` and consistent padding to prevent content squashing.
+- Optimized the Hamburger Menu toggle to sit flush with the header border by adjusting height and removing internal borders.
 - Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization.
 
 ### Fixed
+
+- Resolved "tight" spacing and inconsistent vertical alignment in header buttons by normalizing padding and font-size across `<a>` and `<button>` tags.
+- Fixed layout "drift" in the hamburger toggle and adjacent elements by stabilizing flexbox container behaviors.
+- Corrected black-on-light theme text visibility issues for popup triggers in the header.
+- Fixed unintentional "Hey" navigation item visibility in the hamburger menu.
 
 - Resolved sidebar decoration "jitter" and navigation deadzones when **Reduced Motion** is enabled by disabling margin scaling and rounding active section positions.
 

@@ -18,6 +18,7 @@ import ThemeToggle from "../../features/theme/ThemeToggle.astro";
 import PerformanceToggle from "../../features/performance/PerformanceToggle.astro";
 import AccessibilityToggle from "../../features/a11y/AccessibilityToggle.astro";
 import HeaderIconButton from "../HeaderIconButton.astro";
+import ContactButton from "../ContactButton.astro";
 
 interface Props {
   isHome: boolean;
@@ -88,23 +89,25 @@ const { isHome } = Astro.props;
     <div class="hmbrgr-section hmbrgr-connect-section">
       <span class="hmbrgr-section-label">Connect</span>
       <div class="hmbrgr-contact-grid">
-        <a href="/cv.pdf" class="hmbrgr-contact-btn" target="_blank">
-          <i class="fa-solid fa-file-lines"></i>&#8194;CV
-        </a>
-        <a
+        <ContactButton
+          isHamburger={true}
+          href="/cv.pdf"
+          target="_blank"
+          label="CV"
+          icon="fa-solid fa-file-lines"
+        />
+        <ContactButton
+          isHamburger={true}
           href={LINKS.linkedin.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="hmbrgr-contact-btn hmbrgr-pill"
-        >
-          <i class="fa-brands fa-linkedin-in"></i>&#8194;LinkedIn
-        </a>
+          label="LinkedIn"
+          icon="fa-brands fa-linkedin-in"
+        />
         <div class="hmbrgr-talk-wrapper">
           <LetsTalk isHamburger={true} />
         </div>
-        <a href="/#about" class="hmbrgr-contact-btn hmbrgr-pill">
-          <i class="fa-solid fa-user"></i>&#8194;About
-        </a>
+        <ContactButton isHamburger={true} href="/#about" label="About" icon="fa-solid fa-user" />
       </div>
     </div>
 
@@ -167,15 +170,22 @@ const { isHome } = Astro.props;
 
   .hmbrgr-menu-toggle-wrapper {
     @apply flx-cntr-rw;
-    height: var(--header-height);
+    height: calc(var(--header-height) - var(--border-width));
     width: var(--header-height);
-    background: var(--brand-secondary);
-    border-bottom: var(--border-width) solid color-mix(in srgb, transparent, var(--text-color) 20%);
-    box-sizing: border-box;
-    transition: background var(--transition-fast) ease;
+    background: transparent;
     position: absolute;
     right: 0;
     top: 0;
+    z-index: 40;
+  }
+
+  .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn) {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    background: var(--brand-secondary) !important;
+    border: none !important;
+    color: var(--bg-base) !important;
   }
 
   .fa-solid {
@@ -339,12 +349,11 @@ const { isHome } = Astro.props;
   }
 
   /* Navigation Links */
-  .hmbrgr-nav-grid,
-  .hmbrgr-contact-grid {
+  .hmbrgr-nav-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 0.75rem;
-    justify-content: center;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 0.75rem;
+    justify-items: center;
   }
 
   .hmbrgr-nav {
@@ -374,31 +383,17 @@ const { isHome } = Astro.props;
   /* Contact Buttons */
   .hmbrgr-contact-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .hmbrgr-contact-btn {
-    @apply btn-type-main;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 0.75rem;
+    justify-items: center;
     width: 100%;
-    max-width: 200px;
-    justify-self: center;
-    text-decoration: none;
-  }
-
-  .hmbrgr-pill {
-    border-radius: 9999px;
   }
 
   .hmbrgr-talk-wrapper {
-    width: 100%;
     display: flex;
     justify-content: center;
-  }
-
-  .hmbrgr-talk-wrapper :global(.hmbrgr-contact-btn) {
-    width: 100% !important;
-    max-width: 200px;
+    align-items: center;
+    width: 100%;
   }
 
   .hmbrgr-resources-grid {
@@ -424,21 +419,6 @@ const { isHome } = Astro.props;
   }
 
   /* Media Queries for Layout Balance */
-  @media (max-width: 480px) {
-    .hmbrgr-nav-grid,
-    .hmbrgr-contact-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .hmbrgr-nav-grid,
-    .hmbrgr-contact-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  /* Desktop Drawer Specifics */
   @media (min-width: 1200px) {
     .hmbrgr-toggles-section {
       display: none; /* Already prominently in header */
@@ -461,7 +441,7 @@ const { isHome } = Astro.props;
   @media (hover: hover) {
     .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
     .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn[aria-expanded="true"]) {
-      background: rgba(0, 0, 0, 0.15);
+      background: var(--brand-primary) !important;
     }
   }
 
@@ -470,8 +450,26 @@ const { isHome } = Astro.props;
   }
 
   /* Clarity Mode */
-  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper {
-    background: var(--brand-primary);
+  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn) {
+    background: var(--brand-primary) !important;
+  }
+
+  @media (hover: hover) {
+    html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
+    html[data-clarity="true"]
+      .hmbrgr-menu-toggle-wrapper
+      :global(.header-icon-btn[aria-expanded="true"]) {
+      background: color-mix(in srgb, var(--brand-secondary), white 10%) !important;
+    }
+
+    html[data-theme="dark"][data-clarity="true"]
+      .hmbrgr-menu-toggle-wrapper
+      :global(.header-icon-btn:hover),
+    html[data-theme="dark"][data-clarity="true"]
+      .hmbrgr-menu-toggle-wrapper
+      :global(.header-icon-btn[aria-expanded="true"]) {
+      background: color-mix(in srgb, var(--brand-secondary), black 10%) !important;
+    }
   }
   html[data-clarity="true"] .hmbrgr-nav {
     border: var(--border-width) solid var(--brand-secondary);

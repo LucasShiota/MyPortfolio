@@ -1,0 +1,81 @@
+---
+/**
+ * ══════════════════════════════════════════════
+ *  CONTACT BUTTON COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: A unified button for contact links (CV, LinkedIn, etc.) and popup triggers.
+ * Handles styling for both normal header and hamburger menu contexts.
+ */
+interface Props {
+  href?: string;
+  icon?: string;
+  label: string;
+  isHamburger?: boolean;
+  target?: string;
+  rel?: string;
+  class?: string;
+  id?: string;
+  tag?: "a" | "button" | "div";
+  [key: string]: any;
+}
+
+const {
+  href,
+  icon,
+  label,
+  isHamburger = false,
+  target,
+  rel,
+  class: className = "",
+  id,
+  tag: Tag = href ? "a" : "button",
+  ...restProps
+} = Astro.props;
+
+const baseClass = isHamburger ? "hmbrgr-contact-btn" : "contact-btn";
+---
+
+<Tag
+  href={href}
+  target={target}
+  rel={rel}
+  class:list={[baseClass, className]}
+  id={id}
+  {...restProps}
+>
+  {icon && <i class:list={["contact-icon", icon]} />}
+  <span class="btn-label">{label}</span>
+</Tag>
+
+<style>
+  @reference "../../styles/global.css";
+
+  .contact-btn,
+  .hmbrgr-contact-btn {
+    @apply btn-type-main;
+  }
+
+  .hmbrgr-contact-btn {
+    width: 100%;
+    max-width: 200px;
+    justify-self: center;
+  }
+
+  .contact-icon {
+    display: none;
+    margin-right: 0.5rem;
+  }
+
+  /* Responsive Icon Visibility */
+  @media (min-width: 768px) {
+    .contact-icon {
+      display: inline-block;
+    }
+  }
+
+  /* Always show icon in hamburger mode */
+  .hmbrgr-contact-btn .contact-icon {
+    display: inline-block;
+  }
+</style>

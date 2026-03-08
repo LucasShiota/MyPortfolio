@@ -14,12 +14,27 @@ interface Props {
   wrapperClass?: string;
   panelClass?: string;
   isHamburger?: boolean;
+  fullWidth?: boolean;
 }
 
-const { id, wrapperClass = "", panelClass = "", isHamburger = false } = Astro.props;
+const {
+  id,
+  wrapperClass = "",
+  panelClass = "",
+  isHamburger = false,
+  fullWidth = false,
+} = Astro.props;
 ---
 
-<div id={id} class={`popup-wrapper ${isHamburger ? "hmbrgr-popup-wrapper" : ""} ${wrapperClass}`}>
+<div
+  id={id}
+  class:list={[
+    "popup-wrapper",
+    isHamburger ? "hmbrgr-popup-wrapper" : "",
+    fullWidth ? "full-width" : "",
+    wrapperClass,
+  ]}
+>
   <div class="popup-trigger">
     <slot name="trigger" />
   </div>
@@ -98,12 +113,26 @@ const { id, wrapperClass = "", panelClass = "", isHamburger = false } = Astro.pr
 
   .popup-wrapper {
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
   }
 
   .hmbrgr-popup-wrapper {
     justify-content: center;
+  }
+
+  .popup-wrapper.full-width {
+    width: 100%;
+  }
+
+  .popup-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .popup-wrapper.full-width .popup-trigger {
+    width: 100%;
   }
 
   .popup-panel {

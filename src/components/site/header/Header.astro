@@ -20,6 +20,7 @@ import PerformanceToggle from "../../features/performance/PerformanceToggle.astr
 import AccessibilityToggle from "../../features/a11y/AccessibilityToggle.astro";
 import ReducedMotion from "../../features/a11y/ReducedMotion.astro";
 import { LINKS } from "../../../config/site";
+import ContactButton from "../ContactButton.astro";
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === "/" || pathname === "";
@@ -28,23 +29,18 @@ const isHome = pathname === "/" || pathname === "";
 <header class="flx-cntr-rw surface-panel">
   <HeaderLogo />
   <div class="header-contacts">
-    <div class="contact-btn">
-      <i class="contact-icon fa-solid fa-file-lines"></i>CV
-    </div>
-    <a
+    <ContactButton href="/cv.pdf" target="_blank" label="CV" icon="fa-solid fa-file-lines" />
+    <ContactButton
       href={LINKS.linkedin.url}
       target="_blank"
       rel="noopener noreferrer"
-      class="contact-btn"
+      label="LinkedIn"
+      icon="fa-brands fa-linkedin-in"
       aria-label={LINKS.linkedin.label}
       title={LINKS.linkedin.title}
-    >
-      <i class="contact-icon fa-brands fa-linkedin-in"></i>LinkedIn
-    </a>
+    />
     <LetsTalk />
-    <a href="/#about" class="contact-btn">
-      <i class="contact-icon fa-solid fa-user"></i> About
-    </a>
+    <ContactButton href="/#about" label="About" icon="fa-solid fa-user" />
   </div>
   <div class="header-actions">
     <div class="header-toggles">
@@ -126,20 +122,6 @@ const isHome = pathname === "/" || pathname === "";
   /* #endregion */
 
   /* ---------------------------------------------------------------- */
-  /* ----- CONTACTS ----- */
-  /* ---------------------------------------------------------------- */
-  /* #region Contacts */
-
-  .contact-btn {
-    @apply btn-type-main;
-  }
-  .contact-icon {
-    display: none;
-  }
-
-  /* #endregion */
-
-  /* ---------------------------------------------------------------- */
   /* ----- QUERY ----- */
   /* ---------------------------------------------------------------- */
   /* #region Query */
@@ -152,14 +134,10 @@ const isHome = pathname === "/" || pathname === "";
   }
   @media (min-width: 768px) {
     /* #3: Tablet - Start Shrink, Remove Elements */
-    .contact-icon {
-      display: flex;
-    } /* Show */
   }
   @media (min-width: 1200px) {
     /* #4: Laptop */
-    .header-toggles,
-    .contact-icon {
+    .header-toggles {
       display: flex;
     } /* Show */
   }

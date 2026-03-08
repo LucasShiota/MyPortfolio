@@ -1,6 +1,18 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  LET'S TALK COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: A popup panel trigger and content for contact options (Email, Discord).
+ *
+ * CRITICAL RULES:
+ * - Uses PopUpPanel for the modal/flyout behavior.
+ * - Uses ContactButton for the trigger styling.
+ */
 import { LINKS } from "../../../config/site";
 import PopUpPanel from "../PopUpPanel.astro";
+import ContactButton from "../ContactButton.astro";
 
 interface Props {
   isHamburger?: boolean;
@@ -9,16 +21,16 @@ interface Props {
 const { isHamburger = false } = Astro.props;
 ---
 
-<PopUpPanel isHamburger={isHamburger} wrapperClass="lets-talk-wrapper">
-  <button
+<PopUpPanel isHamburger={isHamburger} fullWidth={isHamburger} wrapperClass="lets-talk-wrapper">
+  <ContactButton
     slot="trigger"
-    class={isHamburger ? "hmbrgr-contact-btn" : "contact-btn"}
+    isHamburger={isHamburger}
+    label="Let's Talk"
+    icon="fa-solid fa-comments"
     aria-haspopup="true"
     aria-expanded="false"
     aria-label="Open contact options"
-  >
-    <i class="contact-icon fa-solid fa-comments"></i> Let's Talk
-  </button>
+  />
 
   <!-- Section 1: Action -->
   <div class="panel-section">
@@ -130,25 +142,5 @@ const { isHamburger = false } = Astro.props;
   }
   .copy-btn.copied .btn-text {
     color: var(--brand-secondary);
-  }
-  .contact-btn,
-  .hmbrgr-contact-btn {
-    @apply btn-type-main;
-  }
-  .contact-icon {
-    display: none;
-  }
-
-  /* Select trigger directly through PopUpPanel slots */
-  :global(.hmbrgr-popup-wrapper) .contact-icon {
-    display: inline-block;
-    margin-right: 0.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .contact-icon {
-      display: inline-block;
-      margin-right: 0.5rem;
-    }
   }
 </style>
