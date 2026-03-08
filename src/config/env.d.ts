@@ -1,3 +1,13 @@
+/**
+ * ══════════════════════════════════════════════
+ *  ENVIRONMENT TYPE DEFINITIONS (env.d.ts)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Extends the global Window interface and Astro environment types.
+ *
+ * CRITICAL RULES:
+ * - All global property extensions MUST be documented here for IDE support.
+ */
 /// <reference types="astro/client" />
 
 interface VantaEffect {
@@ -35,6 +45,7 @@ interface Window {
   performanceModeScroll?: {
     enableSnap: () => void;
     disableSnap: () => void;
+    syncSnapping: () => void;
     refresh: () => void;
   };
 }

@@ -45,6 +45,7 @@
   --border-radius-full: 9999px;
 
   --transition-speed: 0.6s;
+  --transition-fast: 0.3s;
   --transition-cubic: cubic-bezier(0.4, 0, 0.2, 1);
   --border-width: 4px;
   --border: var(--border-width) solid rgba(var(--gray), 0.2);

@@ -73,7 +73,7 @@
   color: var(--bg-base);
   font-size: 1rem;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast) ease;
 
   &:hover {
     color: var(
@@ -83,8 +83,8 @@
     text-decoration: none; /* In case your `a` tag adds an underline on hover */
   }
 
-  /* High Contrast Interaction Override */
-  html[data-high-contrast="true"] & {
+  /* Clarity Mode Interaction Override */
+  html[data-clarity="true"] & {
     background: var(--brand-primary);
 
     &:hover {
@@ -135,7 +135,7 @@
   background-color: rgb(var(--gray));
   border-radius: 9999px;
   border: none;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--transition-fast) ease;
   padding: 0;
 
   &[aria-checked="true"] {
@@ -155,6 +155,25 @@
 
   &[aria-checked="true"] .toggle-thumb {
     transform: translateX(1.5rem);
+  }
+
+  /* --- CLARITY MODE --- */
+  html[data-clarity="true"] & {
+    border: var(--border-width) solid var(--brand-secondary);
+    background: transparent;
+
+    &[aria-checked="true"] {
+      background: var(--brand-secondary);
+    }
+
+    & .toggle-thumb {
+      background-color: var(--brand-secondary);
+      border: 1px solid var(--bg-base);
+    }
+
+    &[aria-checked="true"] .toggle-thumb {
+      background-color: var(--bg-base);
+    }
   }
 }
 

@@ -1,16 +1,19 @@
 ---
-import HeaderIconButton from '../../site/HeaderIconButton.astro';
-
-interface Window {
-  togglePerformanceMode?: () => void;
-}
+/**
+ * ══════════════════════════════════════════════
+ *  PERFORMANCE TOGGLE COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Interactive button for enabling/disabling performance-saving modes.
+ */
+import HeaderIconButton from "../../site/HeaderIconButton.astro";
 
 const { id = "performance-toggle", class: className = "" } = Astro.props;
 ---
 
-<HeaderIconButton 
-  id={id} 
-  class:list={["performance-toggle", className]} 
+<HeaderIconButton
+  id={id}
+  class:list={["performance-toggle", className]}
   title="Toggle performance mode"
   data-delay-toggle
 >
@@ -18,12 +21,12 @@ const { id = "performance-toggle", class: className = "" } = Astro.props;
   <i class="fa-solid fa-wand-magic-sparkles icon-sparkles"></i>
 </HeaderIconButton>
 
-
-
 <style>
   @reference "../../../styles/global.css";
 
-  :global(html.mobile-device) :global(.performance-toggle) { display: none !important; }
+  :global(html.mobile-device) :global(.performance-toggle) {
+    display: none !important;
+  }
 
   /* 
      Performance Toggles use an instant swap (no fade) + a Fling animation.
@@ -46,10 +49,18 @@ const { id = "performance-toggle", class: className = "" } = Astro.props;
 
   /* Wand Fling Animation */
   @keyframes wand-fling {
-    0% { transform: scale(1) rotate(0deg); }
-    30% { transform: scale(1.2) rotate(-15deg) translateX(-3px); }
-    60% { transform: scale(1.1) rotate(15deg) translateX(3px); }
-    100% { transform: scale(1) rotate(0deg); }
+    0% {
+      transform: scale(var(--icon-scale, 1)) rotate(0deg);
+    }
+    30% {
+      transform: scale(calc(var(--icon-scale, 1) * 1.2)) rotate(-15deg) translateX(-3px);
+    }
+    60% {
+      transform: scale(calc(var(--icon-scale, 1) * 1.1)) rotate(15deg) translateX(3px);
+    }
+    100% {
+      transform: scale(var(--icon-scale, 1)) rotate(0deg);
+    }
   }
 
   /* Trigger animation on whichever icon is currently visible */

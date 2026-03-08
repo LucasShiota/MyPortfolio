@@ -4,17 +4,20 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
-- Added systemic **Shadow Tokens** (`--shadow-sm` through `--shadow-xl`) to `tokens.css` for consistent elevation.
-- Implemented **High Contrast** mode with a curated dual-theme palette: "Mature" Crimson/Navy for Light mode and "Poppy" Cherry/Cyan for Dark mode.
-- Established a **Hierarchical Border System** for clarity: Primary brand colors for structural panels (Header, Sections) and Secondary brand colors for floating UX elements (Popups).
-- Standardized global `--border-width` to ensure zero layout shifting when toggling accessibility modes.
-- Enhanced high-contrast button interactions with **Luminosity-Shifted** hover states for better value-change detection.
-- Refactored **SideBar** with a triple-layer architecture to decouple scaling animations from structural borders.
-- Implemented **Proportional Dynamic Margins** in the sidebar that scale alongside button sizes for consistent breathing room.
-- Added **Binary Scaling** logic for Reduced Motion mode in the sidebar navigation.
-- Synchronized sidebar **Navigation Circles** with the scaling "wave" for a fluid, sequence-based transition.
+- Implemented **Clarity Mode** project-wide (renamed from High Contrast) with consistent data-attribute handling.
+- Integrated **Reduced Motion** into GSAP snapping logic, ensuring animations are disabled alongside Performance Mode.
+- Unified scroll snapping control with the new `syncSnapping` method.
+- Added **Perceptual Scale Correction** (10% bump) to icons in Clarity Mode to counteract the irradiation illusion on solid backgrounds.
+- Added default structural borders for all toggle buttons (Accessibility, Theme, Performance) in Clarity Mode.
+- Dynamic color inversion for Hamburger menu icons in Clarity Mode to ensure visibility against structural fills.
 
 ### Changed
+
+- Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization.
+
+### Fixed
+
+- Resolved sidebar decoration "jitter" and navigation deadzones when **Reduced Motion** is enabled by disabling margin scaling and rounding active section positions.
 
 - Fixed typos in `root.css` dark mode highlighting to correctly map shaded secondary colors.
 - Removed motion delays when `data-reduced-motion` is disabled by forcefully stopping button scale and transition effects.

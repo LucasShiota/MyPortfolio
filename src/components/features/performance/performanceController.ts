@@ -1,4 +1,3 @@
-
 const STORAGE_KEY = "performance-mode";
 const TOGGLE_SELECTOR = ".performance-toggle";
 
@@ -8,7 +7,7 @@ export const initPerformanceController = () => {
     document.documentElement.classList.toggle("performance-mode", enabled);
 
     const buttons = document.querySelectorAll<HTMLElement>(TOGGLE_SELECTOR);
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       button.setAttribute("aria-pressed", String(enabled));
     });
 
@@ -16,12 +15,12 @@ export const initPerformanceController = () => {
       window.performanceModeVanta?.freeze();
       window.performanceModeMatter?.stop();
       window.performanceModeMarquee?.refresh();
-      window.performanceModeScroll?.disableSnap();
+      window.performanceModeScroll?.syncSnapping();
     } else {
       window.performanceModeVanta?.resume();
       window.performanceModeMatter?.start();
       window.performanceModeMarquee?.refresh();
-      window.performanceModeScroll?.enableSnap();
+      window.performanceModeScroll?.syncSnapping();
     }
   };
 
@@ -44,11 +43,11 @@ export const initPerformanceController = () => {
     if (!btn) return;
 
     // Handle Fling Animation
-    if (btn instanceof HTMLElement && btn.hasAttribute('data-delay-toggle')) {
+    if (btn instanceof HTMLElement && btn.hasAttribute("data-delay-toggle")) {
       event.stopPropagation();
-      btn.classList.remove('fling');
+      btn.classList.remove("fling");
       void btn.offsetWidth;
-      btn.classList.add('fling');
+      btn.classList.add("fling");
       return;
     }
 
@@ -56,14 +55,18 @@ export const initPerformanceController = () => {
   });
 
   // Handle Animation End for delayed toggles
-  document.addEventListener('animationend', (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
+  document.addEventListener(
+    "animationend",
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
 
-    const btn = target.closest('.performance-toggle.fling');
-    if (btn) {
-      btn.classList.remove('fling');
-      window.togglePerformanceMode?.();
-    }
-  }, { capture: true });
+      const btn = target.closest(".performance-toggle.fling");
+      if (btn) {
+        btn.classList.remove("fling");
+        window.togglePerformanceMode?.();
+      }
+    },
+    { capture: true }
+  );
 };

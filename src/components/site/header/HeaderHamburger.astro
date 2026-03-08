@@ -189,10 +189,10 @@ const { isHome } = Astro.props;
   }
   #hmbrgr-menu.open {
     display: flex;
-    animation: slideDown 0.3s ease-out;
+    animation: slideDown var(--transition-fast) ease-out;
   }
   #hmbrgr-menu.closing {
-    animation: slideUp 0.3s ease-in forwards;
+    animation: slideUp var(--transition-fast) ease-in forwards;
   }
 
   /* --- Reduced Motion Menu Overrides --- */
@@ -230,6 +230,8 @@ const { isHome } = Astro.props;
     color: var(--bg-base);
     /* Remove internal border to ensure icon stays perfectly centered in the wrapper */
     border: none !important;
+    /* Use 0.3s to match interactive button behavior across the site */
+    transition: background var(--transition-fast) ease;
   }
 
   @media (hover: hover) {
@@ -244,23 +246,28 @@ const { isHome } = Astro.props;
     @apply text-3xl;
   }
 
-  /* --- High Contrast Overrides --- */
-  html[data-high-contrast="true"] .hmbrgr-menu-toggle-wrapper {
+  /* --- Clarity Mode Overrides --- */
+  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper {
     background: var(--brand-primary);
     border-top: none;
     border-bottom: var(--border-primary);
   }
 
-  html[data-high-contrast="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
-  html[data-high-contrast="true"]
+  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn) {
+    color: var(--bg-base); /* Inverted: White on light theme, Black on dark theme */
+  }
+
+  html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
+  html[data-clarity="true"]
     .hmbrgr-menu-toggle-wrapper
     :global(.header-icon-btn[aria-expanded="true"]) {
     background: var(--brand-secondary) !important;
-    outline: var(--border-width) solid var(--brand-secondary);
-    outline-offset: calc(var(--border-width) * -1);
+    color: var(--bg-base);
+    /* Remove redundant outline that desyncs from background transition */
+    outline: none;
   }
 
-  html[data-high-contrast="true"] #hmbrgr-menu {
+  html[data-clarity="true"] #hmbrgr-menu {
     border-bottom: var(--border-primary);
   }
 
@@ -287,7 +294,7 @@ const { isHome } = Astro.props;
 
   .hmbrgr-nav {
     @apply btn-fx-txtcolor focus-visible;
-    transition: color 0.3s;
+    transition: color var(--transition-fast);
     @apply text-xl;
     line-height: 0.9;
     @apply font-bold;

@@ -106,7 +106,7 @@ function updateSidebarVisuals(progress: number) {
   // Select BOTH sections and circles in their DOM order
   const allNavElements = Array.from(navContainer.children) as HTMLElement[];
   const contactsEnterThreshold = gsap.utils.clamp(0, 1, 1 - _step * 0.5);
-  const isHighContrast = document.documentElement.getAttribute("data-high-contrast") === "true";
+  const isClarityMode = document.documentElement.getAttribute("data-clarity") === "true";
   const isReducedMotion = document.documentElement.getAttribute("data-reduced-motion") === "true";
 
   // Toggle footer spacing
@@ -123,10 +123,10 @@ function updateSidebarVisuals(progress: number) {
     const virtualIndex = dataIndex / 2;
 
     const isSection = el.classList.contains("nav-section");
-    const isDirectMatch = isSection && Math.abs(virtualIndex - activeSectionPosition) < 0.35;
+    const isDirectMatch = isSection && Math.round(activeSectionPosition) === virtualIndex;
     const distanceFromActive = Math.abs(virtualIndex - activeSectionPosition);
 
-    // Update active class for High Contrast border fills (only for sections)
+    // Update active class for Clarity border fills (only for sections)
     if (isSection) {
       el.classList.toggle("active", isDirectMatch);
     }
@@ -134,10 +134,9 @@ function updateSidebarVisuals(progress: number) {
     let scale = 1;
 
     if (isReducedMotion) {
-      // BINARY SCALE for Reduced Motion
-      // For circles, we use a smaller scale bump or none, but here we'll match user intent
-      const matchThreshold = isSection ? 0.35 : 0.25;
-      scale = Math.abs(virtualIndex - activeSectionPosition) < matchThreshold ? 1.25 : 1;
+      // BINARY SCALE for Reduced Motion (No deadzones, sycned with active state for sections)
+      const threshold = isSection ? 0.5 : 0.25;
+      scale = distanceFromActive <= threshold ? 1.25 : 1;
     } else {
       // Exponential falloff for smooth scaling
       const falloff = Math.exp(
@@ -149,14 +148,15 @@ function updateSidebarVisuals(progress: number) {
     // Apply scaling
     el.style.transform = `scale(${scale})`;
 
-    // DYNAMIC MARGINS: Scale margins proportionally
+    // DYNAMIC MARGINS: Scale margins proportionally (Disable in Reduced Motion to prevent reflow jitter)
     const baseMargin = el.classList.contains("nav-circle") ? 4 : 6; // Circles are tighter
-    const dynamicMargin = baseMargin * scale;
+    const marginScale = isReducedMotion ? 1 : scale;
+    const dynamicMargin = baseMargin * marginScale;
     el.style.marginTop = `${dynamicMargin}px`;
     el.style.marginBottom = `${dynamicMargin}px`;
 
-    // Explicitly handle color inversion for High Contrast active state
-    if (isHighContrast && isSection) {
+    // Explicitly handle color inversion for Clarity active state
+    if (isClarityMode && isSection) {
       const box = el.querySelector<HTMLElement>(".navsec-box");
       if (box) box.style.transform = "translateZ(0)";
     }
@@ -204,8 +204,22 @@ export const initPanelScroll = () => {
    */
   let snapTrigger: ScrollTrigger | null = null;
 
+  const shouldDisableSnapping = () => {
+    const isPerformanceMode = window.__performanceModeEnabled === true;
+    const isReducedMotion = document.documentElement.getAttribute("data-reduced-motion") === "true";
+    return isPerformanceMode || isReducedMotion;
+  };
+
+  const syncSnapping = () => {
+    if (shouldDisableSnapping()) {
+      disableSnapping();
+    } else {
+      enableSnapping();
+    }
+  };
+
   const enableSnapping = () => {
-    if (snapTrigger || _totalSteps <= 0) return;
+    if (shouldDisableSnapping() || snapTrigger || _totalSteps <= 0) return;
     snapTrigger = ScrollTrigger.create({
       id: "snapping",
       trigger: document.body,
@@ -241,15 +255,14 @@ export const initPanelScroll = () => {
   window.performanceModeScroll = {
     enableSnap: enableSnapping,
     disableSnap: disableSnapping,
+    syncSnapping: syncSnapping,
     refresh: () => {
       ScrollTrigger.getById("sidebar-visuals")?.refresh();
       if (snapTrigger) snapTrigger.refresh();
     },
   };
 
-  if (!window.__performanceModeEnabled) {
-    enableSnapping();
-  }
+  syncSnapping();
 
   // Refresh on vanta finish
   window.addEventListener("startup:vanta", () => {
@@ -338,9 +351,7 @@ const initScrollResize = () => {
       const targetY = progressToScrollY(preResizeActiveIndex * _step);
       gsap.set(window, { scrollTo: { y: targetY } });
 
-      if (!window.__performanceModeEnabled) {
-        window.performanceModeScroll?.enableSnap?.();
-      }
+      window.performanceModeScroll?.syncSnapping?.();
     }, 150);
   });
 };
@@ -376,14 +387,3 @@ export const initJumpToController = () => {
     }
   });
 };
-
-declare global {
-  interface Window {
-    performanceModeScroll?: {
-      enableSnap: () => void;
-      disableSnap: () => void;
-      refresh: () => void;
-    };
-    __performanceModeEnabled?: boolean;
-  }
-}

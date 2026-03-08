@@ -3,7 +3,7 @@
  *  A11Y CONTROLLER
  * ══════════════════════════════════════════════
  *
- * PURPOSE: Manages accessibility preferences (Reduced Motion, High Contrast).
+ * PURPOSE: Manages accessibility preferences (Reduced Motion, Clarity Mode).
  *
  * CRITICAL RULES:
  * - Persists choice to localStorage.
@@ -13,8 +13,8 @@
 const RM_STORAGE_KEY = "reduced-motion";
 const RM_TOGGLE_SELECTOR = ".reduced-motion-toggle";
 
-const HC_STORAGE_KEY = "high-contrast";
-const HC_TOGGLE_SELECTOR = ".high-contrast-toggle";
+const CLARITY_STORAGE_KEY = "clarity-mode";
+const CLARITY_TOGGLE_SELECTOR = ".clarity-toggle";
 
 export const initA11yController = () => {
   // REDUCED MOTION
@@ -28,6 +28,7 @@ export const initA11yController = () => {
 
     // Refresh sidebar scaling logic immediately
     window.performanceModeScroll?.refresh?.();
+    window.performanceModeScroll?.syncSnapping?.();
   };
 
   const toggleReducedMotion = () => {
@@ -37,11 +38,11 @@ export const initA11yController = () => {
     localStorage.setItem(RM_STORAGE_KEY, nextState ? "on" : "off");
   };
 
-  // HIGH CONTRAST
-  const setHighContrast = (enabled: boolean) => {
-    document.documentElement.setAttribute("data-high-contrast", String(enabled));
+  // CLARITY MODE
+  const setClarityMode = (enabled: boolean) => {
+    document.documentElement.setAttribute("data-clarity", String(enabled));
 
-    const toggles = document.querySelectorAll(HC_TOGGLE_SELECTOR);
+    const toggles = document.querySelectorAll(CLARITY_TOGGLE_SELECTOR);
     toggles.forEach((toggle) => {
       toggle.setAttribute("aria-checked", String(enabled));
     });
@@ -50,11 +51,11 @@ export const initA11yController = () => {
     window.performanceModeScroll?.refresh?.();
   };
 
-  const toggleHighContrast = () => {
-    const isEnabled = document.documentElement.getAttribute("data-high-contrast") === "true";
+  const toggleClarityMode = () => {
+    const isEnabled = document.documentElement.getAttribute("data-clarity") === "true";
     const nextState = !isEnabled;
-    setHighContrast(nextState);
-    localStorage.setItem(HC_STORAGE_KEY, nextState ? "on" : "off");
+    setClarityMode(nextState);
+    localStorage.setItem(CLARITY_STORAGE_KEY, nextState ? "on" : "off");
   };
 
   const attachListeners = () => {
@@ -77,21 +78,21 @@ export const initA11yController = () => {
       });
     });
 
-    // High Contrast Listeners
-    const hcToggles = document.querySelectorAll(HC_TOGGLE_SELECTOR);
-    hcToggles.forEach((btn) => {
+    // Clarity Mode Listeners
+    const clarityToggles = document.querySelectorAll(CLARITY_TOGGLE_SELECTOR);
+    clarityToggles.forEach((btn) => {
       const newBtn = btn.cloneNode(true) as HTMLElement;
       btn.parentNode?.replaceChild(newBtn, btn);
 
       newBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        toggleHighContrast();
+        toggleClarityMode();
       });
 
       newBtn.addEventListener("keydown", (e) => {
         if ((e as KeyboardEvent).key === "Enter" || (e as KeyboardEvent).key === " ") {
           e.preventDefault();
-          toggleHighContrast();
+          toggleClarityMode();
         }
       });
     });
@@ -106,13 +107,13 @@ export const initA11yController = () => {
     setReducedMotion(prefersReduced);
   }
 
-  // Initial state (High Contrast)
-  const savedHC = localStorage.getItem(HC_STORAGE_KEY);
-  if (savedHC) {
-    setHighContrast(savedHC === "on");
+  // Initial state (Clarity Mode)
+  const savedClarity = localStorage.getItem(CLARITY_STORAGE_KEY);
+  if (savedClarity) {
+    setClarityMode(savedClarity === "on");
   } else {
     const prefersContrast = window.matchMedia("(prefers-contrast: more)").matches;
-    setHighContrast(prefersContrast);
+    setClarityMode(prefersContrast);
   }
 
   // Attach initial

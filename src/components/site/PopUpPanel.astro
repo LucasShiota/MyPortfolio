@@ -108,7 +108,7 @@ const { id, wrapperClass = "", panelClass = "", isHamburger = false } = Astro.pr
     padding: 0.4rem;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-fast) var(--transition-cubic);
     min-width: 220px;
   }
 
@@ -142,8 +142,8 @@ const { id, wrapperClass = "", panelClass = "", isHamburger = false } = Astro.pr
     transform: translateX(-50%) !important;
   }
 
-  /* --- High Contrast Support --- */
-  html[data-high-contrast="true"] .popup-panel {
+  /* --- Clarity Mode Support --- */
+  html[data-clarity="true"] .popup-panel {
     border: var(--border-secondary) !important;
   }
 

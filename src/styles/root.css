@@ -3,10 +3,10 @@
  *  ROOT STYLES (root.css)
  * ══════════════════════════════════════════════
  *
- * PURPOSE: Global theme logic, color-mix overrides, and accessibility state styling.
+ * PURPOSE: Global theme logic, color-mix overrides, and accessibility state styling (Clarity Mode, Reduced Motion).
  *
  * CRITICAL RULES:
- * - High Contrast overrides MUST redefine all shaded/tinted variants to prevent global leaks.
+ * - Clarity Mode overrides MUST redefine all shaded/tinted variants to prevent global leaks.
  * - Transitions are centralized here for bg/text shifts.
  */
 
@@ -101,8 +101,8 @@ html {
   --focus-ring: var(--brand-secondary);
 }
 
-/* --- HIGH CONTRAST MODE --- */
-[data-high-contrast="true"] {
+/* --- CLARITY MODE --- */
+[data-clarity="true"] {
   --bg-base: #f8f9fa; /* Mature Off-White */
   --bg-panel: color-mix(in srgb, var(--bg-base), black 7%); /* Mixed for depth */
   --text-color: #0d0d0d; /* Mature Off-Black */
@@ -187,7 +187,7 @@ html {
   --focus-ring: var(--brand-secondary);
 }
 
-[data-theme="dark"][data-high-contrast="true"] {
+[data-theme="dark"][data-clarity="true"] {
   --bg-base: #0d0d0d; /* Mature Off-Black */
   --bg-panel: color-mix(in srgb, var(--bg-base), white 9%); /* Mixed for depth */
   --text-color: #f8f9fa; /* Mature Off-White */

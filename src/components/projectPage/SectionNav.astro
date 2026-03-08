@@ -526,21 +526,21 @@ const { sections, title } = Astro.props;
     opacity: 1;
   }
 
-  /* --- High Contrast Overrides --- */
-  html[data-high-contrast="true"] .nav-link {
+  /* --- Clarity Mode Overrides --- */
+  html[data-clarity="true"] .nav-link {
     border: var(--border-width) solid var(--brand-secondary);
     background: transparent;
     opacity: 1;
     margin-bottom: 2px; /* Small gap between bordered items */
   }
 
-  html[data-high-contrast="true"] .nav-link:hover,
-  html[data-high-contrast="true"] .nav-link.active {
+  html[data-clarity="true"] .nav-link:hover,
+  html[data-clarity="true"] .nav-link.active {
     background: var(--brand-secondary);
     color: var(--bg-base);
   }
 
-  html[data-high-contrast="true"] .sub-link {
+  html[data-clarity="true"] .sub-link {
     border-style: dashed; /* Differentiate sub-links with a dashed border */
     border-width: 2px;
   }

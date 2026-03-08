@@ -1,5 +1,12 @@
 ---
-import HeaderIconButton from '../../site/HeaderIconButton.astro';
+/**
+ * ══════════════════════════════════════════════
+ *  THEME TOGGLE COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Interactive button for switching between light and dark themes.
+ */
+import HeaderIconButton from "../../site/HeaderIconButton.astro";
 
 interface Props {
   id?: string;
@@ -24,7 +31,7 @@ const { id = "theme-toggle", class: className = "" } = Astro.props;
   :global(html:not([data-theme="dark"])) :global(.theme-toggle .icon-sun),
   :global(html[data-theme="dark"]) :global(.theme-toggle .icon-moon) {
     opacity: 1 !important;
-    transform: scale(1) rotate(0deg) !important;
+    transform: scale(var(--icon-scale, 1)) rotate(0deg) !important;
     pointer-events: auto !important;
   }
 

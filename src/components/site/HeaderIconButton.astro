@@ -1,4 +1,11 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  HEADER ICON BUTTON COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: A standardized button used in the site header for toggles and menus.
+ */
 interface Props {
   id?: string;
   class?: string;
@@ -34,7 +41,7 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background var(--transition-fast);
     z-index: 30;
     position: relative;
     color: var(--text-color);
@@ -47,6 +54,21 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
     }
   }
 
+  /* --- CLARITY MODE --- */
+  html[data-clarity="true"] .header-icon-btn {
+    border: var(--border-width) solid var(--brand-secondary);
+    background: transparent;
+    color: var(--text-color); /* Black on Light, White on Dark */
+    --icon-scale: 1;
+  }
+
+  html[data-clarity="true"] .header-icon-btn:hover,
+  html[data-clarity="true"] .header-icon-btn[aria-expanded="true"] {
+    background: var(--brand-secondary);
+    color: var(--bg-base);
+    --icon-scale: 1.1; /* Perceptual scale correction */
+  }
+
   :global(.header-icon-btn i) {
     position: absolute;
     @apply text-2xl;
@@ -54,10 +76,10 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
     transition:
       opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
       transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.3s ease;
+      color var(--transition-fast) ease;
 
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: scale(var(--icon-scale, 1)) rotate(0deg);
   }
 
   /* 

@@ -8,7 +8,7 @@
  *
  * REFACTOR LOGIC:
  * - .nav-section: Handles GSAP scaling and layout positioning.
- * - .navsec-box: Internal wrapper for High Contrast borders and fills.
+ * - .navsec-box: Internal wrapper for Clarity borders and fills.
  * - Separation prevents scaling artifacts on borders/padding.
  */
 ---
@@ -196,16 +196,16 @@
     display: block; /* Visible across all modes */
   }
 
-  /* --- HIGH CONTRAST MODE --- */
-  html[data-high-contrast="true"] .navsec-box {
+  /* --- CLARITY MODE --- */
+  html[data-clarity="true"] .navsec-box {
     border: var(--border-width) solid var(--brand-secondary);
     background: transparent; /* TRANSPARENT by default as requested */
     color: var(--brand-secondary);
     min-width: 90px;
   }
 
-  html[data-high-contrast="true"] .nav-section:hover .navsec-box,
-  html[data-high-contrast="true"] .nav-section.active .navsec-box {
+  html[data-clarity="true"] .nav-section:hover .navsec-box,
+  html[data-clarity="true"] .nav-section.active .navsec-box {
     background: var(--brand-secondary);
     color: var(--bg-base);
   }
@@ -227,7 +227,7 @@
       border-radius: 10px;
     }
 
-    html[data-high-contrast="true"] .navsec-box {
+    html[data-clarity="true"] .navsec-box {
       min-width: 2.75rem;
     }
   }
