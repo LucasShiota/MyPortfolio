@@ -110,31 +110,30 @@
   font-weight: 600;
   transition: all var(--transition-fast) ease;
 
-  &:hover {
-    color: var(
-      --bg-base
-    ); /* Forces text to stay the right color instead of using the `a` hover color */
-    background: var(--brand-primary); /* Good brand color alteration for hover */
-    text-decoration: none; /* In case your `a` tag adds an underline on hover */
+  &:hover,
+  &[aria-expanded="true"] {
+    color: var(--bg-base);
+    background: var(--brand-primary);
+    text-decoration: none;
   }
 
   /* Clarity Mode Interaction Override */
   html[data-clarity="true"] & {
     background: var(--brand-primary);
 
-    &:hover {
-      /* Mixed with luminosity for a perceivable value shift even for color-blind users */
+    &:hover,
+    &[aria-expanded="true"] {
       background: color-mix(in srgb, var(--brand-secondary), white 10%);
       color: var(--bg-base);
-
-      /* Dark mode adjustment for luminosity */
-      html[data-theme="dark"] & {
-        background: color-mix(in srgb, var(--brand-secondary), black 10%);
-      }
-
       outline: var(--border-width) solid var(--brand-secondary);
       outline-offset: 2px;
       transform: scale(1.02);
+    }
+
+    /* Dark mode adjustment for luminosity */
+    html[data-theme="dark"][data-clarity="true"] &:hover,
+    html[data-theme="dark"][data-clarity="true"] &[aria-expanded="true"] {
+      background: color-mix(in srgb, var(--brand-secondary), black 10%);
     }
   }
 }

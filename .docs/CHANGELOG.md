@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Standardized section dividers with rounded-end bars for improved visual polish.
 - Hardcoded **QR Code** color tokens to strict Black & White for scannability across all site themes.
 - Increased header spacing for toggles and contact buttons to improve visual balance.
+- Implemented persistent "Active" visual state for `btn-type-main` buttons and the hamburger toggle based on `aria-expanded` attributes.
 
 ### Changed
 
@@ -27,6 +28,8 @@ All notable changes to this project will be documented in this file. See [standa
 - Simplified `btn-type-main` utility with `height: auto` and consistent padding to prevent content squashing.
 - Optimized the Hamburger Menu toggle to sit flush with the header border by adjusting height and removing internal borders.
 - Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization.
+- Simplified hamburger menu navigation by removing redundant section headers while preserving visual divider lines.
+- Improved `btn-type-main` accessibility in Clarity Mode with consistent structural borders and perceptual scaling in active states.
 
 ### Fixed
 
@@ -34,6 +37,8 @@ All notable changes to this project will be documented in this file. See [standa
 - Fixed layout "drift" in the hamburger toggle and adjacent elements by stabilizing flexbox container behaviors.
 - Corrected black-on-light theme text visibility issues for popup triggers in the header.
 - Fixed unintentional "Hey" navigation item visibility in the hamburger menu.
+- Corrected `menuController.ts` to properly manage `aria-expanded` state on the hamburger trigger.
+- Cleaned up redundant CSS outline logic and fixed structural indentation in `button.css`.
 
 - Resolved sidebar decoration "jitter" and navigation deadzones when **Reduced Motion** is enabled by disabling margin scaling and rounding active section positions.
 

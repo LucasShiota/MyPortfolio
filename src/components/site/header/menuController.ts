@@ -1,3 +1,10 @@
+/**
+ * ══════════════════════════════════════════════
+ *  MENU CONTROLLER (menuController.ts)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Logic for opening/closing the mobile hamburger menu and managing accessibility states.
+ */
 export const initMenuController = () => {
   const menuToggle = document.getElementById("hmbrgr-menu-toggle");
   const mobileMenu = document.getElementById("hmbrgr-menu");
@@ -7,9 +14,13 @@ export const initMenuController = () => {
 
   const toggleMenu = () => {
     const isReducedMotion = document.documentElement.getAttribute("data-reduced-motion") === "true";
+    const isOpening = !mobileMenu.classList.contains("open");
+
+    // Update ARIA state
+    menuToggle.setAttribute("aria-expanded", isOpening.toString());
 
     // OPENING logic
-    if (!mobileMenu.classList.contains("open")) {
+    if (isOpening) {
       mobileMenu.classList.remove("closing");
       mobileMenu.classList.add("open");
       header.classList.add("menu-open");

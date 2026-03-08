@@ -39,7 +39,7 @@ const { isHome } = Astro.props;
     {
       isHome && (
         <div class="hmbrgr-section">
-          <span class="hmbrgr-section-label">Navigation</span>
+          <span class="hmbrgr-section-label" />
           <div class="hmbrgr-nav-grid">
             <div
               class="hmbrgr-nav"
@@ -87,7 +87,7 @@ const { isHome } = Astro.props;
     }
 
     <div class="hmbrgr-section hmbrgr-connect-section">
-      <span class="hmbrgr-section-label">Connect</span>
+      <span class="hmbrgr-section-label"></span>
       <div class="hmbrgr-contact-grid">
         <ContactButton
           isHamburger={true}
@@ -112,7 +112,7 @@ const { isHome } = Astro.props;
     </div>
 
     <div class="hmbrgr-section hmbrgr-toggles-section">
-      <span class="hmbrgr-section-label">Interface Settings</span>
+      <span class="hmbrgr-section-label"></span>
       <div class="hmbrgr-toggles">
         <AccessibilityToggle isHamburger={true} id="hmbrgr-accessibility-toggle" />
         <ThemeToggle id="hmbrgr-theme-toggle" />
@@ -121,7 +121,7 @@ const { isHome } = Astro.props;
     </div>
 
     <div class="hmbrgr-section">
-      <span class="hmbrgr-section-label">Resources</span>
+      <span class="hmbrgr-section-label"></span>
       <div class="hmbrgr-resources-grid">
         <HeaderQR />
         <HeaderCredit />
@@ -321,10 +321,10 @@ const { isHome } = Astro.props;
     @apply txt-body-sm font-bold uppercase;
     color: var(--brand-secondary);
     letter-spacing: 0.1em;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.2rem;
     position: relative;
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   .hmbrgr-section-label::after {
@@ -438,9 +438,12 @@ const { isHome } = Astro.props;
     transition: background var(--transition-fast) ease;
   }
 
+  .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn[aria-expanded="true"]) {
+    background: var(--brand-primary) !important;
+  }
+
   @media (hover: hover) {
-    .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
-    .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn[aria-expanded="true"]) {
+    .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover) {
       background: var(--brand-primary) !important;
     }
   }
@@ -454,20 +457,26 @@ const { isHome } = Astro.props;
     background: var(--brand-primary) !important;
   }
 
+  html[data-clarity="true"]
+    .hmbrgr-menu-toggle-wrapper
+    :global(.header-icon-btn[aria-expanded="true"]) {
+    background: color-mix(in srgb, var(--brand-secondary), white 10%) !important;
+  }
+
+  html[data-theme="dark"][data-clarity="true"]
+    .hmbrgr-menu-toggle-wrapper
+    :global(.header-icon-btn[aria-expanded="true"]) {
+    background: color-mix(in srgb, var(--brand-secondary), black 10%) !important;
+  }
+
   @media (hover: hover) {
-    html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover),
-    html[data-clarity="true"]
-      .hmbrgr-menu-toggle-wrapper
-      :global(.header-icon-btn[aria-expanded="true"]) {
+    html[data-clarity="true"] .hmbrgr-menu-toggle-wrapper :global(.header-icon-btn:hover) {
       background: color-mix(in srgb, var(--brand-secondary), white 10%) !important;
     }
 
     html[data-theme="dark"][data-clarity="true"]
       .hmbrgr-menu-toggle-wrapper
-      :global(.header-icon-btn:hover),
-    html[data-theme="dark"][data-clarity="true"]
-      .hmbrgr-menu-toggle-wrapper
-      :global(.header-icon-btn[aria-expanded="true"]) {
+      :global(.header-icon-btn:hover) {
       background: color-mix(in srgb, var(--brand-secondary), black 10%) !important;
     }
   }
