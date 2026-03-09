@@ -1,11 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
-import ProjectPageLayout from '@layouts/ProjectPageLayout.astro';
+/**
+ * ══════════════════════════════════════════════
+ *  DYNAMIC PROJECT PAGE ([slug].astro)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Dynamic route for detailed project pages.
+ *
+ * CRITICAL RULES:
+ * - Uses project.id for static path generation (compatible with Astro 5 image types).
+ */
+import { getCollection } from "astro:content";
+import ProjectPageLayout from "@layouts/ProjectPageLayout.astro";
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const projects = await getCollection("projects");
   return projects.map((project: any) => ({
-    params: { slug: project.slug },
+    params: { slug: project.id },
     props: { project },
   }));
 }

@@ -49,3 +49,5 @@ interface Window {
     refresh: () => void;
   };
 }
+
+declare module "vanta/dist/vanta.fog.min.js";

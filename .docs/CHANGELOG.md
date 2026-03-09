@@ -4,53 +4,28 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
-- Centralized contact links and popup triggers into a unified `ContactButton.astro` component.
-- Implemented global `box-sizing: border-box` to ensure consistent layout calculations across all browsers.
-- Refactored `PopUpPanel` with a `fullWidth` prop for better responsive layout control.
-- Synchronized **Clarity Mode** and **Theme** colors across all header and menu buttons (Blue/Orange transitions).
-- Implemented **Clarity Mode** project-wide (renamed from High Contrast) with consistent data-attribute handling.
-- Integrated **Reduced Motion** into GSAP snapping logic, ensuring animations are disabled alongside Performance Mode.
-- Unified scroll snapping control with the new `syncSnapping` method.
-- Added **Perceptual Scale Correction** (10% bump) to icons in Clarity Mode to counteract the irradiation illusion on solid backgrounds.
-- Added default structural borders for all toggle buttons (Accessibility, Theme, Performance) in Clarity Mode.
-- Dynamic color inversion for Hamburger menu icons in Clarity Mode to ensure visibility against structural fills.
-- Redesigned the **Hamburger Menu** into a responsive, sectioned layout with adaptive width stages (Overlay -> Drawer -> Flyout).
-- Implemented **Pinning Logic** for PopUpPanels (Accessibility & Let's Talk), supporting both hover-to-peek and click-to-pin interactions.
-- Modernized legacy hamburger menu elements with rounded pill buttons and progressive content visibility logic.
-- Standardized section dividers with rounded-end bars for improved visual polish.
-- Hardcoded **QR Code** color tokens to strict Black & White for scannability across all site themes.
-- Increased header spacing for toggles and contact buttons to improve visual balance.
-- Implemented persistent "Active" visual state for `btn-type-main` buttons and the hamburger toggle based on `aria-expanded` attributes.
+- Localized critical 3rd-party libraries (**Three.js**, **Vanta.js**, **FontAwesome**) to eliminate render-blocking CDN dependencies.
+- Implemented **Astro Image Optimization** pipeline across the homepage and project pages, reducing image payload by over **80%**.
+- Restored **Variable Font preloading** in `BaseHead.astro` to improve Core Web Vitals (LCP/CLS).
+- Integrated `src/assets` and the `<Image />` component into the `projects` content collection schema.
+- Optimized initial parser-blocking scripts for theme detection and mobile performance mode.
+- Downgraded **Three.js** to `v0.134.0` as a pinned dependency to maintain legacy Vanta shader color precision.
 
 ### Changed
 
 - Refactored `Header.astro`, `HeaderHamburger.astro`, and `LetsTalk.astro` to use the standardized `ContactButton` component.
 - Simplified `btn-type-main` utility with `height: auto` and consistent padding to prevent content squashing.
 - Optimized the Hamburger Menu toggle to sit flush with the header border by adjusting height and removing internal borders.
-- Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization.
+- Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization and Vanta effect management.
 - Simplified hamburger menu navigation by removing redundant section headers while preserving visual divider lines.
 - Improved `btn-type-main` accessibility in Clarity Mode with consistent structural borders and perceptual scaling in active states.
 
 ### Fixed
 
-- Resolved "tight" spacing and inconsistent vertical alignment in header buttons by normalizing padding and font-size across `<a>` and `<button>` tags.
-- Fixed layout "drift" in the hamburger toggle and adjacent elements by stabilizing flexbox container behaviors.
-- Corrected black-on-light theme text visibility issues for popup triggers in the header.
-- Fixed unintentional "Hey" navigation item visibility in the hamburger menu.
-- Corrected `menuController.ts` to properly manage `aria-expanded` state on the hamburger trigger.
-- Cleaned up redundant CSS outline logic and fixed structural indentation in `button.css`.
-
-- Resolved sidebar decoration "jitter" and navigation deadzones when **Reduced Motion** is enabled by disabling margin scaling and rounding active section positions.
-
-- Fixed typos in `root.css` dark mode highlighting to correctly map shaded secondary colors.
-- Removed motion delays when `data-reduced-motion` is disabled by forcefully stopping button scale and transition effects.
-- Removed arbitrary color overrides from `btn-fx-scale` and applied specific branded hover states directly to `btn-type-main`.
-- Disabled Maintenance workflow to bring the site live.
-- Fixed a CSS parsing issue in `button.css` that broke Tailwind due to an inline comment within a variable assignment.
-
-- Refactored header and panel buttons to use semantically correct HTML tags (`<a>` vs `<button>`).
-- Updated button utility classes (`btn-type-main`) to correctly override global link hover styles.
-- Enhanced hamburger menu toggle with full-height wrapper and improved border layout.
+- Resolved `/[object Object]` 404 errors in project pages by updating content mapping and routing to handle **Astro 5** image metadata objects.
+- Fixed markup nesting error in `Hey.astro` where the flip card back face was rendering outside its container.
+- Resolved TypeScript declaration errors for legacy Vanta and Three.js modules via `env.d.ts` and `@types` installation.
+- Corrected project route generation by switching from deprecated `slug` to `id` mapping in `projectsData.ts`.
 
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 

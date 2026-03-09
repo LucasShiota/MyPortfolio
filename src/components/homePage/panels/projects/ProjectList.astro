@@ -1,4 +1,15 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  PROJECT LIST (ProjectList.astro)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Horizontally scrollable thumbnail bar for project selection.
+ *
+ * CRITICAL RULES:
+ * - Thumbnail images use Astro <Image /> for optimized lazy-loading.
+ */
+import { Image } from "astro:assets";
 import type { Project } from "./projectsData";
 
 interface Props {
@@ -20,12 +31,13 @@ const { projects } = Astro.props;
         data-project-selectable="true"
         aria-pressed="false"
       >
-        <img
+        <Image
           class="project-thumbnail"
-          src={project.thumbnailSrc}
+          src={project.thumbnailSrc as any}
           alt={project.thumbnailAlt}
-          loading="lazy"
-          decoding="async"
+          width={150}
+          height={150}
+          format="webp"
         />
       </button>
     ))

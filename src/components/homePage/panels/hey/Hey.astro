@@ -1,5 +1,18 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  HERO SECTION (Hey.astro)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Portfolio landing hero with interactive flip-card headshot.
+ *
+ * CRITICAL RULES:
+ * - Uses Astro <Image /> for optimized headshot and logo assets.
+ */
+import { Image } from "astro:assets";
 import HeroBGText from "./HeyBGTEXT.astro";
+import headshotImg from "../../../../assets/headshot.webp";
+import logoImg from "../../../../assets/logo/crazyblenderV2.webp";
 ---
 
 <section id="hello" class="panel hero-panel flx-cntr-clmn">
@@ -16,13 +29,25 @@ import HeroBGText from "./HeyBGTEXT.astro";
       <div id="flip-card" class="flip-container">
         <div class="flipper">
           <div class="front">
-            <img class="headshot" src="../images/headshot.webp" alt="Headshot" />
+            <Image
+              class="headshot"
+              src={headshotImg}
+              alt="Headshot"
+              width={400}
+              height={400}
+              format="webp"
+            />
           </div>
-          <div class="back"></div><img
-            class="headshot"
-            src="/logo/crazyblenderV2.webp"
-            alt="CrazyBlender"
-          />
+          <div class="back">
+            <Image
+              class="headshot"
+              src={logoImg}
+              alt="CrazyBlender"
+              width={400}
+              height={400}
+              format="webp"
+            />
+          </div>
         </div>
       </div>
     </div>

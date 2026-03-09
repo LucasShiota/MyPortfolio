@@ -1,9 +1,22 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  PROJECT INTRODUCTION (SectionIntro.astro)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Hero section for detailed project pages.
+ *
+ * CRITICAL RULES:
+ * - Accepts ImageMetadata or strings for hero/logo assets.
+ * - Uses <Image /> for optimized delivery.
+ */
+import { Image } from "astro:assets";
+
 interface Props {
   title: string;
   subtitle: string;
-  heroImage: string;
-  logo?: string;
+  heroImage: any;
+  logo?: any;
   id?: string;
   order?: number;
   total?: number;
@@ -25,7 +38,7 @@ const { title, subtitle, heroImage, logo, id = "intro", order, total } = Astro.p
       {
         logo && (
           <div class="logo-container">
-            <img src={logo} alt={`${title} Logo`} class="project-logo" />
+            <Image src={logo} alt={`${title} Logo`} class="project-logo" width={200} height={200} />
           </div>
         )
       }
@@ -34,7 +47,7 @@ const { title, subtitle, heroImage, logo, id = "intro", order, total } = Astro.p
     </header>
   </div>
   <div class="hero-image-container">
-    <img src={heroImage} alt={title} class="hero-image" />
+    <Image src={heroImage} alt={title} class="hero-image" width={1200} height={800} />
   </div>
 </section>
 

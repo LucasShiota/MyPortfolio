@@ -1,13 +1,27 @@
+/**
+ * ══════════════════════════════════════════════
+ *  PROJECT DATA UTILITY (projectsData.ts)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Fetches and maps project content from Astro Collections.
+ *
+ * CRITICAL RULES:
+ * - Uses entry.id for URL generation (required for Astro 5 compatibility).
+ * - Maps image fields to ImageMetadata objects for optimization.
+ */
+import type { ImageMetadata } from "astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 
 export type Project = {
   id: string;
   title: string;
-  thumbnailSrc: string;
+  thumbnailSrc: ImageMetadata | string;
   thumbnailAlt: string;
   body: string; // Summary HTML
-  previewImage: string;
+  previewImage: ImageMetadata | string;
   previewVideo?: string;
+  heroImage?: ImageMetadata | string;
+  logo?: ImageMetadata | string;
   tags: string[]; // filterTags
   descriptorTags?: string[];
   descriptorTagColors?: Record<string, "green" | "purple" | "red" | "blue">;
@@ -38,13 +52,15 @@ export async function getProjects(): Promise<Project[]> {
       body: bodyHtml,
       previewImage: data.previewImage,
       previewVideo: data.previewVideo,
+      heroImage: data.heroImage,
+      logo: data.logo,
       tags: data.filterTags,
       descriptorTags: data.descriptorTags,
       descriptorTagColors: data.descriptorTagColors,
       previewButton: {
         text: data.previewButton.text,
         ariaLabel: data.previewButton.ariaLabel,
-        href: `/${entry.slug}`, // Dynamically centralized! Ensures the button always points to the live [slug].astro route
+        href: `/${entry.id}`, // Dynamically centralized! Ensures the button always points to the live [slug].astro route
       },
     };
   });
