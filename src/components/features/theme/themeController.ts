@@ -1,94 +1,59 @@
-interface ThemeWindow extends Window {
-  vantaEffect?: any;
-}
+interface ThemeWindow extends Window {}
 
 const win = window as unknown as ThemeWindow;
 const root = document.documentElement;
 
 export const initThemeController = () => {
   const getHex = (varName: string) => {
-    return getComputedStyle(root)
-      .getPropertyValue(varName)
-      .trim();
+    return getComputedStyle(root).getPropertyValue(varName).trim();
   };
 
   const hexToRgb = (hex: string): [number, number, number] => {
-    const bigint = parseInt(hex.replace('#', ''), 16);
-    return [
-      (bigint >> 16) & 255,
-      (bigint >> 8) & 255,
-      bigint & 255
-    ];
+    const bigint = parseInt(hex.replace("#", ""), 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
   };
 
   const rgbToHex = (r: number, g: number, b: number): number => {
     return (Math.round(r) << 16) | (Math.round(g) << 8) | Math.round(b);
   };
 
-  const syncVantaToTheme = (retries = 10) => {
-    const vantaEffect = win.vantaEffect;
-    if (!vantaEffect) {
-      if (retries > 0) {
-        setTimeout(() => syncVantaToTheme(retries - 1), 100);
-      }
-      return;
-    }
-
-    const toHighlight = hexToRgb(getHex('--vanta-highlight'));
-    const toMid = hexToRgb(getHex('--vanta-midtone'));
-    const toLow = hexToRgb(getHex('--vanta-lowlight'));
-    const toBase = hexToRgb(getHex('--vanta-base'));
-
-    vantaEffect.setOptions({
-      highlightColor: rgbToHex(...toHighlight),
-      midtoneColor: rgbToHex(...toMid),
-      lowlightColor: rgbToHex(...toLow),
-      baseColor: rgbToHex(...toBase)
-    });
-  };
-
-  const setTheme = (nextTheme: 'dark' | 'light') => {
-    if (nextTheme === 'dark') {
-      root.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
+  const setTheme = (nextTheme: "dark" | "light") => {
+    if (nextTheme === "dark") {
+      root.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
     } else {
-      root.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
+      root.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
     }
-    syncVantaToTheme(0);
   };
 
-  const applyThemeInstantly = (nextTheme: 'dark' | 'light') => {
-    root.classList.add('theme-switch-instant');
+  const applyThemeInstantly = (nextTheme: "dark" | "light") => {
+    root.classList.add("theme-switch-instant");
     setTheme(nextTheme);
-    
+
     void root.offsetHeight; // Force reflow
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        root.classList.remove('theme-switch-instant');
+        root.classList.remove("theme-switch-instant");
       });
     });
   };
 
   // Initial Sync
-  syncVantaToTheme();
 
   // Listeners
-  window.addEventListener('startup:vanta', () => {
-    syncVantaToTheme(20);
-  });
 
-  document.addEventListener('click', (event) => {
+  document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
 
-    const toggleBtn = target.closest('.theme-toggle');
+    const toggleBtn = target.closest(".theme-toggle");
     if (!toggleBtn) return;
 
-    const isDark = root.getAttribute('data-theme') === 'dark';
-    const nextTheme = isDark ? 'light' : 'dark';
-    const isPerformanceMode = root.classList.contains('performance-mode');
+    const isDark = root.getAttribute("data-theme") === "dark";
+    const nextTheme = isDark ? "light" : "dark";
+    const isPerformanceMode = root.classList.contains("performance-mode");
 
     if (isPerformanceMode) {
       setTheme(nextTheme);
