@@ -1,7 +1,7 @@
 ---
 import BaseHead from "@components/site/BaseHead.astro";
 import Header from "@components/site/header/Header.astro";
-import VantaFogBG from "@components/features/vantajs/VantaFogBG.astro";
+import ShaderFogBG from "@components/features/vantajs/ShaderFogBG.astro";
 interface Props {
   title: string;
   description: string;
@@ -59,7 +59,7 @@ const { title, description } = Astro.props;
     </div>
     <Header />
     <slot />
-    <VantaFogBG />
+    <ShaderFogBG />
     <script>
       import { initStartupController } from "@components/features/startup/startupController";
       initStartupController();

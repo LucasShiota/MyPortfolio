@@ -4,15 +4,21 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
-- Localized critical 3rd-party libraries (**Three.js**, **Vanta.js**, **FontAwesome**) to eliminate render-blocking CDN dependencies.
+- Replaced **Three.js** and **Vanta.js** (~600KB) with a custom, lightweight **Pure WebGL** shader in `ShaderFogBG.astro`.
+- Localized critical 3rd-party libraries (**FontAwesome**) to eliminate render-blocking CDN dependencies.
 - Implemented **Astro Image Optimization** pipeline across the homepage and project pages, reducing image payload by over **80%**.
 - Restored **Variable Font preloading** in `BaseHead.astro` to improve Core Web Vitals (LCP/CLS).
 - Integrated `src/assets` and the `<Image />` component into the `projects` content collection schema.
 - Optimized initial parser-blocking scripts for theme detection and mobile performance mode.
-- Downgraded **Three.js** to `v0.134.0` as a pinned dependency to maintain legacy Vanta shader color precision.
+
+### Added
+
+- Created `ShaderFogBG.astro`, a zero-dependency WebGL shader that replicates the Vanta Fog effect with 99% less code.
 
 ### Changed
 
+- Refactored `HomePageLayout.astro` to use the new `ShaderFogBG` component.
+- Optimized homepage background by eliminating heavy 3rd-party 3D engine dependencies.
 - Refactored `Header.astro`, `HeaderHamburger.astro`, and `LetsTalk.astro` to use the standardized `ContactButton` component.
 - Simplified `btn-type-main` utility with `height: auto` and consistent padding to prevent content squashing.
 - Optimized the Hamburger Menu toggle to sit flush with the header border by adjusting height and removing internal borders.
@@ -26,6 +32,11 @@ All notable changes to this project will be documented in this file. See [standa
 - Fixed markup nesting error in `Hey.astro` where the flip card back face was rendering outside its container.
 - Resolved TypeScript declaration errors for legacy Vanta and Three.js modules via `env.d.ts` and `@types` installation.
 - Corrected project route generation by switching from deprecated `slug` to `id` mapping in `projectsData.ts`.
+
+### Removed
+
+- Removed `vanta` and `three` from project dependencies.
+- Deleted `VantaFogBG.astro` following migration to native WebGL.
 
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
