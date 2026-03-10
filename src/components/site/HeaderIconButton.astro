@@ -19,7 +19,7 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
 
 <button
   id={id}
-  class:list={["header-icon-btn", className]}
+  class:list={["header-icon-btn", "btn-fx-squish", className]}
   title={title}
   aria-label={ariaLabel || title}
   {...restProps}
@@ -35,7 +35,7 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: transparent;
+    background: rgba(var(--gray), 0.1);
     border: none;
     display: flex;
     align-items: center;
@@ -50,7 +50,7 @@ const { id, class: className = "", title, ariaLabel, ...restProps } = Astro.prop
   @media (hover: hover) {
     .header-icon-btn:hover,
     .header-icon-btn[aria-expanded="true"] {
-      background: rgba(var(--gray), 0.3);
+      background: rgba(var(--gray), 0.25);
     }
   }
 

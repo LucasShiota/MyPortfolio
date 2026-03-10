@@ -47,8 +47,8 @@ const { title, description } = Astro.props;
           navigator.userAgent
         );
         if (isMobile) {
-          localStorage.setItem("performance-mode", "on");
-          document.documentElement.classList.add("performance-mode", "mobile-device");
+          localStorage.setItem("performance-mode-v2", "low");
+          document.documentElement.classList.add("perf-low", "mobile-device");
         }
       })();
     </script>

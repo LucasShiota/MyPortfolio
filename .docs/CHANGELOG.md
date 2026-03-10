@@ -10,10 +10,14 @@ All notable changes to this project will be documented in this file. See [standa
 - Restored **Variable Font preloading** in `BaseHead.astro` to improve Core Web Vitals (LCP/CLS).
 - Integrated `src/assets` and the `<Image />` component into the `projects` content collection schema.
 - Optimized initial parser-blocking scripts for theme detection and mobile performance mode.
+- Redesigned Performance Toggle into a dynamic 3-state (Auto, Eco, Off) capsule button.
+- Integrated comprehensive accessibility controls (Reduced Motion) directly into the `ShaderFogBG.astro` WebGL render loop.
+- Unified button press feedback with a new global `btn-fx-squish` utility class.
 
 ### Added
 
 - Created `ShaderFogBG.astro`, a zero-dependency WebGL shader that replicates the Vanta Fog effect with 99% less code.
+- Created `@utility btn-fx-squish` in `button.css` to centralize tactile click animations with automatic Reduced Motion overrides.
 
 ### Changed
 
@@ -25,6 +29,8 @@ All notable changes to this project will be documented in this file. See [standa
 - Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization and Vanta effect management.
 - Simplified hamburger menu navigation by removing redundant section headers while preserving visual divider lines.
 - Improved `btn-type-main` accessibility in Clarity Mode with consistent structural borders and perceptual scaling in active states.
+- Re-architected `performanceController.ts` and `PerformanceToggle.astro` to support a continuous "Spectrum" of performance mapping instead of binary on/off states.
+- Updated `HeaderIconButton.astro` for cohesive frosted glass styling and unified button states across all header UI elements.
 
 ### Fixed
 

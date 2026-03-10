@@ -16,6 +16,7 @@ interface Window {
   performanceModeVanta?: {
     freeze: () => void;
     resume: () => void;
+    setLevel?: (lv: string, isManual?: boolean) => void;
   };
   performanceModeMatter?: {
     start: () => void;

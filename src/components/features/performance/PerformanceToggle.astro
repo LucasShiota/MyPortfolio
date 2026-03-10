@@ -1,73 +1,147 @@
 ---
 /**
  * ══════════════════════════════════════════════
- *  PERFORMANCE TOGGLE COMPONENT
+ *  HYBRID PERFORMANCE TOGGLE (PerformanceToggle.astro)
  * ══════════════════════════════════════════════
  *
- * PURPOSE: Interactive button for enabling/disabling performance-saving modes.
+ * FEATURES:
+ * - 3 States: Auto (Bolt) | Eco (Leaf) | Static (Off)
+ * - Persistent Label + Icon layout in a Capsule shape.
  */
 import HeaderIconButton from "../../site/HeaderIconButton.astro";
 
 const { id = "performance-toggle", class: className = "" } = Astro.props;
 ---
 
-<HeaderIconButton
-  id={id}
-  class:list={["performance-toggle", className]}
-  title="Toggle performance mode"
-  data-delay-toggle
->
-  <i class="fa-solid fa-wand-magic icon-magic"></i>
-  <i class="fa-solid fa-wand-magic-sparkles icon-sparkles"></i>
+<HeaderIconButton id={id} class:list={["performance-toggle", className]} title="Performance Mode">
+  <div class="toggle-content">
+    <div class="label-stack">
+      <span class="label-perf label-auto">Auto</span>
+      <span class="label-perf label-eco">Eco</span>
+      <span class="label-perf label-off">Off</span>
+    </div>
+    <div class="icon-stack">
+      <i class="fa-solid fa-bolt icon-perf icon-auto"></i>
+      <i class="fa-solid fa-leaf icon-perf icon-eco"></i>
+      <i class="fa-solid fa-power-off icon-perf icon-off"></i>
+    </div>
+  </div>
 </HeaderIconButton>
 
 <style>
   @reference "../../../styles/global.css";
 
-  :global(html.mobile-device) :global(.performance-toggle) {
-    display: none !important;
+  :global(.performance-toggle) {
+    --pref-high: #e6a800; /* Darker Gold */
+    --pref-eco: #00cc6a; /* Darker Mint / Green */
+    --pref-off: #888888; /* Darker Silver */
+
+    width: auto !important;
+    height: 50px !important;
+    padding: 0 16px !important;
+    border-radius: 9999px !important;
+    background: rgba(var(--gray), 0.1) !important;
+    border: none !important;
+    transition: background var(--transition-fast) !important;
   }
 
-  /* 
-     Performance Toggles use an instant swap (no fade) + a Fling animation.
-     We hide the inactive icon with display: none to avoid conflict.
-  */
-  :global(.performance-toggle i) {
-    display: none;
-    transition: none !important; /* "No fade" per request */
+  /* Clarity Mode overrides */
+  :global(html[data-clarity="true"] .performance-toggle) {
+    border: var(--border-width) solid var(--brand-secondary) !important;
+    background: transparent !important;
   }
 
-  /* Show the icon corresponding to the current state */
-  :global(html:not(.performance-mode)) :global(.performance-toggle .icon-sparkles) {
-    display: block !important;
-    pointer-events: auto !important;
-  }
-  :global(html.performance-mode) :global(.performance-toggle .icon-magic) {
-    display: block !important;
-    pointer-events: auto !important;
+  :global(html[data-clarity="true"] .performance-toggle:hover) {
+    background: var(--brand-secondary) !important;
   }
 
-  /* Wand Fling Animation */
-  @keyframes wand-fling {
-    0% {
-      transform: scale(var(--icon-scale, 1)) rotate(0deg);
+  :global(html[data-clarity="true"] .performance-toggle:hover i.icon-perf),
+  :global(html[data-clarity="true"] .performance-toggle:hover span.label-perf) {
+    color: var(--bg-base) !important;
+  }
+
+  :global(.performance-toggle .toggle-content) {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    pointer-events: none !important;
+    height: 100% !important;
+  }
+
+  :global(.performance-toggle .icon-stack) {
+    position: relative !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Force override the base HeaderIconButton <i> styles */
+  :global(.performance-toggle i.icon-perf) {
+    position: absolute !important;
+    font-size: 1.1rem !important;
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  :global(.performance-toggle .label-stack) {
+    position: relative !important;
+    width: 36px !important; /* Minimized width for short words */
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  :global(.performance-toggle span.label-perf) {
+    position: absolute !important;
+    left: 0 !important;
+    white-space: nowrap !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.1em !important;
+    opacity: 0 !important;
+    transform: translateY(10px) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: var(--text-color) !important;
+  }
+
+  /* --- STATE: AUTO --- */
+  :global(.performance-toggle[data-mode="auto"]) {
+    color: var(--pref-high) !important;
+  }
+  :global(.performance-toggle[data-mode="auto"] i.icon-auto),
+  :global(.performance-toggle[data-mode="auto"] span.label-auto) {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* --- STATE: ECO --- */
+  :global(.performance-toggle[data-mode="eco"]) {
+    color: var(--pref-eco) !important;
+  }
+  :global(.performance-toggle[data-mode="eco"] i.icon-eco),
+  :global(.performance-toggle[data-mode="eco"] span.label-eco) {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* --- STATE: OFF --- */
+  :global(.performance-toggle[data-mode="off"]) {
+    color: var(--pref-off) !important;
+  }
+  :global(.performance-toggle[data-mode="off"] i.icon-off),
+  :global(.performance-toggle[data-mode="off"] span.label-off) {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* Interaction */
+  @media (hover: hover) {
+    :global(html:not([data-clarity="true"]) .performance-toggle:hover) {
+      background: rgba(var(--gray), 0.25) !important;
     }
-    30% {
-      transform: scale(calc(var(--icon-scale, 1) * 1.2)) rotate(-15deg) translateX(-3px);
-    }
-    60% {
-      transform: scale(calc(var(--icon-scale, 1) * 1.1)) rotate(15deg) translateX(3px);
-    }
-    100% {
-      transform: scale(var(--icon-scale, 1)) rotate(0deg);
-    }
   }
-
-  /* Trigger animation on whichever icon is currently visible */
-  :global(.performance-toggle.fling) i {
-    animation: wand-fling 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-    z-index: 100;
-  }
-
-  /* Removed hamburger override to maintain consistency with header */
 </style>

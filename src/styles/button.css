@@ -44,6 +44,18 @@
   }
 }
 
+@utility btn-fx-squish {
+  &:active {
+    transform: scale(0.95) !important;
+  }
+
+  html[data-reduced-motion="true"] & {
+    &:active {
+      transform: none !important;
+    }
+  }
+}
+
 /* #endregion  */
 
 /* ----- TYPES -----*/
@@ -99,7 +111,7 @@
 }
 
 @utility btn-type-main {
-  @apply flx-cntr btn shape-pill btn-fx-scale focus-visible;
+  @apply flx-cntr btn shape-pill btn-fx-scale btn-fx-squish focus-visible;
   height: auto; /* Remove small conflicting height */
   min-height: 2.5rem; /* Keep a minimum height baseline */
   padding-right: clamp(1rem, 1vw, 2rem);
