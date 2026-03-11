@@ -143,4 +143,13 @@ const { isHamburger = false } = Astro.props;
   .copy-btn.copied .btn-text {
     color: var(--brand-secondary);
   }
+
+  /* Specific adjustment for LetsTalk trigger in hamburger list to ensure it spans correctly */
+  :global(.hmbrgr-talk-wrapper .lets-talk-wrapper) {
+    width: 100%;
+  }
+  :global(.hmbrgr-talk-wrapper .lets-talk-wrapper [slot="trigger"]) {
+    width: 100%;
+    justify-content: flex-start;
+  }
 </style>

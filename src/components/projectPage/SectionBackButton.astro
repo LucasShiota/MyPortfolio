@@ -1,4 +1,11 @@
 ---
+/**
+ * ══════════════════════════════════════════════
+ *  SECTION BACK BUTTON COMPONENT
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: A dedicated navigation button indicating a back or "up a level" action (e.g., returning to all projects).
+ */
 interface Props {
   href?: string;
   label?: string;
@@ -46,6 +53,7 @@ const { href = "/#projects", label = "All Projects" } = Astro.props;
 
   .back-btn-label {
     font-size: 0.95em;
+    white-space: nowrap;
   }
 
   .back-btn:hover {

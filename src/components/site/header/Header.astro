@@ -40,7 +40,12 @@ const isHome = pathname === "/" || pathname === "";
       title={LINKS.linkedin.title}
     />
     <LetsTalk />
-    <ContactButton href="/#about" label="About" icon="fa-solid fa-user" />
+    <ContactButton
+      href="/#about"
+      label="About"
+      icon="fa-solid fa-user"
+      class:list={{ "home-hidden": isHome }}
+    />
   </div>
   <div class="header-actions">
     <div class="header-toggles">
@@ -117,6 +122,10 @@ const isHome = pathname === "/" || pathname === "";
     justify-self: flex-end;
     margin-right: 0;
     padding-right: var(--header-height);
+  }
+
+  .home-hidden {
+    display: none !important;
   }
 
   /* #endregion */

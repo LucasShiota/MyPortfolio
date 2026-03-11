@@ -36,65 +36,16 @@ const { isHome } = Astro.props;
 
 <div id="hmbrgr-menu">
   <div class="hmbrgr-scroll-container">
-    {
-      isHome && (
-        <div class="hmbrgr-section">
-          <span class="hmbrgr-section-label" />
-          <div class="hmbrgr-nav-grid">
-            <div
-              class="hmbrgr-nav"
-              data-index="0"
-              tabindex="0"
-              role="link"
-              aria-label="Scroll to Hey section"
-            >
-              {" "}
-              Hey{" "}
-            </div>
-            <div
-              class="hmbrgr-nav"
-              data-index="1"
-              tabindex="0"
-              role="link"
-              aria-label="Scroll to Projects section"
-            >
-              {" "}
-              Projects{" "}
-            </div>
-            <div
-              class="hmbrgr-nav"
-              data-index="2"
-              tabindex="0"
-              role="link"
-              aria-label="Scroll to About Me section"
-            >
-              {" "}
-              About Me{" "}
-            </div>
-            <div
-              class="hmbrgr-nav"
-              data-index="3"
-              tabindex="0"
-              role="link"
-              aria-label="Scroll to Contacts section"
-            >
-              {" "}
-              Contacts{" "}
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    <div class="hmbrgr-section hmbrgr-connect-section">
-      <span class="hmbrgr-section-label"></span>
-      <div class="hmbrgr-contact-grid">
+    <div class="hmbrgr-section hmbrgr-connect-section" class:list={{ "is-not-home": !isHome }}>
+      <span class="hmbrgr-section-label">Quick Links</span>
+      <div class="hmbrgr-contact-list">
         <ContactButton
           isHamburger={true}
           href="/cv.pdf"
           target="_blank"
           label="CV"
           icon="fa-solid fa-file-lines"
+          class="desktop-hide"
         />
         <ContactButton
           isHamburger={true}
@@ -103,11 +54,34 @@ const { isHome } = Astro.props;
           rel="noopener noreferrer"
           label="LinkedIn"
           icon="fa-brands fa-linkedin-in"
+          class="desktop-hide"
         />
-        <div class="hmbrgr-talk-wrapper">
+        <div class="hmbrgr-talk-wrapper desktop-hide">
           <LetsTalk isHamburger={true} />
         </div>
-        <ContactButton isHamburger={true} href="/#about" label="About" icon="fa-solid fa-user" />
+        {
+          !isHome && (
+            <>
+              <ContactButton isHamburger={true} href="/#projects" label="Projects">
+                <svg slot="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.591 2.921C2.591 2.4 2.171 1.98 1.65 1.98C1.129 1.98 0.709 2.4 0.709 2.921L0.709 17.348C0.709 18.56 1.693 19.544 2.905 19.544L10.118 19.544L10.118 17.662L2.905 17.662C2.732 17.662 2.591 17.521 2.591 17.348L2.591 8.253L10.118 8.253L10.118 6.371L2.591 6.371L2.591 2.921ZM13.882 10.762L21.409 10.762C22.448 10.762 23.291 9.919 23.291 8.88L23.291 5.117C23.291 4.078 22.448 3.235 21.409 3.235L18.167 3.235C17.834 3.235 17.516 3.102 17.281 2.866L16.944 2.529C16.591 2.176 16.113 1.976 15.615 1.976L13.882 1.98C12.843 1.98 12 2.823 12 3.862L12 8.88C12 9.919 12.843 10.762 13.882 10.762ZM13.882 22.053L21.409 22.053C22.448 22.053 23.291 21.21 23.291 20.171L23.291 16.408C23.291 15.369 22.448 14.526 21.409 14.526L18.167 14.526C17.834 14.526 17.516 14.392 17.281 14.157L16.944 13.82C16.591 13.467 16.113 13.267 15.615 13.267L13.882 13.271C12.843 13.271 12 14.114 12 15.153L12 20.171C12 21.21 12.843 22.053 13.882 22.053Z" />
+                </svg>
+              </ContactButton>
+              <ContactButton isHamburger={true} href="/#contacts" label="Contacts">
+                <svg slot="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.991,3.376C7.244,3.376 3.393,7.229 3.393,11.979C3.393,16.729 7.244,20.583 11.991,20.583C12.783,20.583 13.424,21.223 13.424,22.017C13.424,22.81 12.783,23.451 11.991,23.451C5.658,23.451 0.526,18.315 0.526,11.979C0.526,5.643 5.658,0.508 11.991,0.508C18.323,0.508 23.455,5.643 23.455,11.979L23.455,13.413C23.455,15.788 21.529,17.715 19.156,17.715C17.844,17.715 16.666,17.123 15.878,16.196C14.857,17.137 13.491,17.715 11.991,17.715C8.825,17.715 6.259,15.147 6.259,11.979C6.259,8.811 8.825,6.244 11.991,6.244C13.24,6.244 14.395,6.642 15.336,7.324C15.591,7.099 15.923,6.961 16.29,6.961C17.082,6.961 17.723,7.601 17.723,8.394L17.723,13.413C17.723,14.206 18.363,14.847 19.156,14.847C19.948,14.847 20.589,14.206 20.589,13.413L20.589,11.979C20.589,7.229 16.738,3.376 11.991,3.376ZM14.857,11.979C14.857,10.397 13.571,9.111 11.991,9.111C10.41,9.111 9.125,10.397 9.125,11.979C9.125,13.561 10.41,14.847 11.991,14.847C13.571,14.847 14.857,13.561 14.857,11.979Z" />
+                </svg>
+              </ContactButton>
+            </>
+          )
+        }
+        <ContactButton
+          isHamburger={true}
+          href="/#about"
+          label="About"
+          icon="fa-solid fa-user"
+          class="desktop-hide"
+        />
       </div>
     </div>
 
@@ -343,8 +317,11 @@ const { isHome } = Astro.props;
   }
 
   @media (min-width: 640px) {
-    .hmbrgr-connect-section {
+    .hmbrgr-connect-section:not(.is-not-home) {
       display: none;
+    }
+    :global(.hmbrgr-contact-list .desktop-hide) {
+      display: none !important;
     }
   }
 
@@ -381,18 +358,14 @@ const { isHome } = Astro.props;
   }
 
   /* Contact Buttons */
-  .hmbrgr-contact-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem 0.75rem;
-    justify-items: center;
+  .hmbrgr-contact-list {
+    @apply flx-clmn;
     width: 100%;
+    gap: 0; /* Handled by list item padding/borders */
   }
 
   .hmbrgr-talk-wrapper {
     display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
   }
 

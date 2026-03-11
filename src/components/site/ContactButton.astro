@@ -44,38 +44,89 @@ const baseClass = isHamburger ? "hmbrgr-contact-btn" : "contact-btn";
   id={id}
   {...restProps}
 >
-  {icon && <i class:list={["contact-icon", icon]} />}
+  {
+    (icon || Astro.slots.has("icon")) && (
+      <span class="contact-icon-wrapper">
+        {icon ? <i class:list={["contact-icon", icon]} /> : <slot name="icon" />}
+      </span>
+    )
+  }
   <span class="btn-label">{label}</span>
 </Tag>
 
 <style>
   @reference "../../styles/global.css";
 
-  .contact-btn,
-  .hmbrgr-contact-btn {
+  .btn-label {
+    white-space: nowrap;
+  }
+
+  .contact-btn {
     @apply btn-type-main;
   }
 
   .hmbrgr-contact-btn {
+    @apply focus-visible;
+    display: flex;
+    align-items: center;
     width: 100%;
-    max-width: 200px;
-    justify-self: center;
+    padding: 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: var(--border-width) solid color-mix(in srgb, var(--text-color) 10%, transparent);
+    transition: all var(--transition-fast) ease;
+    text-decoration: none;
+    gap: 1.25rem;
   }
 
-  .contact-icon {
+  .hmbrgr-contact-btn:hover {
+    color: var(--brand-secondary);
+    padding-left: 0.5rem;
+  }
+
+  /* Clarity mode adjustment: remove border, use consistent colors */
+  html[data-clarity="true"] .hmbrgr-contact-btn {
+    border-bottom: var(--border-width) solid var(--brand-secondary);
+  }
+
+  html[data-clarity="true"] .hmbrgr-contact-btn:hover {
+    background: var(--brand-secondary);
+    color: var(--bg-base);
+  }
+
+  .contact-icon-wrapper {
     display: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .hmbrgr-contact-btn .contact-icon-wrapper {
+    display: flex;
+  }
+
+  .contact-btn .contact-icon-wrapper {
     margin-right: 0.5rem;
   }
 
-  /* Responsive Icon Visibility */
+  .contact-icon-wrapper :global(svg) {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
+  /* Responsive Icon Visibility for normal buttons */
   @media (min-width: 768px) {
-    .contact-icon {
-      display: inline-block;
+    .contact-btn .contact-icon-wrapper {
+      display: flex;
     }
   }
 
   /* Always show icon in hamburger mode */
-  .hmbrgr-contact-btn .contact-icon {
-    display: inline-block;
+  .hmbrgr-contact-btn .contact-icon-wrapper {
+    display: flex;
   }
 </style>

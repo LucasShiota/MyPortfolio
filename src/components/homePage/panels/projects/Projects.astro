@@ -1,48 +1,403 @@
 ---
-import ProjectList from "./ProjectList.astro";
-import ProjectPreviews from "./ProjectPreviews.astro";
+/**
+ * ══════════════════════════════════════════════
+ *  PROJECTS SECTION (Projects.astro)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Orchestration layer for the Projects panel.
+ * Connects Astro's static data fetching with SolidJS's reactive UI.
+ */
 import { getProjects, getFilterTags } from "./projectsData";
+import ProjectsPanel from "./ProjectsPanel";
 
 const projects = await getProjects();
 const filterTags = await getFilterTags();
 ---
-<div id="projects" class="panel projects-panel flx-algncntr-clmn justify-between">
-  <div class="projects-preview-wrap">
-    <ProjectPreviews projects={projects} />
-  </div>
-  <div class="projects-filter-parent flx-algncntr-rw"> 
-    <div class="project-filters flx-algncntr-rw" role="group" aria-label="Filter projects">
-      <button type="button" class="project-filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
-      {filterTags.map((tag) => (
-        <button type="button" class="project-filter-btn" data-filter={tag} aria-pressed="false">
-          {tag}
-        </button>
-      ))}
-    </div>
-  </div>
-  <div class="projects-list-parent">
-    <ProjectList projects={projects} />
-  </div>
-</div>
 
-<script>
-  import { initProjectsPanel } from "./initProjectsPanel";
+<ProjectsPanel client:load projects={projects} filterTags={filterTags} />
 
-  if (document.readyState === "loading") {
-    window.addEventListener("DOMContentLoaded", initProjectsPanel, { once: true });
-  } else {
-    initProjectsPanel();
+<style is:global>
+  @reference "../../../../styles/global.css";
+
+  /*-------------------*/
+  /* ----- FILTER -----*/
+  /*-------------------*/
+  /* #region Filter */
+  .projects-filter-parent {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0 5%;
+    gap: 1rem;
+    box-sizing: border-box;
+    display: none !important; /* Hidden on mobile */
   }
-</script>
 
-<style>
-  .projects-panel { gap: 0; }
+  @media (min-width: 720px) {
+    .projects-filter-parent {
+      display: flex !important;
+    }
+  }
+
+  .project-filters {
+    flex-wrap: wrap;
+    /* Fluid gap scaling down for laptops */
+    gap: clamp(0.3rem, 1vh, 0.5rem);
+    width: 100%;
+    z-index: 2;
+  }
+
+  .project-filter-btn {
+    border-radius: 9999px;
+    border: 2px solid color-mix(in srgb, var(--brand-secondary) 80%, transparent);
+    background-color: transparent;
+    /* Fluid padding and font-size */
+    padding: clamp(0.1rem, 0.4vh, 0.2rem) clamp(0.4rem, 1vh, 0.7rem);
+    font-size: clamp(0.8rem, 2vh, 1rem);
+    color: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+    user-select: none;
+
+    appearance: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .project-filter-btn.is-active,
+  .project-filter-btn[aria-pressed="true"] {
+    background-color: color-mix(in srgb, var(--brand-secondary) 40%, transparent);
+  }
+  /* #endregion */
+
+  /*-------------------*/
+  /* ----- LIST -----*/
+  /*-------------------*/
+  /* #region List */
+  .projects-list-parent {
+    width: 90%;
+    height: 20%;
+    min-height: 0;
+    display: flex;
+    align-items: stretch;
+  }
+  .project-list {
+    height: 100%;
+    width: 100%;
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+
+    box-sizing: border-box;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    cursor: grab;
+
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 14%,
+      black 86%,
+      transparent 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-image: linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%);
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+  }
+
+  .scroll-buffer {
+    flex: 0 0 14vw;
+    min-width: 14vw;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .project-list.is-grabbing {
+    cursor: grabbing;
+  }
+
+  .project-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-entry {
+    @apply flx-cntr;
+    /* Start with a neutral, dark border */
+    border: 2px solid rgba(var(--black), 0.2);
+    background: rgba(var(--black), 0.08);
+    color: inherit;
+    @apply text-left;
+
+    /* Fluid Height-Based Sizing */
+    height: 85%; /* Base height fits comfortably in parent container */
+    max-height: 125px; /* Upper cap to prevent comically large thumbs on huge screens */
+    min-height: 50px; /* Lower cap for extreme narrow screens */
+    width: auto;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+
+    cursor: pointer;
+    transform-origin: center center;
+    transition:
+      transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      opacity 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+    opacity: 0.45;
+
+    /* Inactive elements are scaled down relative to their actual layout box */
+    transform: scale(0.8);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .project-entry.is-active {
+    opacity: 1;
+    /* Active element expands perfectly to its layout boundaries (no overflow) */
+    transform: scale(1);
+    border-color: var(--brand-secondary);
+    background-color: rgba(var(--black), 0.15);
+    box-shadow: 0 10px 20px -5px rgba(var(--black), 0.2);
+  }
+
+  .project-entry:hover:not(.is-active) {
+    opacity: 0.75;
+    transform: scale(0.88);
+    border-color: color-mix(in srgb, var(--brand-secondary) 30%, transparent);
+  }
+
+  .project-entry:focus-visible {
+    outline: 2px solid var(--brand-secondary);
+    outline-offset: 2px;
+  }
+
+  .project-thumbnail {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    display: block;
+  }
+
+  /* #endregion */
 
   .projects-preview-wrap {
     width: 100%;
     flex: 1;
     min-height: 0;
+    @apply flx-cntr;
+  }
+
+  .projects-preview-parent {
+    @apply surface-panel;
+    position: relative;
+    width: 96%;
+    height: 96%; /* Increased real estate */
+    overflow: hidden;
+  }
+
+  .preview-entry {
     display: grid;
-    place-items: center;
+    /* Mobile/Tablet Template: Cinematic Top, Story Split Below */
+    grid-template-areas:
+      "header header"
+      "tags   tags"
+      "body   media"
+      "body   footer";
+    grid-template-columns: 1.3fr 1fr; /* Balanced split for smaller screens */
+    grid-template-rows: auto auto 1fr auto;
+    row-gap: 0.7rem;
+    column-gap: 1.2rem;
+
+    position: absolute;
+    inset: 1rem;
+    padding: 0rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.4s ease,
+      visibility 0.4s ease,
+      transform 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+    transform: translateY(20px);
+    z-index: 1;
+    box-sizing: border-box;
+  }
+
+  /* Desktop/Laptop Template: 'Pro' Dashboard Split */
+  @media (min-width: 1024px) {
+    .preview-entry {
+      grid-template-areas:
+        "header tags"
+        "body   media"
+        "body   footer";
+      grid-template-columns: 1.8fr 1fr;
+      grid-template-rows: auto 1fr auto; /* Header/Tag row stays compact */
+      row-gap: 1rem;
+      column-gap: 3.5rem;
+      inset: 1.5rem;
+    }
+
+    .preview-media,
+    .descriptor-tags-container {
+      justify-content: flex-end;
+      @apply text-right;
+    }
+  }
+
+  .preview-entry.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    z-index: 10;
+  }
+
+  /* Assign Areas */
+  .preview-header {
+    grid-area: header;
+    container-type: inline-size; /* Enable container query units for title scaling */
+    width: 100%;
+    min-width: 0; /* Prevents flex/grid blowout */
+  }
+  .descriptor-tags-container {
+    grid-area: tags;
+  }
+  .preview-body-text {
+    grid-area: body;
+  }
+  .preview-footer {
+    grid-area: footer;
+  }
+  /* Media Container: Now a flex wrapper to center/limit the square */
+  .preview-media {
+    grid-area: media;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .media-content {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    display: block;
+    background: rgba(var(--black), 0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow-small);
+    transition: transform 0.6s ease;
+  }
+
+  .preview-entry.active .media-content {
+    transform: scale(1.02);
+  }
+
+  /* Typography Refinement & Scale-to-Fit Title */
+  .preview-title {
+    margin: 0;
+    @apply leading-snug;
+    @apply font-black;
+    @apply txt-h3;
+
+    /* SCALE-TO-FIT LOGIC: */
+    white-space: nowrap; /* Force one line */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Will show "..." if it absolutely can't fit */
+    display: block;
+    width: 100%;
+  }
+
+  .descriptor-tags-container {
+    grid-area: tags;
+    display: flex !important;
+    flex-wrap: wrap; /* Wrap on small screens */
+    gap: clamp(0.2rem, 0.5vh, 0.5rem);
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .preview-body-text {
+    font-size: clamp(0.9rem, 1.8vh, 1.1rem);
+    @apply leading-relaxed;
+    opacity: 0.85;
+    @apply text-left;
+    overflow: hidden;
+    position: relative;
+
+    /* Premium Fade-out Mask for Overflow */
+    mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  }
+
+  /* Style HTML content inside the body */
+  .body-content ul,
+  .body-content ol {
+    margin-top: 0.4rem;
+    margin-bottom: 0.6rem;
+    padding-left: 1.2rem;
+    list-style-position: outside;
+  }
+
+  .body-content ul {
+    list-style-type: disc;
+  }
+
+  .body-content ol {
+    list-style-type: decimal;
+  }
+
+  .body-content li {
+    margin-bottom: 0.3rem;
+    @apply txt-body;
+    @apply leading-snug;
+    display: list-item;
+  }
+
+  .body-content p {
+    margin-bottom: 1.25rem; /* Increased significantly for clearer separation */
+  }
+
+  /* Reduce spacing for the very last child to avoid double-padding against footer */
+  .body-content > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .body-content strong,
+  .body-content b {
+    @apply font-bold;
+    color: rgb(var(--text-color));
+  }
+
+  /* Footer & Button Positioning (Right Column) */
+  .preview-footer {
+    display: flex;
+    justify-content: flex-end; /* Align with the right-column media/tags */
+    align-items: flex-end;
+  }
+
+  .preview-link-btn {
+    @apply btn-type-main;
+    min-width: 140px;
+    padding-top: clamp(0.8rem, 2vh, 1.2rem);
+    padding-bottom: clamp(0.8rem, 2vh, 1.2rem);
+  }
+
+  /* Ensure filtered out entries are completely removed from layout */
+  .project-entry.is-filtered-out,
+  .preview-entry.is-filtered-out {
+    display: none !important;
   }
 </style>

@@ -13,11 +13,17 @@ All notable changes to this project will be documented in this file. See [standa
 - Redesigned Performance Toggle into a dynamic 3-state (Auto, Eco, Off) capsule button.
 - Integrated comprehensive accessibility controls (Reduced Motion) directly into the `ShaderFogBG.astro` WebGL render loop.
 - Unified button press feedback with a new global `btn-fx-squish` utility class.
+- Restructured `Header.astro` and `HeaderHamburger.astro` navigation rules to intelligently hide redundant buttons based on media queries and homepage routing.
+- Redesigned hamburger menu "Quick Links" into a clean, list-style directory.
+- Re-architected the **Projects Panel** using **Solid.js** to eliminate the "Ghost DOM" issue and improve state reactivity.
+- Optimized project list physics by migrating to a **GSAP-powered** inertia and smooth-scrolling engine.
 
 ### Added
 
 - Created `ShaderFogBG.astro`, a zero-dependency WebGL shader that replicates the Vanta Fog effect with 99% less code.
 - Created `@utility btn-fx-squish` in `button.css` to centralize tactile click animations with automatic Reduced Motion overrides.
+- Implemented `ProjectsPanel.tsx`, a Solid.js component for reactive project management.
+- Integrated `gsap` and `ScrollToPlugin` for advanced slider physics.
 
 ### Changed
 
@@ -31,6 +37,8 @@ All notable changes to this project will be documented in this file. See [standa
 - Improved `btn-type-main` accessibility in Clarity Mode with consistent structural borders and perceptual scaling in active states.
 - Re-architected `performanceController.ts` and `PerformanceToggle.astro` to support a continuous "Spectrum" of performance mapping instead of binary on/off states.
 - Updated `HeaderIconButton.astro` for cohesive frosted glass styling and unified button states across all header UI elements.
+- Migrated `Projects.astro` to host the new Solid.js `ProjectsPanel`.
+- Refactored `projectsPhysics.ts` to use GSAP for all scroll-based physics and inertia.
 
 ### Fixed
 
@@ -38,11 +46,14 @@ All notable changes to this project will be documented in this file. See [standa
 - Fixed markup nesting error in `Hey.astro` where the flip card back face was rendering outside its container.
 - Resolved TypeScript declaration errors for legacy Vanta and Three.js modules via `env.d.ts` and `@types` installation.
 - Corrected project route generation by switching from deprecated `slug` to `id` mapping in `projectsData.ts`.
+- Fixed CSS injection issues in the Projects Panel by inlining styles to ensure Tailwind v4 processing.
 
 ### Removed
 
 - Removed `vanta` and `three` from project dependencies.
 - Deleted `VantaFogBG.astro` following migration to native WebGL.
+- Removed deprecated project list and preview Astro components (`ProjectList.astro`, `ProjectPreviews.astro`).
+- Deleted legacy controller scripts (`projectsEntriesController.ts`, `projectsPreviewsController.ts`, `initProjectsPanel.ts`).
 
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
