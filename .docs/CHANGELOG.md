@@ -14,9 +14,26 @@ All notable changes to this project will be documented in this file. See [standa
 - Integrated comprehensive accessibility controls (Reduced Motion) directly into the `ShaderFogBG.astro` WebGL render loop.
 - Unified button press feedback with a new global `btn-fx-squish` utility class.
 - Restructured `Header.astro` and `HeaderHamburger.astro` navigation rules to intelligently hide redundant buttons based on media queries and homepage routing.
-- Redesigned hamburger menu "Quick Links" into a clean, list-style directory.
-- Re-architected the **Projects Panel** using **Solid.js** to eliminate the "Ghost DOM" issue and improve state reactivity.
-- Optimized project list physics by migrating to a **GSAP-powered** inertia and smooth-scrolling engine.
+- Re-architected the **About Section** into a modular **Widget-Based System (Level 2 Customization)**.
+- Implemented a **Persistent Global Header** for character profile tracking across all tabs.
+- Migrated About content and layout logic into a unified, data-driven schema in `aboutData.ts`.
+- Optimized tab navigation with autonomous UI components for Abilities, Proficiencies, and Milestones.
+
+### Added
+
+- Created a **Widget System** in `AboutSheet.tsx` that renders dynamic layouts based on a configuration registry.
+- Added support for asymmetric layouts (e.g. `2-col-asymmetric`, `3-col`) within the About Panel.
+
+### Changed
+
+- Refactored `AboutSheet.tsx` from a static tabbed view to a generic renderer for data-driven widgets.
+- Consolidated global status metrics (AC, Init, Speed) and the HP bar into a persistent header block.
+- Updated Character Sheet styling to follow the latest Tailwind v4 and project-specific color variables.
+
+### Fixed
+
+- Resolved Tailwind v4 utility class mismatches (`border-color-accent` -> `border-(--brand-secondary)`).
+- Restored missing TypeScript interfaces in `aboutData.ts` and resolved all project-wide hints during `astro check`.
 
 ### Added
 
