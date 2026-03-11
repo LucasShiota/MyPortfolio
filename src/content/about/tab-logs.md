@@ -3,16 +3,15 @@ entryType: "tab"
 id: "LOGS"
 label: "Quest Log"
 order: 3
-gridTemplate: "1.5fr 1fr"
 sections:
   - component: "Philosophy"
     options:
-      placement: "1"
+      placement: "1 / 1 / 2 / 3"
     props:
       quote: "Complexity is a hidden cost; Simplicity is the primary currency. My goal is to build systems that players feel before they understand."
   - component: "Milestones"
     options:
-      placement: "1"
+      placement: "2 / 1 / 4 / 3"
     props:
       milestones:
         - "Level 01: Compiled my first C++ engine logic (The 'Old World')."
@@ -21,12 +20,12 @@ sections:
         - "Level 12: Scaling systemic depth through modular UI and data-driven design."
   - component: "PartyRole"
     options:
-      placement: "2"
+      placement: "1 / 3 / 2 / 5"
     props:
       role: "The Bridge: Speaking the language of Engineers (Logic) while protecting the vision of Artists (Aesthetics)."
   - component: "Traits"
     options:
-      placement: "2"
+      placement: "2 / 3 / 4 / 5"
     props:
       traits:
         - title: "Mathematical Empathy"

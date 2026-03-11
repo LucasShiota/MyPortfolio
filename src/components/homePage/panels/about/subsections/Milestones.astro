@@ -11,11 +11,9 @@ const { milestones } = Astro.props;
   <ul class="space-y-6">
     {
       milestones.map((m: string) => (
-        <li class="flx-rw group gap-6">
-          <div class="mt-2 h-2 w-2 shrink-0 rounded-full bg-(--brand-secondary) transition-transform group-hover:scale-150" />
-          <p class="text-base leading-normal font-bold opacity-80 transition-opacity group-hover:opacity-100">
-            {m}
-          </p>
+        <li class="flx-rw gap-6">
+          <div class="mt-2 h-2 w-2 shrink-0 rounded-full bg-(--brand-secondary)" />
+          <p class="text-base leading-normal font-bold opacity-80">{m}</p>
         </li>
       ))
     }

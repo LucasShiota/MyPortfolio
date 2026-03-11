@@ -3,11 +3,10 @@ entryType: "tab"
 id: "STATS"
 label: "Character Sheet"
 order: 1
-gridTemplate: "140px 1.2fr 1fr"
 sections:
   - component: "Abilities"
     options:
-      placement: "1"
+      placement: "1 / 1 / 4 / 2"
       title: "Core Attributes"
     props:
       abilities:
@@ -33,7 +32,7 @@ sections:
           mod: "+2"
   - component: "Skills"
     options:
-      placement: "2"
+      placement: "1 / 2 / 4 / 4"
       title: "Base Proficiencies"
     props:
       skills:
@@ -51,7 +50,7 @@ sections:
           level: 2
   - component: "Inventory"
     options:
-      placement: "3"
+      placement: "1 / 4 / 4 / 5"
       title: "Loot & Equipment"
     props:
       items:

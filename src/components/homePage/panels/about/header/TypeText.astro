@@ -1,0 +1,12 @@
+---
+/**
+ * ══════════════════════════════════════════════
+ *  TYPE TEXT (TypeText.astro)
+ * ══════════════════════════════════════════════
+ */
+const { label, value } = Astro.props;
+---
+
+<span class="text-[0.7rem] font-black tracking-widest uppercase opacity-70">
+  {label}: <strong class={label === "CLASS" ? "text-color-accent" : ""}>{value}</strong>
+</span>

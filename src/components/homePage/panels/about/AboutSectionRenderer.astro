@@ -7,6 +7,10 @@ import Philosophy from "./subsections/Philosophy.astro";
 import Milestones from "./subsections/Milestones.astro";
 import Traits from "./subsections/Traits.astro";
 import PartyRole from "./subsections/PartyRole.astro";
+import CharacterName from "./header/CharacterName.astro";
+import StatBlock from "./header/StatBlock.astro";
+import TypeText from "./header/TypeText.astro";
+import ResourceBar from "./header/ResourceBar.astro";
 
 const { section } = Astro.props;
 const { component, props, options } = section;
@@ -21,6 +25,10 @@ const ComponentMap: Record<string, any> = {
   Milestones,
   Traits,
   PartyRole,
+  CharacterName,
+  StatBlock,
+  TypeText,
+  ResourceBar,
 };
 
 const ResolvedComponent = ComponentMap[component];
@@ -31,7 +39,7 @@ const placementStyle = options?.placement ? `grid-area: ${options.placement};` :
 
 {
   ResolvedComponent ? (
-    <div class="about-section-wrapper" style={placementStyle}>
+    <div class="about-section-wrapper h-full w-full" style={placementStyle}>
       <ResolvedComponent {...props} options={options} />
     </div>
   ) : (

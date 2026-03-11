@@ -1,0 +1,21 @@
+---
+/**
+ * ══════════════════════════════════════════════
+ *  RESOURCE BAR (ResourceBar.astro)
+ * ══════════════════════════════════════════════
+ */
+const { label, current, max } = Astro.props;
+const percentage = Math.round((current / max) * 100);
+---
+
+<div class="global-resource-box ml-8 w-48">
+  <div class="flx-rw mb-1 justify-between text-[0.6rem] font-black uppercase">
+    <span>{label}</span>
+    <span class="text-color-accent">{current} / {max}</span>
+  </div>
+  <div
+    class="bg-rgba(var(--gray), 0.1) border-rgba(var(--gray), 0.1) h-2 overflow-hidden rounded-full border"
+  >
+    <div class="h-full bg-(--brand-primary)" style={{ width: `${percentage}%` }}></div>
+  </div>
+</div>

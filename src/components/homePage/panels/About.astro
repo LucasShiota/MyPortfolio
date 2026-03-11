@@ -58,11 +58,8 @@ if (!rawHeader) {
             id={`tab-content-${tab.data.id}`}
             class={`tab-content absolute inset-0 h-full w-full overflow-y-auto transition-opacity duration-300 ${i === 0 ? "pointer-events-auto z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
           >
-            {/* Dynamic Grid Layout Injection */}
-            <div
-              class="tab-grid grid h-full gap-8 md:gap-12"
-              style={`grid-template: ${tab.data.gridTemplate || "1fr"};`}
-            >
+            {/* Unified 4x3 Grid Layout */}
+            <div class="tab-grid h-full">
               {tab.data.sections?.map((section) => (
                 <AboutSectionRenderer section={section} />
               ))}
@@ -179,6 +176,20 @@ if (!rawHeader) {
     border-radius: 10px;
   }
 
+  .tab-grid {
+    display: grid;
+    gap: 2rem;
+    height: 100%;
+    /* 4-column flexible layout with safety nets */
+    grid-template-columns:
+      minmax(140px, 0.8fr)
+      minmax(200px, 1.2fr)
+      minmax(200px, 1.2fr)
+      minmax(160px, 1fr);
+    /* 3-row layout for consistent vertical distribution */
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+  }
+
   /* Mobile override for heavy grids */
   @media (max-width: 768px) {
     .about-panel {
@@ -191,7 +202,8 @@ if (!rawHeader) {
       overflow: visible;
     }
     .tab-grid {
-      grid-template: auto !important;
+      grid-template-columns: 1fr !important;
+      grid-template-rows: auto !important;
       display: flex !important;
       flex-direction: column !important;
     }

@@ -3,11 +3,10 @@ entryType: "tab"
 id: "TALENTS"
 label: "Skill Tree"
 order: 2
-gridTemplate: "1fr 1fr 1fr"
 sections:
   - component: "Talents"
     options:
-      placement: "1 / span 3"
+      placement: "1 / 1 / 4 / 5"
     props:
       trees:
         systemic:

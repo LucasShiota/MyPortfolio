@@ -6,10 +6,8 @@ const { abilities } = Astro.props;
   <h4 class="txt-micro-label mb-2 opacity-40">Abilities</h4>
   {
     abilities.map((ability: any) => (
-      <div class="ability-node flx-cntr-clmn border-rgba(var(--gray), 0.1) group rounded-xl border p-3 transition-colors hover:border-(--brand-secondary)">
-        <span class="txt-color-accent text-[0.65rem] font-black transition-transform group-hover:scale-110">
-          {ability.name}
-        </span>
+      <div class="ability-node flx-cntr-clmn border-rgba(var(--gray), 0.1) rounded-xl border p-3">
+        <span class="txt-color-accent text-[0.65rem] font-black">{ability.name}</span>
         <span class="my-1 text-2xl leading-none font-black">{ability.mod}</span>
         <div class="text-[0.6rem] font-bold uppercase opacity-60">{ability.label}</div>
         <div class="border-rgba(var(--gray), 0.1) mt-2 rounded-full border px-2 text-[0.6rem]">

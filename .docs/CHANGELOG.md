@@ -24,20 +24,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 - Created a **Widget System** in `AboutSheet.tsx` that renders dynamic layouts based on a configuration registry.
 - Added support for asymmetric layouts (e.g. `2-col-asymmetric`, `3-col`) within the About Panel.
-
-### Changed
-
-- Refactored `AboutSheet.tsx` from a static tabbed view to a generic renderer for data-driven widgets.
-- Consolidated global status metrics (AC, Init, Speed) and the HP bar into a persistent header block.
-- Updated Character Sheet styling to follow the latest Tailwind v4 and project-specific color variables.
-
-### Fixed
-
-- Resolved Tailwind v4 utility class mismatches (`border-color-accent` -> `border-(--brand-secondary)`).
-- Restored missing TypeScript interfaces in `aboutData.ts` and resolved all project-wide hints during `astro check`.
-
-### Added
-
 - Created `ShaderFogBG.astro`, a zero-dependency WebGL shader that replicates the Vanta Fog effect with 99% less code.
 - Created `@utility btn-fx-squish` in `button.css` to centralize tactile click animations with automatic Reduced Motion overrides.
 - Implemented `ProjectsPanel.tsx`, a Solid.js component for reactive project management.
@@ -45,6 +31,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Changed
 
+- Refactored `AboutSheet.tsx` from a static tabbed view to a generic renderer for data-driven widgets.
+- Consolidated global status metrics (AC, Init, Speed) and the HP bar into a persistent header block.
+- Updated Character Sheet styling to follow the latest Tailwind v4 and project-specific color variables.
 - Refactored `HomePageLayout.astro` to use the new `ShaderFogBG` component.
 - Optimized homepage background by eliminating heavy 3rd-party 3D engine dependencies.
 - Refactored `Header.astro`, `HeaderHamburger.astro`, and `LetsTalk.astro` to use the standardized `ContactButton` component.
@@ -60,11 +49,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Fixed
 
+- Resolved comprehensive markdown linting issues (`MD041`, `MD001`, `MD022`, `MD029`, `MD030`) across all workflow files in `.agent/workflows/`.
+- Standardized heading hierarchy (H1 titles and H2 subheadings) and list formatting in documentation.
 - Resolved `/[object Object]` 404 errors in project pages by updating content mapping and routing to handle **Astro 5** image metadata objects.
 - Fixed markup nesting error in `Hey.astro` where the flip card back face was rendering outside its container.
 - Resolved TypeScript declaration errors for legacy Vanta and Three.js modules via `env.d.ts` and `@types` installation.
 - Corrected project route generation by switching from deprecated `slug` to `id` mapping in `projectsData.ts`.
 - Fixed CSS injection issues in the Projects Panel by inlining styles to ensure Tailwind v4 processing.
+- Resolved Tailwind v4 utility class mismatches (`border-color-accent` -> `border-(--brand-secondary)`).
+- Restored missing TypeScript interfaces in `aboutData.ts` and resolved all project-wide hints during `astro check`.
 
 ### Removed
 
