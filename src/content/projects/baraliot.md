@@ -1,5 +1,4 @@
 ---
-id: "1"
 title: "Baraliot Fantasia"
 subtitle: "Design & Product Documentation"
 thumbnailSrc: "../../assets/projects/baraliotlogo.webp"

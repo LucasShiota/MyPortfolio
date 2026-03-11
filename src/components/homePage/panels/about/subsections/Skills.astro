@@ -1,17 +1,17 @@
 ---
-const { skills, options } = Astro.props;
+import SectionTitle from "../SectionTitle.astro";
+const { title, skills, options } = Astro.props;
+
+// Use 'title' from props, fallback to 'options.title'
+const finalTitle = title !== undefined ? title : options?.title;
 ---
 
-<div class="skills-col">
-  <h4
-    class="txt-micro-label txt-color-accent mb-6 border-b border-(--brand-secondary) pb-2 tracking-tighter uppercase"
-  >
-    {options?.title || "Skills"}
-  </h4>
-  <ul class="space-y-4">
+<div class="sheet-section">
+  <SectionTitle title={finalTitle} />
+  <ul class="sheet-list">
     {
       skills.map((skill: any) => (
-        <li class="flx-algncntr-rw border-rgba(var(--gray), 0.15) gap-4 border-b border-dotted pb-3">
+        <li class="sheet-list-item border-dotted">
           <div class="dots flx-rw gap-1.5">
             {[0, 1, 2].map((i) => (
               <div

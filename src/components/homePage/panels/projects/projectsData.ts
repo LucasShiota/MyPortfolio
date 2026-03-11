@@ -45,7 +45,7 @@ export async function getProjects(): Promise<Project[]> {
     const bodyHtml = `<p>${data.summary}</p>${goalsHtml}`;
 
     return {
-      id: data.id,
+      id: entry.id,
       title: data.title,
       thumbnailSrc: data.thumbnailSrc,
       thumbnailAlt: data.thumbnailAlt,

@@ -1,6 +1,5 @@
 ---
 entryType: "header"
-id: "about-header"
 sections:
   - component: "CharacterName"
     props:

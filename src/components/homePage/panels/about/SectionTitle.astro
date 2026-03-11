@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+  className?: string;
+}
+
+const { title, className = "" } = Astro.props;
+---
+
+{
+  title && (
+    <div class={`sheet-label-container ${className}`}>
+      <h4 class="sheet-label-text">{title}</h4>
+      <div class="sheet-label-line" />
+    </div>
+  )
+}

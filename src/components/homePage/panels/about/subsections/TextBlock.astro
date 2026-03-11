@@ -1,0 +1,10 @@
+---
+import SectionTitle from "../SectionTitle.astro";
+const { title, content, options } = Astro.props;
+const finalTitle = title !== undefined ? title : options?.title;
+---
+
+<div class="sheet-section mb-0!">
+  <SectionTitle title={finalTitle} />
+  <div class="sheet-txt-body leading-relaxed opacity-90" set:html={content} />
+</div>

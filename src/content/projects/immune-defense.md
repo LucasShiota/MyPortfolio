@@ -1,5 +1,4 @@
 ---
-id: "2"
 title: "Immune Defense"
 subtitle: "Design & Product Documentation"
 thumbnailSrc: "../../assets/projects/baraliotlogo.webp"

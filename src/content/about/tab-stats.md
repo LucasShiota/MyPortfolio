@@ -1,6 +1,5 @@
 ---
 entryType: "tab"
-id: "STATS"
 label: "Character Sheet"
 order: 1
 sections:

@@ -14,7 +14,6 @@ const projectsCollection = defineCollection({
   type: "content",
   schema: ({ image }) =>
     z.object({
-      id: z.string(),
       title: z.string(),
       subtitle: z.string().optional(),
       thumbnailSrc: image(),
@@ -109,7 +108,6 @@ const aboutCollection = defineCollection({
         .optional(),
 
       // Tab Data (if type === "tab")
-      id: z.string().optional(), // e.g. "STATS"
       label: z.string().optional(), // e.g. "Character Sheet"
       order: z.number().optional(), // For sorting tabs
       gridTemplate: z.string().optional(), // Direct CSS grid-template string
@@ -121,8 +119,10 @@ const aboutCollection = defineCollection({
             component: z.string(),
             options: z
               .object({
-                placement: z.string().optional(), // Direct CSS grid-column/grid-row string
+                placement: z.string().optional(),
                 title: z.string().optional(),
+                "visual container": z.boolean().optional(),
+                visualContainer: z.boolean().optional(),
               })
               .optional(),
             props: z.record(z.any()).optional(),

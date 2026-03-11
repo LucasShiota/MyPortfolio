@@ -1,6 +1,5 @@
 ---
 entryType: "tab"
-id: "TALENTS"
 label: "Skill Tree"
 order: 2
 sections:

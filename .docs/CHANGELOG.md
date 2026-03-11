@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
+- Refactored the **About Panel** into a dynamic "Character Sheet" layout mapped to a 3-tab target audience structure.
+- Migrated About tab content (Stats, Skills, Logs) into **Markdown Content Collections** for easier editing and separation of concerns.
+- Created flexible, data-driven typography and layout components (`SectionTitle`, `TextBlock`, `Quote`, `List`) to render the About markdown.
+- Standardized the visual hierarchy of the "Character Sheet" with a new `charactersheet.css` utility system.
+- Refined the `projects` content collection schema to correctly render rich text and structured metadata arrays.
 - Replaced **Three.js** and **Vanta.js** (~600KB) with a custom, lightweight **Pure WebGL** shader in `ShaderFogBG.astro`.
 - Localized critical 3rd-party libraries (**FontAwesome**) to eliminate render-blocking CDN dependencies.
 - Implemented **Astro Image Optimization** pipeline across the homepage and project pages, reducing image payload by over **80%**.

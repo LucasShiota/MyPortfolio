@@ -1,15 +1,11 @@
 ---
-const { items, options } = Astro.props;
+import SectionTitle from "../SectionTitle.astro";
+const { title, items, options } = Astro.props;
+const finalTitle = title !== undefined ? title : options?.title;
 ---
 
-<div
-  class="loot-box bg-rgba(var(--gray), 0.03) border-rgba(var(--gray), 0.05) h-full rounded-2xl border p-6"
->
-  <h4
-    class="txt-micro-label txt-color-accent mb-4 border-b border-(--brand-secondary) pb-1 uppercase"
-  >
-    {options?.title || "Loot"}
-  </h4>
+<div class="flx-clmn h-full">
+  <SectionTitle title={finalTitle} />
   <ul class="space-y-3 text-sm font-medium">
     {items.map((item: string) => <li>{item}</li>)}
   </ul>

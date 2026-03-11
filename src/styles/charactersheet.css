@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------- */
+/* ----------- CHARACTER SHEET CORE SYSTEM ---------- */
+/* -------------------------------------------------- */
+
+@layer components {
+  /* 📄 SHEET LAYOUT
+     The main container for the TRPG-style sheet. */
+  .trpg-sheet {
+    @apply relative mx-auto flex h-full w-full max-w-[1400px] flex-col rounded-3xl p-4 md:p-8;
+    width: 98%;
+    height: 90%;
+    max-width: 1400px;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    font-family: var(--font-accent);
+
+    & h1,
+    & h2,
+    & h3,
+    & h4,
+    & h5,
+    & span {
+      font-family: var(--font-primary), monospace;
+    }
+  }
+
+  /* 🎩 GLOBAL HEADER
+     The persistent header at the top of the sheet. */
+  .sheet-header {
+    @apply flx-rw mb-2 items-center justify-between border-b-2 pb-6;
+    border-color: rgba(var(--gray), 0.1);
+  }
+
+  /* 🧱 SECTION WRAPPER */
+  .sheet-section {
+    @apply flx-clmn h-full w-full;
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  /* 🏷️ SECTION LABEL
+     The "Micro-Label" headers used for titles (e.g., "Attributes", "Skills").
+     Unifies font-size, weight, colors, and decorative inline lines. */
+  .sheet-label-container {
+    @apply flx-rw mb-6 w-full items-center gap-4;
+  }
+
+  .sheet-label-text {
+    @apply txt-micro-label txt-color-accent shrink-0 font-black tracking-widest uppercase;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sheet-label-line {
+    @apply h-px flex-1;
+    background-color: rgba(var(--gray), 0.15);
+  }
+
+  /* Heritage support for explicit positioning */
+  .sheet-label {
+    @apply txt-micro-label txt-color-accent mb-6 w-full border-b pb-2 font-black tracking-widest uppercase;
+    border-color: rgba(var(--gray), 0.15);
+    display: block;
+    line-height: 1;
+  }
+
+  /* 📦 VISUAL CONTAINER
+     A standalone box with rounded corners and a subtle background fill.
+     Can be applied to individual elements or section wrappers. */
+  .sheet-box,
+  .sheet-surface {
+    @apply h-full rounded-2xl border p-6;
+    background-color: rgba(var(--gray), 0.05);
+    border-color: rgba(var(--gray), 0.15);
+  }
+
+  /* 📄 SHEET CONTENT
+     The inner container for section data.
+     Manages children gap and padding. */
+  .sheet-content {
+    @apply flx-clmn gap-6;
+  }
+
+  /* 🕸️ SHEET GRID
+     Standardized grid layouts for sheet modules. */
+  .sheet-main-grid {
+    display: grid;
+    gap: 2rem;
+    height: 100%;
+    /* 4-column flexible layout with safety nets */
+    grid-template-columns:
+      minmax(140px, 0.8fr)
+      minmax(200px, 1.2fr)
+      minmax(200px, 1.2fr)
+      minmax(160px, 1fr);
+    /* 3-row layout for consistent vertical distribution */
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr !important;
+      grid-template-rows: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+  }
+
+  .sheet-grid-3 {
+    @apply grid h-full w-full grid-cols-1 gap-8 md:grid-cols-3 md:gap-12;
+  }
+
+  /* 🔘 SHEET NODE
+     Styling for individual nodes within a collection (e.g., Ability Score, Talent). */
+  .sheet-node {
+    @apply flx-cntr-clmn rounded-xl border p-3 transition-all duration-300;
+    border-color: rgba(var(--gray), 0.15);
+    background-color: rgba(var(--gray), 0.04);
+    &:hover {
+      border-color: rgba(var(--gray), 0.35);
+      background-color: rgba(var(--gray), 0.08);
+    }
+  }
+
+  /* 💎 STAT NODE */
+  .sheet-stat-node {
+    @apply flx-cntr-clmn rounded-xl border-2 border-(--brand-secondary) p-2 px-5;
+    background-color: rgba(var(--brand-secondary), 0.03);
+  }
+
+  /* 📊 PROGRESS BAR */
+  .sheet-progress-container {
+    @apply h-2 overflow-hidden rounded-full border;
+    background-color: rgba(var(--gray), 0.1);
+    border-color: rgba(var(--gray), 0.1);
+  }
+
+  /* 📜 SHEET LIST
+     Consistent spacing for list items. */
+  .sheet-list {
+    @apply flx-clmn w-full space-y-4;
+  }
+
+  .sheet-list-item {
+    @apply flx-rw items-center gap-4 border-b border-dotted pb-3;
+    border-color: rgba(var(--gray), 0.2);
+  }
+
+  /* 🖋️ SHEET TEXT STYLES */
+  .sheet-txt-quote {
+    @apply text-2xl leading-tight font-black tracking-tight italic opacity-90;
+  }
+
+  .sheet-txt-title {
+    @apply mb-2 text-lg leading-none font-black;
+  }
+
+  .sheet-txt-meta {
+    @apply text-[0.7rem] font-black tracking-widest uppercase opacity-70;
+  }
+
+  .sheet-txt-body {
+    @apply text-[0.8rem] font-bold tracking-tight;
+    line-height: inherit;
+  }
+
+  .sheet-badge {
+    @apply rounded-full border px-2 text-[0.6rem] font-bold;
+    border-color: rgba(var(--gray), 0.1);
+  }
+
+  .sheet-icon-box {
+    @apply flx-cntr h-12 w-12 shrink-0 rounded-lg border-2;
+    border-color: rgba(var(--gray), 0.2);
+    background-color: rgba(var(--gray), 0.03);
+  }
+
+  .sheet-line-v {
+    @apply absolute top-0 bottom-0 -z-1 w-px;
+    background-color: rgba(var(--gray), 0.1);
+  }
+
+  .sheet-accent-bar {
+    @apply w-1 rounded-full bg-(--brand-secondary) opacity-30;
+  }
+}

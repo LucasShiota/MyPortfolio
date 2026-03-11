@@ -1,18 +1,17 @@
 ---
+import SectionTitle from "../SectionTitle.astro";
 const { trees } = Astro.props;
 ---
 
-<div class="talents-container grid h-full grid-cols-3 gap-12">
+<div class="sheet-grid-3">
   {
     Object.entries(trees).map(([category, items]: [string, any]) => (
-      <div class="talent-branch flx-clmn">
-        <h4 class="txt-micro-label txt-color-accent mb-8 border-b-2 border-(--brand-secondary) tracking-widest uppercase">
-          {category} Tree
-        </h4>
+      <div class="sheet-section">
+        <SectionTitle title={`${category} Tree`} />
         <div class="talent-nodes flx-clmn relative gap-8 pb-8">
           {items.map((item: any, i: number) => (
             <div class="talent-node flx-rw items-center gap-5">
-              <div class="border-rgba(var(--gray), 0.2) flx-cntr bg-rgba(var(--gray), 0.03) h-12 w-12 shrink-0 rounded-lg border-2">
+              <div class="sheet-icon-box">
                 <span class="text-sm font-black opacity-30">{i + 1}</span>
               </div>
               <div class="talent-info">
@@ -21,7 +20,7 @@ const { trees } = Astro.props;
                   class={`rounded-md px-2 py-1 text-[0.65rem] font-black uppercase ${
                     item.val === "Expert"
                       ? "bg-(--brand-secondary) text-(--bg-panel)"
-                      : "border-rgba(var(--gray), 0.2) border opacity-60"
+                      : "sheet-badge border opacity-60"
                   }`}
                 >
                   {item.val}
@@ -29,7 +28,7 @@ const { trees } = Astro.props;
               </div>
             </div>
           ))}
-          <div class="bg-rgba(var(--gray), 0.1) absolute top-0 bottom-0 left-6 -z-1 w-px" />
+          <div class="sheet-line-v left-6" />
         </div>
       </div>
     ))

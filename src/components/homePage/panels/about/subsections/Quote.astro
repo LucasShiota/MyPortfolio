@@ -1,0 +1,13 @@
+---
+import SectionTitle from "../SectionTitle.astro";
+const { title, quote, options } = Astro.props;
+const finalTitle = title !== undefined ? title : options?.title;
+---
+
+<div class="sheet-section mb-0!">
+  <SectionTitle title={finalTitle} />
+  <div class="flx-rw h-full items-stretch gap-5 overflow-hidden">
+    <div class="sheet-accent-bar shrink-0"></div>
+    <p class="sheet-txt-quote flex-1 leading-snug" set:html={quote} />
+  </div>
+</div>

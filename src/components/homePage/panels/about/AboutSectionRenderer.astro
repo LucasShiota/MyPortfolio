@@ -3,10 +3,10 @@ import Abilities from "./subsections/Abilities.astro";
 import Skills from "./subsections/Skills.astro";
 import Inventory from "./subsections/Inventory.astro";
 import Talents from "./subsections/Talents.astro";
-import Philosophy from "./subsections/Philosophy.astro";
-import Milestones from "./subsections/Milestones.astro";
+import Quote from "./subsections/Quote.astro";
+import List from "./subsections/List.astro";
 import Traits from "./subsections/Traits.astro";
-import PartyRole from "./subsections/PartyRole.astro";
+import TextBlock from "./subsections/TextBlock.astro";
 import CharacterName from "./header/CharacterName.astro";
 import StatBlock from "./header/StatBlock.astro";
 import TypeText from "./header/TypeText.astro";
@@ -21,10 +21,10 @@ const ComponentMap: Record<string, any> = {
   Skills,
   Inventory,
   Talents,
-  Philosophy,
-  Milestones,
+  Quote,
+  List,
   Traits,
-  PartyRole,
+  TextBlock,
   CharacterName,
   StatBlock,
   TypeText,
@@ -33,13 +33,22 @@ const ComponentMap: Record<string, any> = {
 
 const ResolvedComponent = ComponentMap[component];
 
-// Generate inline style for grid placement if provided in options
+// Check universal options
+const isVisualContainer =
+  options?.visualContainer === true || options?.["visual container"] === true;
+const wrapperClasses = [
+  "about-section-wrapper h-full w-full",
+  isVisualContainer ? "sheet-surface" : "",
+]
+  .filter(Boolean)
+  .join(" ");
+
 const placementStyle = options?.placement ? `grid-area: ${options.placement};` : "";
 ---
 
 {
   ResolvedComponent ? (
-    <div class="about-section-wrapper h-full w-full" style={placementStyle}>
+    <div class={wrapperClasses} style={placementStyle}>
       <ResolvedComponent {...props} options={options} />
     </div>
   ) : (

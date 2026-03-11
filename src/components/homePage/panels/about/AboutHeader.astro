@@ -11,9 +11,7 @@ const resourceSections = sections.filter((s: any) => s.component === "ResourceBa
 const statSections = sections.filter((s: any) => s.component === "StatBlock");
 ---
 
-<header
-  class="sheet-global-header flx-rw border-rgba(var(--gray), 0.1) mb-2 items-center justify-between border-b-2 pb-6"
->
+<header class="sheet-header">
   <div class="header-left flx-rw items-center gap-6">
     <div class="profile-meta">
       {nameSection && <AboutSectionRenderer section={nameSection} />}

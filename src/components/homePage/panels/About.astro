@@ -26,9 +26,7 @@ if (!rawHeader) {
 ---
 
 <section id="about" class="panel about-panel flx-cntr" data-panel="about">
-  <div
-    class="trpg-sheet surface-panel landscape-mode flx-clmn animate-fade-in relative mx-auto flex h-full w-full max-w-[1400px] flex-col rounded-3xl p-4 md:p-8"
-  >
+  <div class="trpg-sheet surface-panel animate-fade-in">
     <!-- 🛡️ PERSISTENT GLOBAL HEADER -->
     <AboutHeader data={rawHeader.data} />
 
@@ -37,7 +35,7 @@ if (!rawHeader) {
       {
         rawTabs.map((tab, i) => (
           <button
-            data-tab-target={tab.data.id}
+            data-tab-target={tab.id}
             class={`about-tab-btn txt-micro-label border-b-2 px-6 py-2 transition-all duration-300 ${
               i === 0
                 ? "txt-color-accent is-active border-(--brand-secondary) opacity-100"
@@ -55,11 +53,11 @@ if (!rawHeader) {
       {
         rawTabs.map((tab, i) => (
           <div
-            id={`tab-content-${tab.data.id}`}
+            id={`tab-content-${tab.id}`}
             class={`tab-content absolute inset-0 h-full w-full overflow-y-auto transition-opacity duration-300 ${i === 0 ? "pointer-events-auto z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
           >
             {/* Unified 4x3 Grid Layout */}
-            <div class="tab-grid h-full">
+            <div class="sheet-main-grid">
               {tab.data.sections?.map((section) => (
                 <AboutSectionRenderer section={section} />
               ))}
@@ -137,75 +135,9 @@ if (!rawHeader) {
   }
 
   .trpg-sheet {
-    width: 98%;
-    height: 90%;
-    max-width: 1400px;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-    font-family: var(--font-accent);
-  }
-
-  .trpg-sheet h1,
-  .trpg-sheet h2,
-  .trpg-sheet h3,
-  .trpg-sheet h4,
-  .trpg-sheet h5,
-  .trpg-sheet span {
-    font-family: var(--font-primary), monospace;
+    /* Specific overrides if any */
   }
 
   .animate-fade-in {
-    animation: sheet-fade 0.4s ease-out forwards;
-  }
-  @keyframes sheet-fade {
-    from {
-      opacity: 0;
-      transform: translateY(5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Standard Scrollbar */
-  .overflow-y-auto::-webkit-scrollbar {
-    width: 4px;
-  }
-  .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: rgba(var(--gray), 0.1);
-    border-radius: 10px;
-  }
-
-  .tab-grid {
-    display: grid;
-    gap: 2rem;
-    height: 100%;
-    /* 4-column flexible layout with safety nets */
-    grid-template-columns:
-      minmax(140px, 0.8fr)
-      minmax(200px, 1.2fr)
-      minmax(200px, 1.2fr)
-      minmax(160px, 1fr);
-    /* 3-row layout for consistent vertical distribution */
-    grid-template-rows: repeat(3, minmax(0, 1fr));
-  }
-
-  /* Mobile override for heavy grids */
-  @media (max-width: 768px) {
-    .about-panel {
-      height: auto;
-      padding-top: 5rem;
-    }
-    .trpg-sheet {
-      height: auto;
-      min-height: 80vh;
-      overflow: visible;
-    }
-    .tab-grid {
-      grid-template-columns: 1fr !important;
-      grid-template-rows: auto !important;
-      display: flex !important;
-      flex-direction: column !important;
-    }
   }
 </style>
