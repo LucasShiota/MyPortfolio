@@ -1,0 +1,42 @@
+---
+import Abilities from "./subsections/Abilities.astro";
+import Skills from "./subsections/Skills.astro";
+import Inventory from "./subsections/Inventory.astro";
+import Talents from "./subsections/Talents.astro";
+import Philosophy from "./subsections/Philosophy.astro";
+import Milestones from "./subsections/Milestones.astro";
+import Traits from "./subsections/Traits.astro";
+import PartyRole from "./subsections/PartyRole.astro";
+
+const { section } = Astro.props;
+const { component, props, options } = section;
+
+// Resolve the correct component based on the string name
+const ComponentMap: Record<string, any> = {
+  Abilities,
+  Skills,
+  Inventory,
+  Talents,
+  Philosophy,
+  Milestones,
+  Traits,
+  PartyRole,
+};
+
+const ResolvedComponent = ComponentMap[component];
+
+// Generate inline style for grid placement if provided in options
+const placementStyle = options?.placement ? `grid-area: ${options.placement};` : "";
+---
+
+{
+  ResolvedComponent ? (
+    <div class="about-section-wrapper" style={placementStyle}>
+      <ResolvedComponent {...props} options={options} />
+    </div>
+  ) : (
+    <div class="rounded-lg border border-red-500 p-4 text-red-500">
+      Component `{component}` not found in AboutSectionRenderer.
+    </div>
+  )
+}

@@ -1,0 +1,41 @@
+---
+const { trees } = Astro.props;
+---
+
+<div class="tab-content grid h-full grid-cols-3 gap-12">
+  {
+    Object.entries(trees).map(([category, items]: [string, any]) => (
+      <div class="talent-branch flx-clmn">
+        <h4 class="txt-micro-label txt-color-accent mb-8 border-b-2 border-(--brand-secondary) tracking-widest uppercase">
+          {category} Tree
+        </h4>
+        <div class="talent-nodes flx-clmn relative gap-8 pb-8">
+          {items.map((item: any, i: number) => (
+            <div class="talent-node flx-rw group items-center gap-5">
+              <div class="border-rgba(var(--gray), 0.2) flx-cntr bg-rgba(var(--gray), 0.03) group-hover:bg-rgba(var(--brand-secondary), 0.05) h-12 w-12 shrink-0 rounded-lg border-2 transition-all group-hover:border-(--brand-secondary)">
+                <span class="text-sm font-black opacity-30 transition-transform group-hover:scale-125 group-hover:opacity-100">
+                  {i + 1}
+                </span>
+              </div>
+              <div class="talent-info">
+                <h5 class="group-hover:txt-color-accent mb-2 text-base leading-none font-black transition-colors">
+                  {item.label}
+                </h5>
+                <span
+                  class={`rounded-md px-2 py-1 text-[0.65rem] font-black uppercase ${
+                    item.val === "Expert"
+                      ? "bg-(--brand-secondary) text-(--bg-panel)"
+                      : "border-rgba(var(--gray), 0.2) border opacity-60"
+                  }`}
+                >
+                  {item.val}
+                </span>
+              </div>
+            </div>
+          ))}
+          <div class="bg-rgba(var(--gray), 0.1) absolute top-0 bottom-0 left-6 -z-1 w-px" />
+        </div>
+      </div>
+    ))
+  }
+</div>

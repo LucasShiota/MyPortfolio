@@ -4,13 +4,131 @@
  *  ABOUT SECTION (About.astro)
  * ══════════════════════════════════════════════
  *
- * PURPOSE: "Character Sheet" bio with 3 interactive tabs (Stats, Skill Tree, Quest Log).
+ * PURPOSE: "Character Sheet" bio built on Astro Content Collections.
+ * Renders tabs driven by Markdown + YAML frontmatter.
  */
-import AboutSheet from "./AboutSheet";
+import { getCollection } from "astro:content";
+import AboutHeader from "./about/AboutHeader.astro";
+import AboutSectionRenderer from "./about/AboutSectionRenderer.astro";
+
+// Fetch Content Collection
+const aboutEntries = await getCollection("about");
+
+// Separate Header global data from Tab content
+const rawHeader = aboutEntries.find((e) => e.data.entryType === "header");
+const rawTabs = aboutEntries
+  .filter((e) => e.data.entryType === "tab")
+  .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+if (!rawHeader) {
+  throw new Error("About section requires a 'header' entry in the about collection.");
+}
 ---
 
-<section id="about" class="panel about-panel flx-cntr">
-  <AboutSheet client:load />
+<section id="about" class="panel about-panel flx-cntr" data-panel="about">
+  <div
+    class="trpg-sheet surface-panel landscape-mode flx-clmn animate-fade-in relative mx-auto flex h-full w-full max-w-[1400px] flex-col rounded-3xl p-4 md:p-8"
+  >
+    <!-- 🛡️ PERSISTENT GLOBAL HEADER -->
+    <AboutHeader data={rawHeader.data} />
+
+    <!-- 🧭 NAVIGATION TABS -->
+    <nav class="sheet-tabs flx-rw relative z-10 mb-6 gap-8">
+      {
+        rawTabs.map((tab, i) => (
+          <button
+            data-tab-target={tab.data.id}
+            class={`about-tab-btn txt-micro-label border-b-2 px-6 py-2 transition-all duration-300 ${
+              i === 0
+                ? "txt-color-accent is-active border-(--brand-secondary) opacity-100"
+                : "border-transparent opacity-40 hover:opacity-70"
+            }`}
+          >
+            {tab.data.label}
+          </button>
+        ))
+      }
+    </nav>
+
+    <!-- 🖼️ UNIFIED "MASTER SYSTEM" VIEWPORT -->
+    <div class="sheet-viewport relative min-h-0 flex-1 overflow-hidden">
+      {
+        rawTabs.map((tab, i) => (
+          <div
+            id={`tab-content-${tab.data.id}`}
+            class={`tab-content absolute inset-0 h-full w-full overflow-y-auto transition-opacity duration-300 ${i === 0 ? "pointer-events-auto z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
+          >
+            {/* Dynamic Grid Layout Injection */}
+            <div
+              class="tab-grid grid h-full gap-8 md:gap-12"
+              style={`grid-template: ${tab.data.gridTemplate || "1fr"};`}
+            >
+              {tab.data.sections?.map((section) => (
+                <AboutSectionRenderer section={section} />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- ⚡ VANILLA JS TAB LOGIC -->
+    <script>
+      function initAboutTabs() {
+        const buttons = document.querySelectorAll(".about-tab-btn");
+        const contents = document.querySelectorAll(".tab-content");
+
+        if (!buttons.length) return;
+
+        buttons.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const targetId = (e.currentTarget as HTMLButtonElement).dataset.tabTarget;
+
+            // Reset all
+            buttons.forEach((b) => {
+              b.classList.remove(
+                "border-(--brand-secondary)",
+                "txt-color-accent",
+                "opacity-100",
+                "is-active"
+              );
+              b.classList.add("border-transparent", "opacity-40");
+            });
+            contents.forEach((c) => {
+              c.classList.remove("opacity-100", "pointer-events-auto", "z-10");
+              c.classList.add("opacity-0", "pointer-events-none", "z-0");
+            });
+
+            // Activate Target
+            (e.currentTarget as HTMLButtonElement).classList.remove(
+              "border-transparent",
+              "opacity-40"
+            );
+            (e.currentTarget as HTMLButtonElement).classList.add(
+              "border-(--brand-secondary)",
+              "txt-color-accent",
+              "opacity-100",
+              "is-active"
+            );
+
+            const targetContent = document.getElementById(`tab-content-${targetId}`);
+            if (targetContent) {
+              targetContent.classList.remove("opacity-0", "pointer-events-none", "z-0");
+              targetContent.classList.add("opacity-100", "pointer-events-auto", "z-10");
+            }
+          });
+        });
+      }
+
+      // Initialize on load and on Astro view transitions
+      document.addEventListener("astro:page-load", initAboutTabs);
+      if (document.readyState === "complete") {
+        initAboutTabs();
+      } else {
+        document.addEventListener("DOMContentLoaded", initAboutTabs);
+      }
+    </script>
+  </div>
 </section>
 
 <style>
@@ -18,31 +136,64 @@ import AboutSheet from "./AboutSheet";
 
   .about-panel {
     padding: 3rem 2rem;
-    height: 100vh; /* Ensure the panel occupies full height for the landscape sheet */
+    height: 100vh;
   }
 
-  /* Ensure the sheet (from AboutSheet.tsx) fills the space correctly */
-  :global(.trpg-sheet) {
+  .trpg-sheet {
     width: 98%;
     height: 90%;
     max-width: 1400px;
     padding: clamp(1.5rem, 3vw, 2.5rem);
     font-family: var(--font-accent);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
   }
 
-  /* Responsive Adjustments */
+  .trpg-sheet h1,
+  .trpg-sheet h2,
+  .trpg-sheet h3,
+  .trpg-sheet h4,
+  .trpg-sheet h5,
+  .trpg-sheet span {
+    font-family: var(--font-primary), monospace;
+  }
+
+  .animate-fade-in {
+    animation: sheet-fade 0.4s ease-out forwards;
+  }
+  @keyframes sheet-fade {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Standard Scrollbar */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+  }
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(var(--gray), 0.1);
+    border-radius: 10px;
+  }
+
+  /* Mobile override for heavy grids */
   @media (max-width: 768px) {
     .about-panel {
       height: auto;
       padding-top: 5rem;
     }
-    :global(.trpg-sheet) {
+    .trpg-sheet {
       height: auto;
       min-height: 80vh;
       overflow: visible;
+    }
+    .tab-grid {
+      grid-template: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
     }
   }
 </style>

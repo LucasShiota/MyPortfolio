@@ -1,0 +1,57 @@
+---
+/**
+ * ══════════════════════════════════════════════
+ *  ABOUT HEADER (AboutHeader.astro)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: Renders the persistent character profile header.
+ */
+const { data } = Astro.props;
+---
+
+<header
+  class="sheet-global-header flx-rw border-rgba(var(--gray), 0.1) mb-2 items-center justify-between border-b-2 pb-6"
+>
+  <div class="header-left flx-rw items-center gap-6">
+    <div class="profile-meta">
+      <h2 class="txt-brand mb-1 text-4xl">{data.name}</h2>
+      <div
+        class="meta-row flx-rw gap-4 text-[0.7rem] font-black tracking-widest uppercase opacity-70"
+      >
+        <span>CLASS: <strong class="text-color-accent">{data.class}</strong></span>
+        <span>ALIGNMENT: <strong>{data.alignment}</strong></span>
+      </div>
+    </div>
+
+    <div class="global-hp-box ml-8 w-48">
+      <div class="flx-rw mb-1 justify-between text-[0.6rem] font-black uppercase">
+        <span>Hit Points</span>
+        <span class="text-color-accent">{data.stats.hp.current} / {data.stats.hp.max}</span>
+      </div>
+      <div
+        class="bg-rgba(var(--gray), 0.1) border-rgba(var(--gray), 0.1) h-2 overflow-hidden rounded-full border"
+      >
+        <div
+          class="h-full bg-(--brand-primary)"
+          style={{ width: `${(data.stats.hp.current / data.stats.hp.max) * 100}%` }}
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right flx-rw gap-3">
+    {
+      [
+        { label: "Armor Class", val: data.stats.ac },
+        { label: "Init", val: data.stats.init },
+        { label: "Speed", val: data.stats.speed },
+      ].map(({ label, val }) => (
+        <div class="status-node flx-cntr-clmn bg-rgba(var(--brand-secondary), 0.03) rounded-xl border-2 border-(--brand-secondary) p-2 px-5">
+          <span class="text-[0.6rem] font-black uppercase opacity-60">{label}</span>
+          <span class="text-2xl font-black">{val}</span>
+        </div>
+      ))
+    }
+  </div>
+</header>

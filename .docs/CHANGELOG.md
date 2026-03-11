@@ -16,7 +16,8 @@ All notable changes to this project will be documented in this file. See [standa
 - Restructured `Header.astro` and `HeaderHamburger.astro` navigation rules to intelligently hide redundant buttons based on media queries and homepage routing.
 - Re-architected the **About Section** into a modular **Widget-Based System (Level 2 Customization)**.
 - Implemented a **Persistent Global Header** for character profile tracking across all tabs.
-- Migrated About content and layout logic into a unified, data-driven schema in `aboutData.ts`.
+- Migrated About content and layout logic into a unified, data-driven schema in `aboutData.ts` and further into an **Astro Content Collection** (WIP feature).
+- Replaced SolidJS-based About widgets with statically generated Astro components driven by Markdown.
 - Optimized tab navigation with autonomous UI components for Abilities, Proficiencies, and Milestones.
 
 ### Added

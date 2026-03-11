@@ -85,6 +85,54 @@ const projectsCollection = defineCollection({
     }),
 });
 
+const aboutCollection = defineCollection({
+  type: "content",
+  schema: () =>
+    z.object({
+      // Entry Type identifier
+      entryType: z.enum(["header", "tab"]),
+
+      // Global Header Data (if type === "header")
+      name: z.string().optional(),
+      class: z.string().optional(),
+      alignment: z.string().optional(),
+      stats: z
+        .object({
+          ac: z.number(),
+          init: z.string(),
+          speed: z.string(),
+          hp: z.object({
+            current: z.number(),
+            max: z.number(),
+          }),
+        })
+        .optional(),
+
+      // Tab Data (if type === "tab")
+      id: z.string().optional(), // e.g. "STATS"
+      label: z.string().optional(), // e.g. "Character Sheet"
+      order: z.number().optional(), // For sorting tabs
+      gridTemplate: z.string().optional(), // Direct CSS grid-template string
+
+      // Shared Section System
+      sections: z
+        .array(
+          z.object({
+            component: z.string(),
+            options: z
+              .object({
+                placement: z.string().optional(), // Direct CSS grid-column/grid-row string
+                title: z.string().optional(),
+              })
+              .optional(),
+            props: z.record(z.any()).optional(),
+          })
+        )
+        .optional(),
+    }),
+});
+
 export const collections = {
   projects: projectsCollection,
+  about: aboutCollection,
 };

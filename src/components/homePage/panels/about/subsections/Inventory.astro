@@ -1,0 +1,16 @@
+---
+const { items, options } = Astro.props;
+---
+
+<div
+  class="loot-box bg-rgba(var(--gray), 0.03) border-rgba(var(--gray), 0.05) h-full rounded-2xl border p-6"
+>
+  <h4
+    class="txt-micro-label txt-color-accent mb-4 border-b border-(--brand-secondary) pb-1 uppercase"
+  >
+    {options?.title || "Loot"}
+  </h4>
+  <ul class="space-y-3 text-sm font-medium">
+    {items.map((item: string) => <li>{item}</li>)}
+  </ul>
+</div>

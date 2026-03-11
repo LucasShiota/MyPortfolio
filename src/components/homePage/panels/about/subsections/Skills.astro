@@ -1,0 +1,27 @@
+---
+const { skills, options } = Astro.props;
+---
+
+<div class="skills-col">
+  <h4
+    class="txt-micro-label txt-color-accent mb-6 border-b border-(--brand-secondary) pb-2 tracking-tighter uppercase"
+  >
+    {options?.title || "Skills"}
+  </h4>
+  <ul class="space-y-4">
+    {
+      skills.map((skill: any) => (
+        <li class="flx-algncntr-rw border-rgba(var(--gray), 0.15) gap-4 border-b border-dotted pb-3">
+          <div class="dots flx-rw gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <div
+                class={`h-2.5 w-2.5 rounded-full border-2 border-(--brand-secondary) ${i < skill.level ? "bg-(--brand-secondary)" : ""}`}
+              />
+            ))}
+          </div>
+          <span class="text-base font-bold tracking-tight">{skill.label}</span>
+        </li>
+      ))
+    }
+  </ul>
+</div>
