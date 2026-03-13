@@ -70,9 +70,10 @@
    * Presets are maps of [Num Octaves, Resolution Scale]
    */
   const PRESETS: Record<string, [number, number]> = {
-    high: [6, 1.0], // 100% Crisp / 6 Layers
+    high: [4, 1.0], // 100% Crisp / 4 Layers (Capped at 4 for high-perf balanced with battery)
     mid: [3, 0.75], // 75% Scale / 3 Layers
     low: [2, 0.5], // 50% Scale / 2 Layers
+    eco: [1, 0.25], // 25% Scale / 1 Layer (Ultra Low / Background mode)
     off: [0, 0], // Disabled
   };
 
@@ -110,6 +111,37 @@
     let lastTime = performance.now();
     let frameTimes: number[] = []; // Used for FPS tracking
     let manualOverride = false;
+    let lastMoveTime = performance.now();
+    let isSleeping = false;
+    let previousLevel = currentLevel;
+
+    const TIME_WRAP = 60000; // 60 Seconds in ms (Prevents precision jitter)
+    const SLEEP_DELAY = 5 * 60 * 1000; // 5 Minutes
+
+    /**
+     * Change performance level
+     */
+    const setLevel = (lv: string, isManual = true) => {
+      if (!CONFIG.seamlessTransition && isManual && currentLevel !== lv && lv !== "off") {
+        // totalTime += 999999; // REMOVED: This created a multi-frame jitter bug due to improper wrapping
+      }
+      manualOverride = isManual;
+      currentLevel = lv;
+      setupGPU(currentLevel);
+    };
+
+    // PERFORMANCE CACHE: Avoids layout thrashing & string lookups in hot loop
+    const CACHE = {
+      w: window.innerWidth,
+      h: window.innerHeight,
+      isReducedMotion: false,
+      colors: {
+        base: [0, 0, 0],
+        low: [0, 0, 0],
+        mid: [0, 0, 0],
+        high: [0, 0, 0],
+      },
+    };
 
     let isFirstFrame = true;
     let currColors = {
@@ -119,13 +151,57 @@
       high: [0, 0, 0],
     };
 
-    function lerpColor(curr: number[], target: number[], speed: number) {
-      return [
-        curr[0] + (target[0] - curr[0]) * speed,
-        curr[1] + (target[1] - curr[1]) * speed,
-        curr[2] + (target[2] - curr[2]) * speed,
-      ];
+    /**
+     * Component-wise lerp - faster, no array allocation
+     */
+    function lerpColorValue(curr: number[], target: number[], speed: number) {
+      curr[0] += (target[0] - curr[0]) * speed;
+      curr[1] += (target[1] - curr[1]) * speed;
+      curr[2] += (target[2] - curr[2]) * speed;
     }
+
+    function hexToRgb(hex: string) {
+      hex = hex.trim().replace("#", "");
+      if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+      const bigint = parseInt(hex, 16);
+      return [((bigint >> 16) & 255) / 255, ((bigint >> 8) & 255) / 255, (bigint & 255) / 255];
+    }
+
+    /**
+     * Refreshes colors and settings from DOM
+     * Run this only when theme changes or on startup
+     */
+    function updateStateCache() {
+      const css = getComputedStyle(document.documentElement);
+      CACHE.isReducedMotion =
+        css.getPropertyValue("--reduced-motion") === "true" ||
+        document.documentElement.getAttribute("data-reduced-motion") === "true";
+
+      CACHE.colors.base = hexToRgb(css.getPropertyValue("--vanta-base") || "#ffebcd");
+      CACHE.colors.low = hexToRgb(css.getPropertyValue("--vanta-lowlight") || "#eebcff");
+      CACHE.colors.mid = hexToRgb(css.getPropertyValue("--vanta-midtone") || "#ff9ee2");
+      CACHE.colors.high = hexToRgb(css.getPropertyValue("--vanta-highlight") || "#ffd787");
+    }
+
+    // Handle Window Resizing efficiently with RAF throttling
+    let resizeTimeout: number;
+    const onResize = () => {
+      if (resizeTimeout) cancelAnimationFrame(resizeTimeout);
+      resizeTimeout = requestAnimationFrame(() => {
+        CACHE.w = window.innerWidth;
+        CACHE.h = window.innerHeight;
+      });
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+
+    // Handle Theme Changes (Mutation Observer on HTML element)
+    const observer = new MutationObserver(updateStateCache);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "class"],
+    });
+
+    updateStateCache();
 
     // --- SHADER SOURCES ---
     const vsSource = `
@@ -255,23 +331,23 @@
     const onMouse = (e: MouseEvent) => {
       // We always track mouse coords, but determine if they apply dynamically in render loop
       targetX = e.clientX;
-      targetY = window.innerHeight - e.clientY;
+      targetY = CACHE.h - e.clientY;
+      lastMoveTime = performance.now();
+
+      if (isSleeping) {
+        isSleeping = false;
+        console.log("[FOG] Waking up from sleep mode.");
+        setLevel(previousLevel, false);
+      }
     };
-    window.addEventListener("mousemove", onMouse);
-
-    function hexToRgb(hex: string) {
-      hex = hex.trim().replace("#", "");
-      if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-      const bigint = parseInt(hex, 16);
-      return [((bigint >> 16) & 255) / 255, ((bigint >> 8) & 255) / 255, (bigint & 255) / 255];
-    }
-
+    window.addEventListener("mousemove", onMouse, { passive: true });
     // THE RENDER LOOP
     function render(now: number) {
       if (isFrozen || currentLevel === "off") return;
 
       // 1. Performance Monitoring
       if (CONFIG.performance.enabled && CONFIG.performance.autoDowngrade && !manualOverride) {
+        // A. FPS Tracking
         frameTimes.push(now);
         if (frameTimes.length > CONFIG.performance.sampleWindow) {
           const first = frameTimes.shift()!;
@@ -288,12 +364,20 @@
             }
           }
         }
+
+        // B. Inactivity Check (Sleep Mode)
+        if (!isSleeping && now - lastMoveTime > SLEEP_DELAY) {
+          isSleeping = true;
+          previousLevel = currentLevel;
+          console.log("[FOG] Entering sleep mode due to inactivity.");
+          setLevel("eco", false);
+        }
       }
 
       // 2. Dynamic Scaling
       const scale = PRESETS[currentLevel][1];
-      const targetW = Math.floor(window.innerWidth * scale);
-      const targetH = Math.floor(window.innerHeight * scale);
+      const targetW = Math.floor(CACHE.w * scale);
+      const targetH = Math.floor(CACHE.h * scale);
 
       if (canvas.width !== targetW || canvas.height !== targetH) {
         canvas.width = targetW;
@@ -301,15 +385,12 @@
         gl!.viewport(0, 0, canvas.width, canvas.height);
       }
 
-      const css = getComputedStyle(document.documentElement);
-      const isReducedMotion =
-        css.getPropertyValue("--reduced-motion") === "true" ||
-        document.documentElement.getAttribute("data-reduced-motion") === "true";
-
-      // Apply Dynamic Motion Rules
-      const currentSpeed = isReducedMotion ? CONFIG.motion.reduceMotionSpeed : CONFIG.motion.speed;
-      const currentReactToMouse = isReducedMotion ? false : CONFIG.motion.reactToMouse;
-      const currentSmoothColors = isReducedMotion ? false : CONFIG.motion.smoothColors;
+      // Apply Dynamic Motion Rules (using CACHE instead of DOM)
+      const currentSpeed = CACHE.isReducedMotion
+        ? CONFIG.motion.reduceMotionSpeed
+        : CONFIG.motion.speed;
+      const currentReactToMouse = CACHE.isReducedMotion ? false : CONFIG.motion.reactToMouse;
+      const currentSmoothColors = CACHE.isReducedMotion ? false : CONFIG.motion.smoothColors;
       const currentMouseStrength = currentReactToMouse ? CONFIG.motion.mouseStrength : 0.0;
 
       // 3. Logic & Rendering
@@ -325,29 +406,36 @@
       // Multiply delta by speed instead of totalTime so we don't get time jumps when speed changes dynamically
       totalTime += delta * currentSpeed;
 
+      // Wrap time to prevent floating-point precision jitter over long durations
+      // Use modulo for robust wrapping even with large jumps
+      if (totalTime > TIME_WRAP) totalTime %= TIME_WRAP;
+
       gl!.uniform2f(locs.res, canvas.width, canvas.height);
       gl!.uniform1f(locs.time, totalTime * 0.001);
       gl!.uniform2f(locs.mouse, mouseX * scale, mouseY * scale);
       gl!.uniform1f(locs.mouseStrength, currentMouseStrength);
 
-      const targetBase = hexToRgb(css.getPropertyValue("--vanta-base") || "#ffebcd");
-      const targetLow = hexToRgb(css.getPropertyValue("--vanta-lowlight") || "#eebcff");
-      const targetMid = hexToRgb(css.getPropertyValue("--vanta-midtone") || "#ff9ee2");
-      const targetHigh = hexToRgb(css.getPropertyValue("--vanta-highlight") || "#ffd787");
-
       if (isFirstFrame || !currentSmoothColors) {
-        currColors.base = targetBase;
-        currColors.low = targetLow;
-        currColors.mid = targetMid;
-        currColors.high = targetHigh;
+        currColors.base[0] = CACHE.colors.base[0];
+        currColors.base[1] = CACHE.colors.base[1];
+        currColors.base[2] = CACHE.colors.base[2];
+        currColors.low[0] = CACHE.colors.low[0];
+        currColors.low[1] = CACHE.colors.low[1];
+        currColors.low[2] = CACHE.colors.low[2];
+        currColors.mid[0] = CACHE.colors.mid[0];
+        currColors.mid[1] = CACHE.colors.mid[1];
+        currColors.mid[2] = CACHE.colors.mid[2];
+        currColors.high[0] = CACHE.colors.high[0];
+        currColors.high[1] = CACHE.colors.high[1];
+        currColors.high[2] = CACHE.colors.high[2];
         isFirstFrame = false;
       } else {
         // Framerate-independent interpolation smoothing
         const speed = 1.0 - Math.exp(-0.005 * delta);
-        currColors.base = lerpColor(currColors.base, targetBase, speed);
-        currColors.low = lerpColor(currColors.low, targetLow, speed);
-        currColors.mid = lerpColor(currColors.mid, targetMid, speed);
-        currColors.high = lerpColor(currColors.high, targetHigh, speed);
+        lerpColorValue(currColors.base, CACHE.colors.base, speed);
+        lerpColorValue(currColors.low, CACHE.colors.low, speed);
+        lerpColorValue(currColors.mid, CACHE.colors.mid, speed);
+        lerpColorValue(currColors.high, CACHE.colors.high, speed);
       }
 
       gl!.uniform3fv(locs.base, currColors.base);
@@ -360,7 +448,7 @@
     }
 
     function handleAutoSwitch(dir: "up" | "down") {
-      const order = ["low", "mid", "high"];
+      const order = ["eco", "low", "mid", "high"];
       let idx = order.indexOf(currentLevel);
       if (dir === "down" && idx > 0) {
         console.warn(`[FOG] Performance drop detected. Downgrading to: ${order[idx - 1]}`);
@@ -388,15 +476,10 @@
       destroy: () => {
         cancelAnimationFrame(animationId);
         window.removeEventListener("mousemove", onMouse);
+        window.removeEventListener("resize", onResize);
+        observer.disconnect();
       },
-      setLevel: (lv: string, isManual = true) => {
-        if (!CONFIG.seamlessTransition && isManual && currentLevel !== lv && lv !== "off") {
-          totalTime += 999999; // Massive time jump to create a "cut" effect
-        }
-        manualOverride = isManual;
-        currentLevel = lv;
-        setupGPU(currentLevel);
-      },
+      setLevel,
     };
   }
 
@@ -416,5 +499,4 @@
     }
   }
   window.addEventListener("startup:vanta", handleStartup);
-  handleStartup();
 </script>

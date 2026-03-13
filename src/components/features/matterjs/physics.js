@@ -1,18 +1,8 @@
 import Matter from "matter-js";
 import { LINKS } from "../../../config/site.ts";
 
-const {
-  Engine,
-  Render,
-  Runner,
-  Bodies,
-  Composite,
-  Mouse,
-  MouseConstraint,
-  Events,
-  Body,
-  Query
-} = Matter;
+const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events, Body, Query } =
+  Matter;
 
 let matterRuntime = null;
 let initVersion = 0;
@@ -41,12 +31,8 @@ export function destroyMatter() {
     onVisibilityChange,
     onBeforeUnload,
     intersectionObserver,
-    resizeObserver
+    resizeObserver,
   } = matterRuntime;
-
-  if (driftIntervalId) {
-    clearInterval(driftIntervalId);
-  }
 
   if (container && onMouseMove) {
     container.removeEventListener("mousemove", onMouseMove);
@@ -104,7 +90,7 @@ export async function initMatter() {
     substack: { sx: 336, sy: 30, sw: 168, sh: 201 },
     linkedin: { sx: 612, sy: 27, sw: 177, sh: 177 },
     itchio: { sx: 881, sy: 39, sw: 198, sh: 178 },
-    steam: { sx: 1162, sy: 30, sw: 196, sh: 196 }
+    steam: { sx: 1162, sy: 30, sw: 196, sh: 196 },
   };
 
   const spriteSheet = await preloadSpriteSheet();
@@ -119,8 +105,8 @@ export async function initMatter() {
         sx: Math.round(sprite.sx * spriteScaleX),
         sy: Math.round(sprite.sy * spriteScaleY),
         sw: Math.round(sprite.sw * spriteScaleX),
-        sh: Math.round(sprite.sh * spriteScaleY)
-      }
+        sh: Math.round(sprite.sh * spriteScaleY),
+      },
     ])
   );
 
@@ -129,7 +115,7 @@ export async function initMatter() {
     { name: "Substack", link: LINKS.substack.url, sprite: sprites.substack },
     { name: "LinkedIn", link: LINKS.linkedin.url, sprite: sprites.linkedin },
     { name: "Itch.io", link: LINKS.itchio.url, sprite: sprites.itchio },
-    { name: "Steam", link: LINKS.steam.url, sprite: sprites.steam }
+    { name: "Steam", link: LINKS.steam.url, sprite: sprites.steam },
   ];
 
   container.style.position = "relative";
@@ -139,7 +125,7 @@ export async function initMatter() {
     gravity: { x: 0, y: 0 },
     positionIterations: 4,
     velocityIterations: 3,
-    constraintIterations: 2
+    constraintIterations: 2,
   });
 
   const render = Render.create({
@@ -150,8 +136,8 @@ export async function initMatter() {
       height: Math.floor(height),
       wireframes: false,
       background: "transparent",
-      pixelRatio: 1
-    }
+      pixelRatio: 1,
+    },
   });
 
   render.canvas.style.position = "absolute";
@@ -172,18 +158,13 @@ export async function initMatter() {
 
   entries.forEach((entry) => {
     const radius = 80;
-    const circle = Bodies.circle(
-      Math.random() * width,
-      Math.random() * height,
-      radius,
-      {
-        frictionAir: 0.005,
-        restitution: 1,
-        label: "clickable",
-        collisionFilter: { category: 0x0001 },
-        render: { fillStyle: "#0062F5" }
-      }
-    );
+    const circle = Bodies.circle(Math.random() * width, Math.random() * height, radius, {
+      frictionAir: 0.005,
+      restitution: 1,
+      label: "clickable",
+      collisionFilter: { category: 0x0001 },
+      render: { fillStyle: "#0062F5" },
+    });
 
     circle.plugin = {
       link: entry.link,
@@ -191,7 +172,7 @@ export async function initMatter() {
       image: spriteSheet,
       sprite: entry.sprite,
       hoverScale: 1,
-      targetScale: 1
+      targetScale: 1,
     };
 
     const linkEl = document.createElement("a");
@@ -206,13 +187,19 @@ export async function initMatter() {
     linkEl.style.pointerEvents = "auto";
     linkEl.style.background = "transparent";
     linkEl.style.outlineOffset = "3px";
+
+    // Performance: Initialize static dimensions once
+    const hitbox = radius * 1.2;
+    linkEl.style.width = `${hitbox}px`;
+    linkEl.style.height = `${hitbox}px`;
     a11yLayer.appendChild(linkEl);
 
     circle.plugin.linkEl = linkEl;
+    circle.plugin.hitbox = hitbox; // Cache for loop
 
     Body.setVelocity(circle, {
       x: (Math.random() - 0.5) * 1,
-      y: (Math.random() - 0.5) * 1
+      y: (Math.random() - 0.5) * 1,
     });
 
     driftBodies.push(circle);
@@ -221,22 +208,17 @@ export async function initMatter() {
   const draggableCount = 5;
   for (let i = 0; i < draggableCount; i++) {
     const radius = 40 + Math.random() * 25;
-    const circle = Bodies.circle(
-      Math.random() * width,
-      Math.random() * height,
-      radius,
-      {
-        frictionAir: 0.005,
-        restitution: 1,
-        label: "draggable",
-        collisionFilter: { category: 0x0002 },
-        render: { fillStyle: "#F5A300" }
-      }
-    );
+    const circle = Bodies.circle(Math.random() * width, Math.random() * height, radius, {
+      frictionAir: 0.005,
+      restitution: 1,
+      label: "draggable",
+      collisionFilter: { category: 0x0002 },
+      render: { fillStyle: "#F5A300" },
+    });
 
     Body.setVelocity(circle, {
       x: (Math.random() - 0.5) * 1,
-      y: (Math.random() - 0.5) * 1
+      y: (Math.random() - 0.5) * 1,
     });
 
     driftBodies.push(circle);
@@ -245,10 +227,22 @@ export async function initMatter() {
 
   const wallThickness = 100;
   const walls = [
-    Bodies.rectangle(width / 2, -wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false } }),
-    Bodies.rectangle(width / 2, height + wallThickness / 2, width, wallThickness, { isStatic: true, render: { visible: false } }),
-    Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false } }),
-    Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height, { isStatic: true, render: { visible: false } })
+    Bodies.rectangle(width / 2, -wallThickness / 2, width, wallThickness, {
+      isStatic: true,
+      render: { visible: false },
+    }),
+    Bodies.rectangle(width / 2, height + wallThickness / 2, width, wallThickness, {
+      isStatic: true,
+      render: { visible: false },
+    }),
+    Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height, {
+      isStatic: true,
+      render: { visible: false },
+    }),
+    Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height, {
+      isStatic: true,
+      render: { visible: false },
+    }),
   ];
 
   Composite.add(engine.world, [...driftBodies, ...walls]);
@@ -258,30 +252,28 @@ export async function initMatter() {
   const mouseConstraint = MouseConstraint.create(engine, {
     mouse,
     constraint: { stiffness: 0.2, render: { visible: false } },
-    collisionFilter: { mask: 0x0002 }
+    collisionFilter: { mask: 0x0002 },
   });
   Composite.add(engine.world, mouseConstraint);
   render.mouse = mouse;
 
+  // PERFORMANCE: Cache the bounding rect to avoid getBoundingClientRect() on every mouse move
+  let canvasRect = render.canvas.getBoundingClientRect();
   let mousePosition = { x: 0, y: 0 };
 
   const onMouseMove = (event) => {
-    const rect = render.canvas.getBoundingClientRect();
-    mousePosition = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    };
+    mousePosition.x = event.clientX - canvasRect.left;
+    mousePosition.y = event.clientY - canvasRect.top;
   };
-  container.addEventListener("mousemove", onMouseMove);
+  container.addEventListener("mousemove", onMouseMove, { passive: true });
 
   const onCanvasClick = (event) => {
     const target = event.target;
     if (target instanceof Element && target.closest("a")) return;
 
-    const rect = render.canvas.getBoundingClientRect();
     const clickPosition = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
+      x: event.clientX - canvasRect.left,
+      y: event.clientY - canvasRect.top,
     };
     const bodies = Composite.allBodies(engine.world);
     const clicked = Query.point(bodies, clickPosition);
@@ -295,7 +287,8 @@ export async function initMatter() {
   };
   container.addEventListener("click", onCanvasClick);
 
-  const DRIFT_INTERVAL_MS = 200;
+  // PERFORMANCE: Move drift logic into the engine lifecycle instead of an independent interval
+  // This ensures it pauses naturally when the engine pauses (visibility/tab change)
   const DRIFT_FORCE = 0.0005;
   const DRIFT_MAX_ANGLE = Math.PI / 12;
 
@@ -312,9 +305,13 @@ export async function initMatter() {
     Body.applyForce(body, body.position, { x: fx, y: fy });
   }
 
-  const driftIntervalId = window.setInterval(() => {
-    driftBodies.forEach((body) => applyBoundedDrift(body));
-  }, DRIFT_INTERVAL_MS);
+  // Use the engine's timestamp to only run every ~200ms without the overhead of setInterval
+  let lastDriftUpdate = 0;
+  Events.on(engine, "beforeUpdate", (event) => {
+    if (event.timestamp - lastDriftUpdate < 200) return;
+    lastDriftUpdate = event.timestamp;
+    driftBodies.forEach(applyBoundedDrift);
+  });
 
   Render.run(render);
   const runner = Runner.create();
@@ -363,12 +360,10 @@ export async function initMatter() {
 
       const linkEl = body.plugin?.linkEl;
       if (linkEl) {
-        const hitbox = radius * 1.2;
-        linkEl.style.width = `${hitbox}px`;
-        linkEl.style.height = `${hitbox}px`;
-        linkEl.style.left = `${x - hitbox / 2}px`;
-        linkEl.style.top = `${y - hitbox / 2}px`;
-        linkEl.style.transform = `rotate(${angle}rad)`;
+        // PERFORMANCE: Use transform: translate3d for GPU-accelerated movement
+        // Avoid setting left/top/width/height every frame to eliminate layout recalculations
+        const hitbox = body.plugin.hitbox;
+        linkEl.style.transform = `translate3d(${x - hitbox / 2}px, ${y - hitbox / 2}px, 0) rotate(${angle}rad) scale(${scale})`;
       }
 
       ctx.save();
@@ -376,7 +371,7 @@ export async function initMatter() {
       ctx.rotate(angle);
 
       const iconSize = radius * 1.2 * scale;
-      if (isHovering) {
+      if (isHovering && !document.documentElement.classList.contains("perf-eco")) {
         ctx.shadowColor = "#00A1F5";
         ctx.shadowBlur = 20;
       }
@@ -400,12 +395,15 @@ export async function initMatter() {
 
   const contactsPanel = document.querySelector(".contacts-panel");
   const intersectionObserver = contactsPanel
-    ? new IntersectionObserver((observerEntries) => {
-        observerEntries.forEach((entry) => {
-          isPanelVisible = entry.isIntersecting;
-          updateSimulationState();
-        });
-      }, { threshold: 0.1 })
+    ? new IntersectionObserver(
+        (observerEntries) => {
+          observerEntries.forEach((entry) => {
+            isPanelVisible = entry.isIntersecting;
+            updateSimulationState();
+          });
+        },
+        { threshold: 0.1 }
+      )
     : null;
 
   if (contactsPanel && intersectionObserver) {
@@ -428,6 +426,9 @@ export async function initMatter() {
     render.canvas.width = newWidth;
     render.canvas.height = newHeight;
 
+    // Refresh cached rect for mouse offsets
+    canvasRect = render.canvas.getBoundingClientRect();
+
     Body.setPosition(walls[0], { x: newWidth / 2, y: -wallThickness / 2 });
     Body.setVertices(
       walls[0],
@@ -437,7 +438,8 @@ export async function initMatter() {
     Body.setPosition(walls[1], { x: newWidth / 2, y: newHeight + wallThickness / 2 });
     Body.setVertices(
       walls[1],
-      Bodies.rectangle(newWidth / 2, newHeight + wallThickness / 2, newWidth, wallThickness).vertices
+      Bodies.rectangle(newWidth / 2, newHeight + wallThickness / 2, newWidth, wallThickness)
+        .vertices
     );
 
     Body.setPosition(walls[2], { x: -wallThickness / 2, y: newHeight / 2 });
@@ -449,7 +451,8 @@ export async function initMatter() {
     Body.setPosition(walls[3], { x: newWidth + wallThickness / 2, y: newHeight / 2 });
     Body.setVertices(
       walls[3],
-      Bodies.rectangle(newWidth + wallThickness / 2, newHeight / 2, wallThickness, newHeight).vertices
+      Bodies.rectangle(newWidth + wallThickness / 2, newHeight / 2, wallThickness, newHeight)
+        .vertices
     );
 
     driftBodies.forEach((body) => {
@@ -479,12 +482,11 @@ export async function initMatter() {
     render,
     runner,
     container,
-    driftIntervalId,
     onMouseMove,
     onCanvasClick,
     onVisibilityChange,
     onBeforeUnload,
     intersectionObserver,
-    resizeObserver
+    resizeObserver,
   };
 }

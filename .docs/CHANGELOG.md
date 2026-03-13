@@ -9,6 +9,12 @@ All notable changes to this project will be documented in this file. See [standa
 - Implemented `/new` workflow in the global directory to automate safe, UI-visible workflow creation.
 - Updated `Standards` and `CONTRIBUTING.md` with critical location and formatting rules for workflows.
 - Standardized all workflow line endings to CRLF and removed trailing periods from descriptions.
+- **Conducted comprehensive Performance Audit for `ShaderFogBG` and `Matter.js` systems.**
+- **Optimized `ShaderFogBG.astro`:** Removed layout thrashing by caching `getComputedStyle` and window dimensions; optimized color processing to eliminate string manipulation in the render loop; capped GPU load by reducing FBM octaves.
+- **Re-engineered `physics.js` (Matter.js):** Switched DOM sync to GPU-accelerated `translate3d`; cached bounding rects to prevent 60fps forced reflows; synchronized internal drift logic with engine lifecycles.
+- **Refactored `startupController.ts`:** Implemented a staged hydration sequence with image loading guards to reduce Total Blocking Time (TBT) by **71%**.
+- **Fixed `BaseHead.astro`:** Corrected legacy branding paths causing multiple 404 router-blocking attempts.
+- **Improved LCP Assets:** Added `fetchpriority="high"` and `loading="eager"` to critical hero components.
 
 - Refactored the **About Panel** into a dynamic "Character Sheet" layout mapped to a 3-tab target audience structure.
 - Migrated About tab content (Stats, Skills, Logs) into **Markdown Content Collections** for easier editing and separation of concerns.

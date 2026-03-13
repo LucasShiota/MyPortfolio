@@ -237,7 +237,7 @@ export const initPanelScroll = () => {
 
           return gsap.utils.clamp(0, 1, targetIndex * _step);
         },
-        duration: { min: 0.1, max: 0.3 }, // Snappier for reduced motion compatibility
+        duration: { min: 0.2, max: 0.5 }, // Snappier for reduced motion compatibility
         delay: 0.03,
         ease: "power1.inOut",
       },

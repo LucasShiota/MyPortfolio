@@ -22,7 +22,7 @@ export const initPerformanceController = () => {
         window.performanceModeVanta.setLevel?.("high", false); // Start high, ALLOW auto-downgrade
         window.performanceModeVanta.resume?.();
       } else if (mode === "eco") {
-        window.performanceModeVanta.setLevel?.("low", true); // Force low, NO change
+        window.performanceModeVanta.setLevel?.("eco", true); // Force eco, NO change
         window.performanceModeVanta.resume?.();
       } else {
         window.performanceModeVanta.setLevel?.("off", true);

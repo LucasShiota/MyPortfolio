@@ -11,15 +11,15 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = "/crazyblender.png" } = Astro.props;
+const { title, description, image = "/logo/crazyblender.png" } = Astro.props;
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/crazyblender.svg" />
-<link rel="icon" type="image/png" sizes="32x32" href="/crazyblender.png" />
-<link rel="icon" href="/crazyblender.ico" />
+<link rel="icon" type="image/svg+xml" href="/logo/crazyblender.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/logo/crazyblender.png" />
+<link rel="icon" href="/logo/crazyblender.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="generator" content={Astro.generator} />
 

@@ -7,15 +7,10 @@ let isControllerInitialized = false;
 let matterDisableMediaQuery: MediaQueryList | null = null;
 let onMatterViewportChange: (() => void) | null = null;
 
-const isMatterBlockedByViewport = (): boolean =>
-  matterDisableMediaQuery?.matches ?? false;
+const isMatterBlockedByViewport = (): boolean => matterDisableMediaQuery?.matches ?? false;
 
 const startMatter = (): void => {
-  if (
-    window.__performanceModeEnabled ||
-    isMatterInitialized ||
-    isMatterBlockedByViewport()
-  ) {
+  if (window.__performanceModeEnabled || isMatterInitialized || isMatterBlockedByViewport()) {
     return;
   }
 
@@ -25,6 +20,7 @@ const startMatter = (): void => {
 
 const stopMatter = (): void => {
   if (!isMatterInitialized) return;
+  console.log("[PHYSICS] Destroying engine to save resources."); // Performance Audit Fix
   destroyMatter();
   isMatterInitialized = false;
 };
@@ -58,10 +54,7 @@ const bindViewportWatcher = (): void => {
     () => {
       if (!matterDisableMediaQuery || !onMatterViewportChange) return;
       if (typeof matterDisableMediaQuery.removeEventListener === "function") {
-        matterDisableMediaQuery.removeEventListener(
-          "change",
-          onMatterViewportChange
-        );
+        matterDisableMediaQuery.removeEventListener("change", onMatterViewportChange);
       } else {
         matterDisableMediaQuery.removeListener(onMatterViewportChange);
       }
