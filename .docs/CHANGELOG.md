@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [Unreleased]
 
+- Resolved workflow visibility issues by identifying global directory enforcement and fixing UI suppression triggers (trailing periods, name collisions).
+- Renamed conflicting workflows: `/a11y` -> `/accessibility`, `/release` -> `/publish`, `/visual-check` -> `/visual-tests`, `/archive` -> `/archive-logs`.
+- Implemented `/new` workflow in the global directory to automate safe, UI-visible workflow creation.
+- Updated `Standards` and `CONTRIBUTING.md` with critical location and formatting rules for workflows.
+- Standardized all workflow line endings to CRLF and removed trailing periods from descriptions.
+
 - Refactored the **About Panel** into a dynamic "Character Sheet" layout mapped to a 3-tab target audience structure.
 - Migrated About tab content (Stats, Skills, Logs) into **Markdown Content Collections** for easier editing and separation of concerns.
 - Created flexible, data-driven typography and layout components (`SectionTitle`, `TextBlock`, `Quote`, `List`) to render the About markdown.

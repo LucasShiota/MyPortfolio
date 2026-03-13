@@ -11,11 +11,11 @@ const finalTitle = title !== undefined ? title : options?.title;
   <div class="sheet-content grid grid-cols-2 gap-4">
     {
       abilities.map((ability: any) => (
-        <div class="sheet-node">
-          <span class="txt-color-accent text-[0.65rem] font-black">{ability.name}</span>
-          <span class="my-1 text-2xl leading-none font-black">{ability.mod}</span>
-          <div class="text-[0.6rem] font-bold uppercase opacity-60">{ability.label}</div>
-          <div class="sheet-badge mt-2">{ability.value}</div>
+        <div class="sheet-node gap-1">
+          <span class="sheet-txt-meta txt-color-accent">{ability.name}</span>
+          <span class="text-2xl leading-none font-black">{ability.mod}</span>
+          <div class="sheet-txt-meta opacity-60">{ability.label}</div>
+          <div class="sheet-badge mt-1">{ability.value}</div>
         </div>
       ))
     }

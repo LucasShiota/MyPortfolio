@@ -4,7 +4,7 @@ const { title, quote, options } = Astro.props;
 const finalTitle = title !== undefined ? title : options?.title;
 ---
 
-<div class="sheet-section mb-0!">
+<div class="sheet-section">
   <SectionTitle title={finalTitle} />
   <div class="flx-rw h-full items-stretch gap-5 overflow-hidden">
     <div class="sheet-accent-bar shrink-0"></div>

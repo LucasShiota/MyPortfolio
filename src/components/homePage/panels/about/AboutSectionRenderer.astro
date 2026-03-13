@@ -11,6 +11,7 @@ import CharacterName from "./header/CharacterName.astro";
 import StatBlock from "./header/StatBlock.astro";
 import TypeText from "./header/TypeText.astro";
 import ResourceBar from "./header/ResourceBar.astro";
+import Portrait from "./header/Portrait.astro";
 
 const { section } = Astro.props;
 const { component, props, options } = section;
@@ -29,6 +30,7 @@ const ComponentMap: Record<string, any> = {
   StatBlock,
   TypeText,
   ResourceBar,
+  Portrait,
 };
 
 const ResolvedComponent = ComponentMap[component];

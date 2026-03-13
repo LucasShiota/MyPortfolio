@@ -25,7 +25,7 @@ sections:
     options:
       placement: "1 / 3 / 2 / 5"
       title: "Primary Role"
-      visual container: true
+      visual container: false
     props:
       content: "<b>The Bridge:</b> Speaking the language of Engineers (Logic) while <span class='txt-color-accent'>protecting the vision of Artists</span> (Aesthetics)."
   - component: "Traits"

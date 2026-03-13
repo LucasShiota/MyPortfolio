@@ -3,29 +3,8 @@ import AboutSectionRenderer from "./AboutSectionRenderer.astro";
 
 const { data } = Astro.props;
 const sections = data.sections || [];
-
-// Find specific components for layout placement
-const nameSection = sections.find((s: any) => s.component === "CharacterName");
-const typeSections = sections.filter((s: any) => s.component === "TypeText");
-const resourceSections = sections.filter((s: any) => s.component === "ResourceBar");
-const statSections = sections.filter((s: any) => s.component === "StatBlock");
 ---
 
-<header class="sheet-header">
-  <div class="header-left flx-rw items-center gap-6">
-    <div class="profile-meta">
-      {nameSection && <AboutSectionRenderer section={nameSection} />}
-      <div
-        class="meta-row flx-rw gap-4 text-[0.7rem] font-black tracking-widest uppercase opacity-70"
-      >
-        {typeSections.map((s: any) => <AboutSectionRenderer section={s} />)}
-      </div>
-    </div>
-
-    {resourceSections.map((s: any) => <AboutSectionRenderer section={s} />)}
-  </div>
-
-  <div class="header-right flx-rw gap-3">
-    {statSections.map((s: any) => <AboutSectionRenderer section={s} />)}
-  </div>
+<header class="sheet-header sheet-header-grid">
+  {sections.map((section: any) => <AboutSectionRenderer section={section} />)}
 </header>

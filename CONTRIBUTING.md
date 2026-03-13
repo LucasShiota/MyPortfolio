@@ -31,4 +31,4 @@ We use a PR-based workflow. Please name your branches consistently:
 
 ---
 
-_This guide is part of our [Standards Workflow](file:///.agent/workflows/git-flow.md)._
+_This guide is part of our [Standards Workflow](file:///.agent/workflows/github-flow.md)._

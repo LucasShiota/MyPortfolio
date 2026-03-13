@@ -4,9 +4,9 @@ const { title, items, options } = Astro.props;
 const finalTitle = title !== undefined ? title : options?.title;
 ---
 
-<div class="flx-clmn h-full">
+<div class="sheet-section">
   <SectionTitle title={finalTitle} />
-  <ul class="space-y-3 text-sm font-medium">
+  <ul class="space-y-2 text-sm font-medium">
     {items.map((item: string) => <li>{item}</li>)}
   </ul>
 </div>

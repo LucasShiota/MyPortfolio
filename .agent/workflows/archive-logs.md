@@ -1,5 +1,5 @@
 ---
-description: Archive old changelog entries to keep history manageable.
+description: Archive old changelog entries to keep history manageable
 ---
 
 # Archive Workflow

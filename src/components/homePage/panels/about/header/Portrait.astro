@@ -1,12 +1,12 @@
 ---
 /**
  * ══════════════════════════════════════════════
- *  TYPE TEXT (TypeText.astro)
+ *  PORTRAIT (Portrait.astro)
  * ══════════════════════════════════════════════
  */
-const { label, value } = Astro.props;
+const { src = "/images/headshot.webp", alt = "Portrait" } = Astro.props;
 ---
 
-<span class="sheet-txt-meta">
-  {label}: <strong>{value}</strong>
-</span>
+<div class="overflow-hidden">
+  <img src={src} alt={alt} class="h-30 w-20 object-cover" />
+</div>

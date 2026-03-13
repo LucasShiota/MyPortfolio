@@ -1,5 +1,5 @@
 ---
-description: High-efficiency execution designed to minimize quota and turn rates.
+description: "High-efficiency execution designed to minimize quota and turn rates"
 ---
 
 # Planning Workflow

@@ -18,31 +18,31 @@ const normalizedEntries = entries.map((entry: any) => {
     {
       normalizedEntries.map((entry: any, i: number) => (
         <li class="flx-clmn">
-          <div class="flx-rw items-start gap-3">
+          <div class={`flx-rw gap-3 ${listStyle === "number" ? "items-baseline" : "items-start"}`}>
             {/* Marker */}
             {listStyle === "number" ? (
-              <span class="sheet-txt-meta txt-color-accent w-4 shrink-0 text-right">{i + 1}.</span>
+              <span class="sheet-txt-meta txt-color-accent w-5 shrink-0 text-right">{i + 1}.</span>
             ) : (
               <div class="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full bg-(--brand-secondary)" />
             )}
 
-            {/* Header or Main Text */}
+            {/* Content Container */}
             <div class="flex-1">
               {entry.header ? (
-                <span class="sheet-txt-meta leading-none" set:html={entry.header} />
+                <>
+                  <span class="sheet-txt-meta" set:html={entry.header} />
+                  {entry.text && (
+                    <div
+                      class="sheet-txt-body mt-1 leading-relaxed opacity-70"
+                      set:html={entry.text}
+                    />
+                  )}
+                </>
               ) : (
                 <div class="sheet-txt-body leading-snug opacity-90" set:html={entry.text} />
               )}
             </div>
           </div>
-
-          {/* Secondary Text if header exists */}
-          {entry.header && entry.text && (
-            <div
-              class="sheet-txt-body mt-1 pl-7 leading-relaxed opacity-70"
-              set:html={entry.text}
-            />
-          )}
         </li>
       ))
     }
