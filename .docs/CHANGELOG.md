@@ -2,86 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [Unreleased]
+### [0.0.3](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.2...v0.0.3) (2026-03-13)
 
-- Resolved workflow visibility issues by identifying global directory enforcement and fixing UI suppression triggers (trailing periods, name collisions).
-- Renamed conflicting workflows: `/a11y` -> `/accessibility`, `/release` -> `/publish`, `/visual-check` -> `/visual-tests`, `/archive` -> `/archive-logs`.
-- Implemented `/new` workflow in the global directory to automate safe, UI-visible workflow creation.
-- Updated `Standards` and `CONTRIBUTING.md` with critical location and formatting rules for workflows.
-- Standardized all workflow line endings to CRLF and removed trailing periods from descriptions.
-- **Conducted comprehensive Performance Audit for `ShaderFogBG` and `Matter.js` systems.**
-- **Optimized `ShaderFogBG.astro`:** Removed layout thrashing by caching `getComputedStyle` and window dimensions; optimized color processing to eliminate string manipulation in the render loop; capped GPU load by reducing FBM octaves.
-- **Re-engineered `physics.js` (Matter.js):** Switched DOM sync to GPU-accelerated `translate3d`; cached bounding rects to prevent 60fps forced reflows; synchronized internal drift logic with engine lifecycles.
-- **Refactored `startupController.ts`:** Implemented a staged hydration sequence with image loading guards to reduce Total Blocking Time (TBT) by **71%**.
-- **Fixed `BaseHead.astro`:** Corrected legacy branding paths causing multiple 404 router-blocking attempts.
-- **Improved LCP Assets:** Added `fetchpriority="high"` and `loading="eager"` to critical hero components.
+### Features
 
-- Refactored the **About Panel** into a dynamic "Character Sheet" layout mapped to a 3-tab target audience structure.
-- Migrated About tab content (Stats, Skills, Logs) into **Markdown Content Collections** for easier editing and separation of concerns.
-- Created flexible, data-driven typography and layout components (`SectionTitle`, `TextBlock`, `Quote`, `List`) to render the About markdown.
-- Standardized the visual hierarchy of the "Character Sheet" with a new `charactersheet.css` utility system.
-- Refined the `projects` content collection schema to correctly render rich text and structured metadata arrays.
-- Replaced **Three.js** and **Vanta.js** (~600KB) with a custom, lightweight **Pure WebGL** shader in `ShaderFogBG.astro`.
-- Localized critical 3rd-party libraries (**FontAwesome**) to eliminate render-blocking CDN dependencies.
-- Implemented **Astro Image Optimization** pipeline across the homepage and project pages, reducing image payload by over **80%**.
-- Restored **Variable Font preloading** in `BaseHead.astro` to improve Core Web Vitals (LCP/CLS).
-- Integrated `src/assets` and the `<Image />` component into the `projects` content collection schema.
-- Optimized initial parser-blocking scripts for theme detection and mobile performance mode.
-- Redesigned Performance Toggle into a dynamic 3-state (Auto, Eco, Off) capsule button.
-- Integrated comprehensive accessibility controls (Reduced Motion) directly into the `ShaderFogBG.astro` WebGL render loop.
-- Unified button press feedback with a new global `btn-fx-squish` utility class.
-- Restructured `Header.astro` and `HeaderHamburger.astro` navigation rules to intelligently hide redundant buttons based on media queries and homepage routing.
-- Re-architected the **About Section** into a modular **Widget-Based System (Level 2 Customization)**.
-- Implemented a **Persistent Global Header** for character profile tracking across all tabs.
-- Migrated About content and layout logic into a unified, data-driven schema in `aboutData.ts` and further into an **Astro Content Collection** (WIP feature).
-- Replaced SolidJS-based About widgets with statically generated Astro components driven by Markdown.
-- Optimized tab navigation with autonomous UI components for Abilities, Proficiencies, and Milestones.
+- **a11y:** add accessibility toggle component and fix button styles ([f0ba0b3](https://github.com/LucasShiota/MyPortfolio/commit/f0ba0b3e7a5937eb2f1fccdd6726820aadff70dc))
+- **a11y:** implement Clarity Mode and unify scroll snapping logic ([3dadd75](https://github.com/LucasShiota/MyPortfolio/commit/3dadd753ffdd4cf870f7a282eb202a7fcbdd5798))
+- **a11y:** implement high contrast mode and refine design tokens ([6fbfc97](https://github.com/LucasShiota/MyPortfolio/commit/6fbfc9714929829e5e4d0ba1e777cc6e650c89ed))
+- **about:** implement level 2 widget system and persistent character header ([c3480cd](https://github.com/LucasShiota/MyPortfolio/commit/c3480cd209d76954243c061f19ea840e14c5b89a))
+- **about:** migrate character sheet to astro content collection (wip) ([b31261e](https://github.com/LucasShiota/MyPortfolio/commit/b31261e56cf9cb43c9da6c5b6a9e0fdd64514928))
+- **about:** re-architect about panel into flexible character sheet ([eede97e](https://github.com/LucasShiota/MyPortfolio/commit/eede97e7d3aecd2e07b727af098dcaf32b228342))
+- **automation:** resolve workflow visibility and standardize infra ([b415b19](https://github.com/LucasShiota/MyPortfolio/commit/b415b1916f7f6fb4a69608c657f06febfb1d1d24))
+- **header:** redesign hamburger menu and enhance panel interaction logic ([a6bd4e7](https://github.com/LucasShiota/MyPortfolio/commit/a6bd4e7c3888cc28849916c930bd28efb886f375))
+- **projects:** refactor panel to Solid.js and integrate GSAP physics ([19c1868](https://github.com/LucasShiota/MyPortfolio/commit/19c18689a7302a8d7284d5db16a2b74fac4e2aca))
+- **ui:** implement multi-level performance toggle with dynamic webgl shader and a11y support ([5c7c287](https://github.com/LucasShiota/MyPortfolio/commit/5c7c287a4e1edda16f84e125248617fa6e4b542d))
+- **ux:** refactor sidebar architecture and implement dynamic scaling ([c1829d1](https://github.com/LucasShiota/MyPortfolio/commit/c1829d1cbc5a993ab6c23898da78eef44ce7deef))
 
-### Added
+### Bug Fixes
 
-- Created a **Widget System** in `AboutSheet.tsx` that renders dynamic layouts based on a configuration registry.
-- Added support for asymmetric layouts (e.g. `2-col-asymmetric`, `3-col`) within the About Panel.
-- Created `ShaderFogBG.astro`, a zero-dependency WebGL shader that replicates the Vanta Fog effect with 99% less code.
-- Created `@utility btn-fx-squish` in `button.css` to centralize tactile click animations with automatic Reduced Motion overrides.
-- Implemented `ProjectsPanel.tsx`, a Solid.js component for reactive project management.
-- Integrated `gsap` and `ScrollToPlugin` for advanced slider physics.
-
-### Changed
-
-- Refactored `AboutSheet.tsx` from a static tabbed view to a generic renderer for data-driven widgets.
-- Consolidated global status metrics (AC, Init, Speed) and the HP bar into a persistent header block.
-- Updated Character Sheet styling to follow the latest Tailwind v4 and project-specific color variables.
-- Refactored `HomePageLayout.astro` to use the new `ShaderFogBG` component.
-- Optimized homepage background by eliminating heavy 3rd-party 3D engine dependencies.
-- Refactored `Header.astro`, `HeaderHamburger.astro`, and `LetsTalk.astro` to use the standardized `ContactButton` component.
-- Simplified `btn-type-main` utility with `height: auto` and consistent padding to prevent content squashing.
-- Optimized the Hamburger Menu toggle to sit flush with the header border by adjusting height and removing internal borders.
-- Updated **Window** interface in `env.d.ts` to support project-wide snapping synchronization and Vanta effect management.
-- Simplified hamburger menu navigation by removing redundant section headers while preserving visual divider lines.
-- Improved `btn-type-main` accessibility in Clarity Mode with consistent structural borders and perceptual scaling in active states.
-- Re-architected `performanceController.ts` and `PerformanceToggle.astro` to support a continuous "Spectrum" of performance mapping instead of binary on/off states.
-- Updated `HeaderIconButton.astro` for cohesive frosted glass styling and unified button states across all header UI elements.
-- Migrated `Projects.astro` to host the new Solid.js `ProjectsPanel`.
-- Refactored `projectsPhysics.ts` to use GSAP for all scroll-based physics and inertia.
-
-### Fixed
-
-- Resolved comprehensive markdown linting issues (`MD041`, `MD001`, `MD022`, `MD029`, `MD030`) across all workflow files in `.agent/workflows/`.
-- Standardized heading hierarchy (H1 titles and H2 subheadings) and list formatting in documentation.
-- Resolved `/[object Object]` 404 errors in project pages by updating content mapping and routing to handle **Astro 5** image metadata objects.
-- Fixed markup nesting error in `Hey.astro` where the flip card back face was rendering outside its container.
-- Resolved TypeScript declaration errors for legacy Vanta and Three.js modules via `env.d.ts` and `@types` installation.
-- Corrected project route generation by switching from deprecated `slug` to `id` mapping in `projectsData.ts`.
-- Fixed CSS injection issues in the Projects Panel by inlining styles to ensure Tailwind v4 processing.
-- Resolved Tailwind v4 utility class mismatches (`border-color-accent` -> `border-(--brand-secondary)`).
-- Restored missing TypeScript interfaces in `aboutData.ts` and resolved all project-wide hints during `astro check`.
-
-### Removed
-
-- Removed `vanta` and `three` from project dependencies.
-- Deleted `VantaFogBG.astro` following migration to native WebGL.
-- Removed deprecated project list and preview Astro components (`ProjectList.astro`, `ProjectPreviews.astro`).
-- Deleted legacy controller scripts (`projectsEntriesController.ts`, `projectsPreviewsController.ts`, `initProjectsPanel.ts`).
+- **ci:** update maintenance worker path in deploy workflow ([7ce1dd2](https://github.com/LucasShiota/MyPortfolio/commit/7ce1dd202cd1d25ce30174b3c5dbfbc4ce89141b))
+- **docs:** resolve markdown linting issues in workflow files ([f37bde2](https://github.com/LucasShiota/MyPortfolio/commit/f37bde2b0320ed9fec40700d7102e85c64cc6550))
 
 ### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
