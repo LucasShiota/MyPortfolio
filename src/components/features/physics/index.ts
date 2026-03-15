@@ -61,8 +61,8 @@ const PHYSICS_CONFIG = {
     },
     draggable: {
       count: 5,
-      minRadius: 25,
-      maxRadius: 40,
+      minRadius: 40,
+      maxRadius: 60,
       category: 0x0002,
     },
   },
@@ -153,22 +153,22 @@ function handleResize() {
 
 function updateSimulationState() {
   const shouldRun = isPanelVisible && isTabVisible && !window.__performanceModeEnabled;
-  if (shouldRun === isSimulationRunning) return;
+  isSimulationRunning = shouldRun;
 
   if (shouldRun) {
     engine?.resume();
+    if (!animationFrameId) render();
   } else {
     engine?.pause();
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
   }
-
-  isSimulationRunning = shouldRun;
 }
 
 function render() {
-  if (!ctx || !canvas || !engine || !isSimulationRunning) {
-    animationFrameId = requestAnimationFrame(render);
-    return;
-  }
+  if (!ctx || !canvas || !engine || !isSimulationRunning) return;
 
   const width = canvas.width;
   const height = canvas.height;

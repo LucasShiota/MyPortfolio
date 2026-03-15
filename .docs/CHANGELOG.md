@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **physics:** refactor `CustomPhysicsEngine` to use unified configuration object
 - **ui:** unify panel CSS layout across `About`, `Contacts`, and `Projects` for consistent spacing and header offsets
 - **deps:** uninstall `matter-js` and remove from Vite optimization config
+- **physics:** refine draggable body sizes for improved tactile interaction
 
 ### Fixed
 
