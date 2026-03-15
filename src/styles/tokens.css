@@ -21,7 +21,7 @@
   /* LAYOUT TOKENS */
   --header-height: 4.5rem;
   --sidebar-width: clamp(180px, 15vw, 240px);
-  --panel-height: calc(100vh - var(--header-height));
+  --panel-height: 100vh;
 
   /* TYPOGRAPHY */
   --font-display: "Notable", sans-serif;

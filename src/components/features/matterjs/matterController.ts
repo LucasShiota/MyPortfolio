@@ -1,4 +1,4 @@
-import { destroyMatter, initMatter } from "./physics.js";
+import { destroyPhysics as destroyMatter, initPhysics as initMatter } from "../physics";
 
 const MATTER_DISABLE_MQ = "(hover: none) and (pointer: coarse)";
 

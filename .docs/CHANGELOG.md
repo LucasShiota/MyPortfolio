@@ -2,9 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.0.3](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.2...v0.0.3) (2026-03-13)
+## [Unreleased]
 
-### Features
+### Added
+
+- **physics:** implement centralized configuration "knobs and dials" system in `index.ts`
+- **physics:** implement mass and momentum-based collisions in custom engine
+- **physics:** implement torque and radius-aware rotation for realistic body response
+
+### Changed
+
+- **physics:** replace `matter-js` with lightweight custom in-house physics engine (~100KB bundle size reduction)
+- **physics:** refactor `CustomPhysicsEngine` to use unified configuration object
+- **ui:** unify panel CSS layout across `About`, `Contacts`, and `Projects` for consistent spacing and header offsets
+- **deps:** uninstall `matter-js` and remove from Vite optimization config
+
+### Fixed
+
+- **physics:** correct Verlet velocity reflection math for wall bounces to prevent sticking
+- **physics:** fix draggable body clipping through vertical walls
+- **physics:** resolve multiple linting and type errors in custom engine implementation
+
+### Features (0.0.3)
 
 - **a11y:** add accessibility toggle component and fix button styles ([f0ba0b3](https://github.com/LucasShiota/MyPortfolio/commit/f0ba0b3e7a5937eb2f1fccdd6726820aadff70dc))
 - **a11y:** implement Clarity Mode and unify scroll snapping logic ([3dadd75](https://github.com/LucasShiota/MyPortfolio/commit/3dadd753ffdd4cf870f7a282eb202a7fcbdd5798))
@@ -18,12 +37,12 @@ All notable changes to this project will be documented in this file. See [standa
 - **ui:** implement multi-level performance toggle with dynamic webgl shader and a11y support ([5c7c287](https://github.com/LucasShiota/MyPortfolio/commit/5c7c287a4e1edda16f84e125248617fa6e4b542d))
 - **ux:** refactor sidebar architecture and implement dynamic scaling ([c1829d1](https://github.com/LucasShiota/MyPortfolio/commit/c1829d1cbc5a993ab6c23898da78eef44ce7deef))
 
-### Bug Fixes
+### Bug Fixes (0.0.3)
 
 - **ci:** update maintenance worker path in deploy workflow ([7ce1dd2](https://github.com/LucasShiota/MyPortfolio/commit/7ce1dd202cd1d25ce30174b3c5dbfbc4ce89141b))
 - **docs:** resolve markdown linting issues in workflow files ([f37bde2](https://github.com/LucasShiota/MyPortfolio/commit/f37bde2b0320ed9fec40700d7102e85c64cc6550))
 
-### [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
+## [0.0.2](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.1...v0.0.2) (2026-03-06)
 
 ### Features (0.0.2)
 
@@ -33,7 +52,7 @@ All notable changes to this project will be documented in this file. See [standa
 - **standards:** add /plan workflow for high-efficiency execution ([3b77f18](https://github.com/LucasShiota/MyPortfolio/commit/3b77f18e30a688956dcc727e110d868247235591))
 - **maintenance:** reorganize worker and add `/maintenance` workflow
 
-### 0.0.1 (2026-03-06)
+## 0.0.1 (2026-03-06)
 
 ### Features (0.0.1)
 
@@ -69,7 +88,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Set up initial homepage layout with new Astro components and integrate Tailwind CSS for styling. ([d20ee93](https://github.com/LucasShiota/MyPortfolio/commit/d20ee93293f0b4565bf39d4b0dc4cc81d89d0438))
 - **standards:** add style guide, automated workflows, and commit enforcers ([949c563](https://github.com/LucasShiota/MyPortfolio/commit/949c56302b5599543d088878de9bd281d33b9351))
 
-### Bug Fixes
+### Bug Fixes (0.0.1)
 
 - correct import path for DarkMode component ([051dc7c](https://github.com/LucasShiota/MyPortfolio/commit/051dc7c23b094a64bd6824187e8738d471a56b23))
 - correct import path for DarkMode component ([d795858](https://github.com/LucasShiota/MyPortfolio/commit/d795858c1c9666c99fcf3c6374bb579615337fb4))

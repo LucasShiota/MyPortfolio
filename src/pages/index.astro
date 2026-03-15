@@ -1,15 +1,24 @@
 ---
-import BaseLayout from '@layouts/HomePageLayout.astro';
+/**
+ * ══════════════════════════════════════════════
+ *  HOMEPAGE (INDEX PAGE)
+ * ══════════════════════════════════════════════
+ *
+ * PURPOSE: The main entry page of the portfolio.
+ * Assembles the Sidebar and all Panels into the Master Layout.
+ */
+import BaseLayout from "@layouts/HomePageLayout.astro";
 
-import SideBar from '../components/homePage/SideBar.astro';
+import SideBar from "../components/homePage/SideBar.astro";
 
-import Hero from '../components/homePage/panels/hey/Hey.astro';
-import Contacts from '../components/homePage/panels/Contacts.astro';
-import About from '../components/homePage/panels/About.astro';
-import Projects from '../components/homePage/panels/projects/Projects.astro';
+import Hero from "../components/homePage/panels/hey/Hey.astro";
+import Contacts from "../components/homePage/panels/Contacts.astro";
+import About from "../components/homePage/panels/About.astro";
+import Projects from "../components/homePage/panels/projects/Projects.astro";
 
-import { SITE_TITLE, SITE_DESCRIPTION } from '../config/site';
+import { SITE_TITLE, SITE_DESCRIPTION } from "../config/site";
 ---
+
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <div class="master-layout">
     <main class="main-content">
@@ -25,19 +34,31 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../config/site';
 </BaseLayout>
 
 <style is:global>
-  .panel { 
-    height: var(--panel-height); 
-    width: 100%; 
-    padding-top: var(--header-height); 
+  .panel {
+    height: var(--panel-height);
+    width: 100%;
+    padding-top: var(--header-height);
     scroll-margin-top: var(--header-height);
-    display: flex; /* Ensure it stays a flex container if it isn't already */
+    position: relative;
+    overflow: hidden;
+    display: flex;
     flex-direction: column;
+    /* Default centering, individual panels can override if needed */
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Ensure child flex containers respect the parent height */
+  .panel > * {
+    max-height: 100%;
   }
 
   @media (max-width: 768px) {
     .panel {
-      min-height: auto;
-      padding-top: 2rem;
+      height: auto;
+      min-height: 100vh;
+      padding-top: calc(var(--header-height) + 1.5rem);
+      justify-content: flex-start; /* Better for scrolling on mobile */
     }
   }
 </style>
