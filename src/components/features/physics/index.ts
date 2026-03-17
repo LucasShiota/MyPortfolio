@@ -32,7 +32,7 @@ const PHYSICS_CONFIG = {
 
   // --- DRIFT BEHAVIOR ---
   drift: {
-    force: 0.02, // Subtle nudge force
+    force: 0.05, // Subtle nudge force
     maxAngleVariance: Math.PI / 4, // Higher = more chaotic direction changes
     updateFrequencyMs: 200, // How often to change nudge direction
   },
@@ -368,9 +368,12 @@ export async function initPhysics() {
     return { x: Math.random() * width, y: Math.random() * height };
   }
 
-  driftBodies = entries.map((entry) => {
+  // Create a temporary list to track placements before we finalize the driftBodies array
+  const tempDriftBodies: PhysicsBody[] = [];
+
+  entries.forEach((entry) => {
     const radius = PHYSICS_CONFIG.bodies.clickable.radius;
-    const pos = findSafePosition(radius, driftBodies);
+    const pos = findSafePosition(radius, tempDriftBodies);
     const body = engine!.addCircle(pos.x, pos.y, radius, {
       frictionAir: PHYSICS_CONFIG.simulation.frictionAir,
       restitution: PHYSICS_CONFIG.simulation.restitution,
@@ -397,7 +400,7 @@ export async function initPhysics() {
     const hitbox = radius * PHYSICS_CONFIG.bodies.clickable.hitboxMultiplier;
     linkEl.style.width = `${hitbox}px`;
     linkEl.style.height = `${hitbox}px`;
-    a11yLayer!.appendChild(linkEl);
+    if (a11yLayer) a11yLayer.appendChild(linkEl);
 
     body.plugin = {
       link: entry.link,
@@ -417,8 +420,10 @@ export async function initPhysics() {
     engine!.setVelocity(body, initialVel);
     body.plugin.driftAngle = Math.atan2(initialVel.y, initialVel.x);
 
-    return body;
+    tempDriftBodies.push(body);
   });
+
+  driftBodies = [...tempDriftBodies];
 
   // Removed blue draggable bodies
 

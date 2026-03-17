@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [Unreleased]
+
+### Added
+
+- **audit:** comprehensive performance audit data (HAR) and results
+
+### Fixed
+
+- **physics:** resolve body placement race condition and refine drift forces for better stability
+
+### Changed
+
+- **maintenance:** disable maintenance mode and verify live status of lucasshiota.com
+
 ### [0.0.4](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.3...v0.0.4) (2026-03-15)
 
 ### Features
