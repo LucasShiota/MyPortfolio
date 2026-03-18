@@ -7,6 +7,7 @@
  *
  * CRITICAL RULES:
  * - Transitions are centralized here for bg/text shifts.
+ * - Managed via Functional Variables to reduce redundancy.
  */
 
 @import "tailwindcss";
@@ -24,7 +25,6 @@
 .no-transitions,
 .no-transitions * {
   transition: none !important;
-  animation: none !important;
 }
 
 /* Global Reduced Motion Override */
@@ -44,16 +44,14 @@ html[data-reduced-motion="true"] *::after {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--focus-ring) 25%, transparent);
 }
 
-/* --- LIGHT THEME (DEFAULT) --- */
+/* --- FUNCTIONAL THEME SYSTEM --- */
 :root {
   color-scheme: light;
-
   --brand-mix-amount: 15%;
 
-  --brand-primary: #f5a300;
+  /* SHADING FORMULAS - Defined once, reused everywhere */
   --brand-primary-shaded: color-mix(in srgb, var(--brand-primary), black var(--brand-mix-amount));
   --brand-primary-tinted: color-mix(in srgb, var(--brand-primary), white var(--brand-mix-amount));
-  --brand-secondary: #0062f5;
   --brand-secondary-shaded: color-mix(
     in srgb,
     var(--brand-secondary),
@@ -65,141 +63,112 @@ html[data-reduced-motion="true"] *::after {
     white var(--brand-mix-amount)
   );
 
+  /* LIGHT THEME (DEFAULT) BASE */
+  --brand-primary: #f5a300;
+  --brand-secondary: #0062f5;
   --black: 15, 18, 25;
   --gray: 96, 115, 159;
 
-  --box-shadow: var(--shadow-lg);
-  --box-shadow-small: var(--shadow-sm);
-
   --bg-base: #ffffff;
   --bg-panel: color-mix(in srgb, var(--bg-base), black 3%);
-
   --bg-overlay: rgba(var(--black), 0.05);
   --bg-overlay-hover: rgba(var(--black), 0.08);
 
   --text-color: rgb(var(--black));
   --text-alt: color-mix(in srgb, var(--black), white 5%);
-
   --link-color: var(--brand-primary);
+  --focus-ring: var(--brand-secondary);
 
-  /* VANTA */
+  --box-shadow: var(--shadow-lg);
+  --box-shadow-small: var(--shadow-sm);
+
+  /* LIGHT VANTA */
   --vanta-highlight: #ffd787;
   --vanta-midtone: #ff9ee2;
   --vanta-lowlight: #eebcff;
   --vanta-base: #ffebcd;
   --wallpaper: #ffe9cd;
 
-  /* Semantic Tag Colors */
+  /* LIGHT TAGS */
   --tag-green: #2ecc71;
   --tag-purple: #9b59b6;
   --tag-red: #e74c3c;
-
-  --focus-ring: var(--brand-secondary);
 }
 
-/* --- CLARITY MODE (COLORS ONLY) --- */
-[data-clarity="true"] {
-  --bg-base: #f8f9fa;
-  --bg-panel: #ffffff;
-  --text-color: #0d0d0d;
-  --text-alt: #0d0d0d;
-
-  --brand-primary: #dc143c;
-  --brand-secondary: #000080;
-
-  --brand-primary-shaded: var(--brand-primary);
-  --brand-primary-tinted: var(--brand-primary);
-  --brand-secondary-shaded: var(--brand-secondary);
-  --brand-secondary-tinted: var(--brand-secondary);
-
-  /* High Contrast Borders - Mantaining 4px to avoid tremor */
-  --border: 4px solid var(--brand-secondary);
-  --box-shadow: none;
-
-  --link-color: var(--brand-secondary);
-  --focus-ring: var(--brand-primary);
-
-  --bg-overlay: rgba(0, 0, 0, 0.1);
-  --bg-overlay-hover: rgba(0, 0, 0, 0.15);
-
-  --brand-interaction: #000000;
-  --text-on-interaction: #ffffff;
-}
-
+/* --- DARK THEME OVERRIDES --- */
 [data-theme="dark"] {
   color-scheme: dark;
 
   --brand-primary: #0062f5;
-  --brand-primary-shaded: color-mix(in srgb, var(--brand-primary), black var(--brand-mix-amount));
-  --brand-primary-tinted: color-mix(in srgb, var(--brand-primary), white var(--brand-mix-amount));
   --brand-secondary: #f5a300;
-  --brand-secondary-shaded: color-mix(
-    in srgb,
-    var(--brand-secondary),
-    black var(--brand-mix-amount)
-  );
-  --brand-secondary-tinted: color-mix(
-    in srgb,
-    var(--brand-secondary),
-    white var(--brand-mix-amount)
-  );
-
   --black: 240, 240, 245;
   --gray: 70, 80, 100;
 
-  --box-shadow: var(--shadow-lg);
-  --box-shadow-small: var(--shadow-md);
-
   --bg-base: #111111;
   --bg-panel: color-mix(in srgb, var(--bg-base), white 3%);
-
   --bg-overlay: rgba(var(--black), 0.08);
   --bg-overlay-hover: rgba(var(--black), 0.12);
 
   --text-color: rgb(var(--black));
   --text-alt: color-mix(in srgb, var(--black), black 5%);
-
   --link-color: #4dabf7;
+  --focus-ring: var(--brand-secondary);
 
-  /* VANTA */
+  --box-shadow: var(--shadow-lg);
+  --box-shadow-small: var(--shadow-md);
+
+  /* DARK VANTA */
   --vanta-highlight: #006476;
   --vanta-midtone: #560296;
   --vanta-lowlight: #000000;
   --vanta-base: #00022f;
   --wallpaper: #3e006e;
 
-  /* Semantic Tag Colors */
+  /* DARK TAGS */
   --tag-green: #37eb87;
   --tag-purple: #bb8fce;
   --tag-red: #ff7675;
-
-  --focus-ring: var(--brand-secondary);
 }
 
+/* --- CLARITY MODE (GLOBAL OVERRIDES) --- */
+[data-clarity="true"] {
+  --brand-mix-amount: 0%; /* Automatically flattens shaded/tinted variants */
+  --box-shadow: none;
+  --box-shadow-small: none;
+
+  /* Re-sync borders to high contrast */
+  --border: 4px solid var(--brand-primary);
+  --link-color: var(--brand-secondary);
+  --focus-ring: var(--brand-primary);
+
+  --brand-interaction: #000000;
+  --text-on-interaction: #ffffff;
+}
+
+/* --- CLARITY MODE (THEME SPECIFIC) --- */
+
+/* Light Clarity */
+[data-clarity="true"]:not([data-theme="dark"]) {
+  --bg-base: #f8f9fa;
+  --bg-panel: #ffffff;
+  --text-color: #0d0d0d;
+  --text-alt: #0d0d0d;
+  --brand-primary: #dc143c;
+  --brand-secondary: #000080;
+  --bg-overlay: rgba(0, 0, 0, 0.1);
+  --bg-overlay-hover: rgba(0, 0, 0, 0.15);
+}
+
+/* Dark Clarity */
 [data-theme="dark"][data-clarity="true"] {
   --bg-base: #0d0d0d;
   --bg-panel: #1a1a1a;
   --text-color: #f8f9fa;
   --text-alt: #f8f9fa;
-
   --brand-primary: #00e5ff;
   --brand-secondary: #ff3b5c;
-
-  --brand-primary-shaded: var(--brand-primary);
-  --brand-primary-tinted: var(--brand-primary);
-  --brand-secondary-shaded: var(--brand-secondary);
-  --brand-secondary-tinted: var(--brand-secondary);
-
-  /* High Contrast Borders - Mantaining 4px to avoid tremor */
-  --border: 4px solid var(--brand-primary);
-  --box-shadow: none;
-
-  --link-color: var(--brand-secondary);
-  --focus-ring: var(--brand-primary);
-
   --bg-overlay: rgba(255, 255, 255, 0.15);
   --bg-overlay-hover: rgba(255, 255, 255, 0.2);
-
   --brand-interaction: #ffffff;
   --text-on-interaction: #000000;
 }

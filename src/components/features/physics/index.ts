@@ -400,6 +400,7 @@ export async function initPhysics() {
     const hitbox = radius * PHYSICS_CONFIG.bodies.clickable.hitboxMultiplier;
     linkEl.style.width = `${hitbox}px`;
     linkEl.style.height = `${hitbox}px`;
+    linkEl.style.cursor = "pointer";
     if (a11yLayer) a11yLayer.appendChild(linkEl);
 
     body.plugin = {
@@ -503,12 +504,17 @@ export async function initPhysics() {
   let isDragging = false;
 
   container.addEventListener("mousedown", (e) => {
-    if (!engine || !isSimulationRunning) return;
+    if (!engine || !isSimulationRunning || !container) return;
     updateMousePos(e);
 
     const grabbed = engine.grabBody(mousePosition);
     if (grabbed) {
       isDragging = true;
+      if (grabbed.label === "draggable-orange") {
+        container.style.cursor = "grabbing";
+      } else {
+        container.style.cursor = "pointer";
+      }
       e.preventDefault();
     }
   });
@@ -516,14 +522,25 @@ export async function initPhysics() {
   window.addEventListener(
     "mousemove",
     (e) => {
-      if (!isSimulationRunning) return;
+      if (!isSimulationRunning || !container || !engine) return;
       updateMousePos(e);
+
+      if (!isDragging) {
+        const hovered = engine.queryPoint(mousePosition);
+        if (hovered.length > 0) {
+          const body = hovered[0];
+          container.style.cursor = body.label === "clickable" ? "pointer" : "grab";
+        } else {
+          container.style.cursor = "";
+        }
+      }
     },
     { passive: true }
   );
 
   window.addEventListener("mouseup", () => {
     if (engine) engine.releaseBody();
+    if (container) container.style.cursor = "";
     isDragging = false;
   });
 

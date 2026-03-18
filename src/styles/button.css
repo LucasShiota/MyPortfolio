@@ -104,12 +104,21 @@
   color: var(--bg-base);
   font-size: 1rem;
   font-weight: 600;
+  line-height: 1; /* Tighten font box for vertical symmetry */
 
   &:hover,
   &[aria-expanded="true"] {
     color: var(--bg-base);
     background: var(--brand-primary);
     text-decoration: none;
+
+    /* Clarity Mode: Symmetric Double-Ring (Gap + Line) */
+    [data-clarity="true"] & {
+      outline: none;
+      box-shadow:
+        0 0 0 3px var(--bg-base),
+        0 0 0 7px var(--brand-primary) !important;
+    }
   }
 }
 

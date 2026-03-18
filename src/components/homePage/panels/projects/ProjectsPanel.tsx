@@ -221,70 +221,73 @@ export default function ProjectsPanel(props: Props) {
         </div>
       </div>
 
-      {/* --- FILTERS --- */}
-      <div class="projects-filter-parent flx-algncntr-rw">
-        <div class="project-filters flx-algncntr-rw" role="group" aria-label="Filter projects">
-          <button
-            type="button"
-            class="project-filter-btn"
-            classList={{ "is-active": selectedFilters().size === 0 }}
-            aria-pressed={selectedFilters().size === 0}
-            onClick={() => toggleFilter("all")}
-          >
-            All
-          </button>
-          <For each={props.filterTags}>
-            {(tag) => (
-              <button
-                type="button"
-                class="project-filter-btn"
-                classList={{ "is-active": selectedFilters().has(tag) }}
-                aria-pressed={selectedFilters().has(tag)}
-                onClick={() => toggleFilter(tag)}
-              >
-                {tag}
-              </button>
-            )}
-          </For>
-        </div>
-      </div>
-
-      {/* --- LIST --- */}
-      <div class="projects-list-parent">
-        <section 
-          ref={containerRef}
-          class="project-list flx-algncntr-rw"
-          classList={{ "is-grabbing": isDragging() }} 
-          aria-label="Project list"
-        >
-          <div class="scroll-buffer" aria-hidden="true">&nbsp;</div>
-          <For each={visibleProjects()}>
-            {(project, index) => {
-              const thumbUrl = typeof project.thumbnailSrc === 'string' ? project.thumbnailSrc : project.thumbnailSrc.src;
-              return (
+      {/* --- FILTERS & LIST --- */}
+      <div class="projects-controls-wrapper surface-panel flx-algncntr-clmn">
+        {/* --- FILTERS --- */}
+        <div class="projects-filter-parent flx-algncntr-rw">
+          <div class="project-filters flx-algncntr-rw" role="group" aria-label="Filter projects">
+            <button
+              type="button"
+              class="project-filter-btn"
+              classList={{ "is-active": selectedFilters().size === 0 }}
+              aria-pressed={selectedFilters().size === 0}
+              onClick={() => toggleFilter("all")}
+            >
+              All
+            </button>
+            <For each={props.filterTags}>
+              {(tag) => (
                 <button
                   type="button"
-                  class="project-entry"
-                  classList={{ "is-active": activeId() === project.id }}
-                  data-project-id={project.id}
-                  data-project-selectable="true"
-                  aria-pressed={activeId() === project.id}
-                  onClick={() => selectProject(project.id, index())}
+                  class="project-filter-btn"
+                  classList={{ "is-active": selectedFilters().has(tag) }}
+                  aria-pressed={selectedFilters().has(tag)}
+                  onClick={() => toggleFilter(tag)}
                 >
-                  <img
-                    class="project-thumbnail"
-                    src={thumbUrl}
-                    alt={project.thumbnailAlt}
-                    width={150}
-                    height={150}
-                    loading="lazy"
-                  />
+                  {tag}
                 </button>
-              );
-            }}
-          </For>
-          <div class="scroll-buffer" aria-hidden="true">&nbsp;</div>
-        </section>
+              )}
+            </For>
+          </div>
+        </div>
+
+        {/* --- LIST --- */}
+        <div class="projects-list-parent">
+          <section 
+            ref={containerRef}
+            class="project-list flx-algncntr-rw"
+            classList={{ "is-grabbing": isDragging() }} 
+            aria-label="Project list"
+          >
+            <div class="scroll-buffer" aria-hidden="true">&nbsp;</div>
+            <For each={visibleProjects()}>
+              {(project, index) => {
+                const thumbUrl = typeof project.thumbnailSrc === 'string' ? project.thumbnailSrc : project.thumbnailSrc.src;
+                return (
+                  <button
+                    type="button"
+                    class="project-entry"
+                    classList={{ "is-active": activeId() === project.id }}
+                    data-project-id={project.id}
+                    data-project-selectable="true"
+                    aria-pressed={activeId() === project.id}
+                    onClick={() => selectProject(project.id, index())}
+                  >
+                    <img
+                      class="project-thumbnail"
+                      src={thumbUrl}
+                      alt={project.thumbnailAlt}
+                      width={150}
+                      height={150}
+                      loading="lazy"
+                    />
+                  </button>
+                );
+              }}
+            </For>
+            <div class="scroll-buffer" aria-hidden="true">&nbsp;</div>
+          </section>
+        </div>
       </div>
 
     </div>

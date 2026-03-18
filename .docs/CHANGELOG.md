@@ -6,15 +6,21 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Added
 
+- **ui:** global `animate-fade-in` utility for smooth component entrances.
+- **physics:** context-aware cursors for the Contacts panel (pointer for links, grab/grabbing for physics bodies).
 - **audit:** comprehensive performance audit data (HAR) and results
 
 ### Fixed
 
+- **projects:** eliminated preview container collapse on narrow viewports by adding robust minimum height constraints.
+- **physics:** resolve TypeScript nullability error for the contacts container reference.
 - **physics:** resolve body placement race condition and refine drift forces for better stability
 - **accessibility:** eliminate "tremble" jitter during mode toggles by removing expensive `ScrollTrigger.refresh()` calls and switching to inset `box-shadow` borders for header icons.
 
 ### Changed
 
+- **projects:** unified controls into a single `.surface-panel` container and expanded list height for better usability.
+- **contacts:** scaled and encased the physics simulation in a `.surface-panel` box to align with the project panel's design language.
 - **maintenance:** disable maintenance mode and verify live status of lucasshiota.com
 - **a11y:** re-enable functional `Reduced Motion` and `Clarity Mode` (colors-only) using a double `requestAnimationFrame` safety pattern for clean state transitions.
 - **ui:** unify `Clarity Mode` borders with an instant (`0s`) transition and fixed `PopUpPanel` visibility bugs.
