@@ -128,7 +128,7 @@
   /* 🔘 SHEET NODE
      Styling for individual nodes within a collection (e.g., Ability Score, Talent). */
   .sheet-node {
-    @apply flx-cntr-clmn rounded-xl border p-3 transition-all duration-300;
+    @apply flx-cntr-clmn rounded-xl border p-3;
     border-color: rgba(var(--gray), 0.15);
     background-color: rgba(var(--gray), 0.04);
     &:hover {

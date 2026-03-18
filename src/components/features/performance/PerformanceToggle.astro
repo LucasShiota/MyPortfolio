@@ -42,16 +42,19 @@ const { id = "performance-toggle", class: className = "" } = Astro.props;
     border-radius: 9999px !important;
     background: rgba(var(--gray), 0.1) !important;
     border: none !important;
-    transition: background var(--transition-fast) !important;
+    transition:
+      background var(--transition-fast),
+      box-shadow 0s !important;
   }
 
   /* Clarity Mode overrides */
   :global(html[data-clarity="true"] .performance-toggle) {
-    border: var(--border-width) solid var(--brand-secondary) !important;
+    box-shadow: inset 0 0 0 var(--border-width) var(--brand-secondary) !important;
     background: transparent !important;
   }
 
   :global(html[data-clarity="true"] .performance-toggle:hover) {
+    box-shadow: inset 0 0 0 var(--border-width) var(--brand-secondary) !important;
     background: var(--brand-secondary) !important;
   }
 

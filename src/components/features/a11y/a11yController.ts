@@ -19,6 +19,9 @@ const CLARITY_TOGGLE_SELECTOR = ".clarity-toggle";
 export const initA11yController = () => {
   // REDUCED MOTION
   const setReducedMotion = (enabled: boolean) => {
+    // ⚡ PRO-TRICK: Temporarily disable transitions during the attribute swap
+    document.documentElement.classList.add("no-transitions");
+
     document.documentElement.setAttribute("data-reduced-motion", String(enabled));
 
     const toggles = document.querySelectorAll(RM_TOGGLE_SELECTOR);
@@ -27,8 +30,14 @@ export const initA11yController = () => {
     });
 
     // Refresh sidebar scaling logic immediately
-    window.performanceModeScroll?.refresh?.();
     window.performanceModeScroll?.syncSnapping?.();
+
+    // Re-enable transitions after the paint
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove("no-transitions");
+      });
+    });
   };
 
   const toggleReducedMotion = () => {
@@ -40,15 +49,23 @@ export const initA11yController = () => {
 
   // CLARITY MODE
   const setClarityMode = (enabled: boolean) => {
+    // ⚡ PRO-TRICK: Temporarily disable all transitions to prevent "tremble" during mode shift
+    document.documentElement.classList.add("no-transitions");
+
     document.documentElement.setAttribute("data-clarity", String(enabled));
 
+    // UI Only: Update the toggle state visually
     const toggles = document.querySelectorAll(CLARITY_TOGGLE_SELECTOR);
     toggles.forEach((toggle) => {
       toggle.setAttribute("aria-checked", String(enabled));
     });
 
-    // Refresh sidebar scaling logic immediately
-    window.performanceModeScroll?.refresh?.();
+    // ⚡ DOUBLE-RAF: Ensures the browser commits the style change BEFORE transitions are re-enabled
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove("no-transitions");
+      });
+    });
   };
 
   const toggleClarityMode = () => {
@@ -98,16 +115,16 @@ export const initA11yController = () => {
     });
   };
 
-  // Initial state (Reduced Motion)
+  // Initial state (Reduced Motion - Functional!)
   const savedRM = localStorage.getItem(RM_STORAGE_KEY);
   if (savedRM) {
     setReducedMotion(savedRM === "on");
   } else {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setReducedMotion(prefersReduced);
+    const prefersReducedValue = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setReducedMotion(prefersReducedValue);
   }
 
-  // Initial state (Clarity Mode)
+  // Initial state (Clarity Mode - Functional again)
   const savedClarity = localStorage.getItem(CLARITY_STORAGE_KEY);
   if (savedClarity) {
     setClarityMode(savedClarity === "on");

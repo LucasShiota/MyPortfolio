@@ -11,10 +11,13 @@ All notable changes to this project will be documented in this file. See [standa
 ### Fixed
 
 - **physics:** resolve body placement race condition and refine drift forces for better stability
+- **accessibility:** eliminate "tremble" jitter during mode toggles by removing expensive `ScrollTrigger.refresh()` calls and switching to inset `box-shadow` borders for header icons.
 
 ### Changed
 
 - **maintenance:** disable maintenance mode and verify live status of lucasshiota.com
+- **a11y:** re-enable functional `Reduced Motion` and `Clarity Mode` (colors-only) using a double `requestAnimationFrame` safety pattern for clean state transitions.
+- **ui:** unify `Clarity Mode` borders with an instant (`0s`) transition and fixed `PopUpPanel` visibility bugs.
 
 ### [0.0.4](https://github.com/LucasShiota/MyPortfolio/compare/v0.0.3...v0.0.4) (2026-03-15)
 

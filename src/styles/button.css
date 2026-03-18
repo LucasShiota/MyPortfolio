@@ -32,27 +32,11 @@
     transform: translateY(-2px) scale(1.05);
     box-shadow: var(--box-shadow);
   }
-
-  /* Look for state on the HTML root element */
-  html[data-reduced-motion="true"] & {
-    transition: none !important;
-
-    &:hover,
-    &[aria-expanded="true"] {
-      transform: none !important;
-    }
-  }
 }
 
 @utility btn-fx-squish {
   &:active {
     transform: scale(0.95) !important;
-  }
-
-  html[data-reduced-motion="true"] & {
-    &:active {
-      transform: none !important;
-    }
   }
 }
 
@@ -120,33 +104,12 @@
   color: var(--bg-base);
   font-size: 1rem;
   font-weight: 600;
-  transition: all var(--transition-fast) ease;
 
   &:hover,
   &[aria-expanded="true"] {
     color: var(--bg-base);
     background: var(--brand-primary);
     text-decoration: none;
-  }
-
-  /* Clarity Mode Interaction Override */
-  html[data-clarity="true"] & {
-    background: var(--brand-primary);
-
-    &:hover,
-    &[aria-expanded="true"] {
-      background: color-mix(in srgb, var(--brand-secondary), white 10%);
-      color: var(--bg-base);
-      outline: var(--border-width) solid var(--brand-secondary);
-      outline-offset: 2px;
-      transform: scale(1.02);
-    }
-
-    /* Dark mode adjustment for luminosity */
-    html[data-theme="dark"][data-clarity="true"] &:hover,
-    html[data-theme="dark"][data-clarity="true"] &[aria-expanded="true"] {
-      background: color-mix(in srgb, var(--brand-secondary), black 10%);
-    }
   }
 }
 
@@ -163,7 +126,6 @@
   border-radius: 8px;
   background: transparent;
   color: var(--text-color);
-  transition: all 0.2s ease;
 
   &:hover,
   &.active {
@@ -181,7 +143,6 @@
   background-color: rgb(var(--gray));
   border-radius: 9999px;
   border: none;
-  transition: background-color var(--transition-fast) ease;
   padding: 0;
 
   &[aria-checked="true"] {
@@ -195,31 +156,11 @@
     height: 1.25rem;
     background-color: var(--bg-base);
     border-radius: 50%;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   &[aria-checked="true"] .toggle-thumb {
     transform: translateX(1.5rem);
-  }
-
-  /* --- CLARITY MODE --- */
-  html[data-clarity="true"] & {
-    border: var(--border-width) solid var(--brand-secondary);
-    background: transparent;
-
-    &[aria-checked="true"] {
-      background: var(--brand-secondary);
-    }
-
-    & .toggle-thumb {
-      background-color: var(--brand-secondary);
-      border: 1px solid var(--bg-base);
-    }
-
-    &[aria-checked="true"] .toggle-thumb {
-      background-color: var(--bg-base);
-    }
   }
 }
 

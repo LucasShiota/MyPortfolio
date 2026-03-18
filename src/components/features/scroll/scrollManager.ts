@@ -106,7 +106,6 @@ function updateSidebarVisuals(progress: number) {
   // Select BOTH sections and circles in their DOM order
   const allNavElements = Array.from(navContainer.children) as HTMLElement[];
   const contactsEnterThreshold = gsap.utils.clamp(0, 1, 1 - _step * 0.5);
-  const isClarityMode = document.documentElement.getAttribute("data-clarity") === "true";
   const isReducedMotion = document.documentElement.getAttribute("data-reduced-motion") === "true";
 
   // Toggle footer spacing
@@ -154,12 +153,6 @@ function updateSidebarVisuals(progress: number) {
     const dynamicMargin = baseMargin * marginScale;
     el.style.marginTop = `${dynamicMargin}px`;
     el.style.marginBottom = `${dynamicMargin}px`;
-
-    // Explicitly handle color inversion for Clarity active state
-    if (isClarityMode && isSection) {
-      const box = el.querySelector<HTMLElement>(".navsec-box");
-      if (box) box.style.transform = "translateZ(0)";
-    }
   });
 }
 

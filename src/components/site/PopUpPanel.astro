@@ -147,7 +147,11 @@ const {
     padding: 0.4rem;
     opacity: 0;
     visibility: hidden;
-    transition: all var(--transition-fast) var(--transition-cubic);
+    transition:
+      opacity var(--transition-fast) var(--transition-cubic),
+      transform var(--transition-fast) var(--transition-cubic),
+      visibility var(--transition-fast) var(--transition-cubic),
+      border-color 0s;
     min-width: 220px;
   }
 
@@ -181,10 +185,7 @@ const {
     transform: translateX(-50%) !important;
   }
 
-  /* --- Clarity Mode Support --- */
-  html[data-clarity="true"] .popup-panel {
-    border: var(--border-secondary) !important;
-  }
+  /* --- Clarity Mode Support (Inherited from global variables) --- */
 
   /* Common Panel Styles */
   .panel-section {

@@ -3,10 +3,9 @@
  *  ROOT STYLES (root.css)
  * ══════════════════════════════════════════════
  *
- * PURPOSE: Global theme logic, color-mix overrides, and accessibility state styling (Clarity Mode, Reduced Motion).
+ * PURPOSE: Global theme logic and color-mix overrides.
  *
  * CRITICAL RULES:
- * - Clarity Mode overrides MUST redefine all shaded/tinted variants to prevent global leaks.
  * - Transitions are centralized here for bg/text shifts.
  */
 
@@ -21,6 +20,13 @@
   box-sizing: border-box;
 }
 
+/* ⚡ EMERGENCY KILL-SWITCH for transitions (Used during mode toggles) */
+.no-transitions,
+.no-transitions * {
+  transition: none !important;
+  animation: none !important;
+}
+
 /* Global Reduced Motion Override */
 html[data-reduced-motion="true"],
 html[data-reduced-motion="true"] *,
@@ -30,22 +36,6 @@ html[data-reduced-motion="true"] *::after {
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;
   scroll-behavior: auto !important;
-}
-
-html {
-  background-color: var(--bg-base);
-  transition:
-    background-color var(--transition-speed) var(--transition-cubic),
-    color var(--transition-speed) var(--transition-cubic);
-}
-
-* {
-  transition:
-    background-color var(--transition-speed) var(--transition-cubic),
-    color var(--transition-speed) var(--transition-cubic),
-    border-color var(--transition-speed) var(--transition-cubic),
-    box-shadow var(--transition-speed) var(--transition-cubic),
-    outline-offset 0.1s ease;
 }
 
 :focus-visible {
@@ -107,38 +97,31 @@ html {
   --focus-ring: var(--brand-secondary);
 }
 
-/* --- CLARITY MODE --- */
+/* --- CLARITY MODE (COLORS ONLY) --- */
 [data-clarity="true"] {
-  --bg-base: #f8f9fa; /* Mature Off-White */
-  --bg-panel: color-mix(in srgb, var(--bg-base), black 7%); /* Mixed for depth */
-  --text-color: #0d0d0d; /* Mature Off-Black */
+  --bg-base: #f8f9fa;
+  --bg-panel: #ffffff;
+  --text-color: #0d0d0d;
   --text-alt: #0d0d0d;
 
-  --brand-primary: #dc143c; /* Mature Crimson */
-  --brand-secondary: #000080; /* Mature Navy */
+  --brand-primary: #dc143c;
+  --brand-secondary: #000080;
 
   --brand-primary-shaded: var(--brand-primary);
   --brand-primary-tinted: var(--brand-primary);
   --brand-secondary-shaded: var(--brand-secondary);
   --brand-secondary-tinted: var(--brand-secondary);
 
+  /* High Contrast Borders - Mantaining 4px to avoid tremor */
+  --border: 4px solid var(--brand-secondary);
+  --box-shadow: none;
+
   --link-color: var(--brand-secondary);
   --focus-ring: var(--brand-primary);
-
-  --box-shadow: none;
-  --box-shadow-small: none;
 
   --bg-overlay: rgba(0, 0, 0, 0.1);
   --bg-overlay-hover: rgba(0, 0, 0, 0.15);
 
-  /* Borders instead of shadows - Using global width to prevent layout shift */
-  --border-primary: var(--border-width) solid var(--brand-primary);
-  --border-secondary: var(--border-width) solid var(--brand-secondary);
-
-  --panel-border: var(--border-primary);
-  --border: var(--border-primary);
-
-  /* Interaction (Inversion) */
   --brand-interaction: #000000;
   --text-on-interaction: #ffffff;
 }
@@ -194,37 +177,29 @@ html {
 }
 
 [data-theme="dark"][data-clarity="true"] {
-  --bg-base: #0d0d0d; /* Mature Off-Black */
-  --bg-panel: color-mix(in srgb, var(--bg-base), white 9%); /* Mixed for depth */
-  --text-color: #f8f9fa; /* Mature Off-White */
+  --bg-base: #0d0d0d;
+  --bg-panel: #1a1a1a;
+  --text-color: #f8f9fa;
   --text-alt: #f8f9fa;
 
-  /* In dark mode we use lighter versions for contrast */
-  --brand-primary: #00e5ff; /* Poppy Cherry */
-  --brand-secondary: #ff3b5c; /* Poppy Cyan */
+  --brand-primary: #00e5ff;
+  --brand-secondary: #ff3b5c;
 
   --brand-primary-shaded: var(--brand-primary);
   --brand-primary-tinted: var(--brand-primary);
   --brand-secondary-shaded: var(--brand-secondary);
   --brand-secondary-tinted: var(--brand-secondary);
 
+  /* High Contrast Borders - Mantaining 4px to avoid tremor */
+  --border: 4px solid var(--brand-primary);
+  --box-shadow: none;
+
   --link-color: var(--brand-secondary);
   --focus-ring: var(--brand-primary);
-
-  --box-shadow: none;
-  --box-shadow-small: none;
 
   --bg-overlay: rgba(255, 255, 255, 0.15);
   --bg-overlay-hover: rgba(255, 255, 255, 0.2);
 
-  /* Borders instead of shadows - Using global width to prevent layout shift */
-  --border-primary: var(--border-width) solid var(--brand-primary);
-  --border-secondary: var(--border-width) solid var(--brand-secondary);
-
-  --panel-border: var(--border-primary);
-  --border: var(--border-primary);
-
-  /* Interaction (Inversion) */
   --brand-interaction: #ffffff;
   --text-on-interaction: #000000;
 }
