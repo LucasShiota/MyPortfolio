@@ -74,7 +74,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "standard-version": "^9.5.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.0"
   },
   "lint-staged": {
     "*.{js,ts,astro,json,md,css}": [
